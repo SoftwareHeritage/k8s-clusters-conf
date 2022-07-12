@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: git-clone
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: workspace
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+  entrypoint: clone
+  inputs:
+    parameters:
+      - name: repository
+        value: url
+      - name: directory
+        value: default
+      - name: branch
+        value: master
+
+  templates:
+    - name: clone
+      steps:
+        - - name: git-clone
+            templateRef:
+              name: git-clone
+              template: clone-into-directory
+            arguments:
+              parameters:
+                - name: directory
+                  value: default
+
+    - name: clone-into-directory
+      inputs:
+        parameters:
+          - name: directory
+      container:
+        image: python:3.9
+        workdir: /workspace # seems to not work
+        command: [sh, -c]
+        args:
+          - |
+            set -x
+            DIRECTORY="{{inputs.parameters.directory}}"
+            BRANCH="{{workflow.parameters.branch}}"
+            REPOSITORY="{{workflow.parameters.repository}}"
+            cd /workspace
+            pwd
+            git clone -v -b ${BRANCH} ${REPOSITORY} ${DIRECTORY}
+        volumeMounts:
+          - name: "workspace"
+            mountPath: /workspace

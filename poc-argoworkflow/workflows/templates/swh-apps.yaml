@@ -1,0 +1,120 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: swh-apps
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: workspace
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: repository
+        value: https://forge.softwareheritage.org/source/swh-apps.git
+      - name: directory
+        value: default
+      - name: branch
+        value: master
+
+  templates:
+    - name: main  # test the templates
+      steps:
+        - - name: clone
+            templateRef:
+              name: git-clone
+              template: clone
+        - - name: list-all-apps
+            template: list-all-apps
+          - name: ls
+            template: ls
+
+    - name: update-app
+      inputs:
+        parameters:
+          - name: app
+      steps:
+        - - name: clone
+            templateRef:
+              name: git-clone
+              template: clone-into-directory
+            arguments:
+              parameters:
+                - name: directory
+                  value: "{{inputs.parameters.app}}"
+        - - name: freeze-dependencies
+            template: freeze-dependencies
+            arguments:
+              parameters:
+                - name: app
+                  value: "{{inputs.parameters.app}}"
+                - name: directory
+                  value: "{{inputs.parameters.app}}"
+
+    - name: list-all-apps
+      script:
+        image: python:3.9 # TODO use an image where the user is not root
+        volumeMounts:
+          - name: "workspace"
+            mountPath: /workspace
+        command: [python]
+        source: |
+          import json
+          import os
+
+          apps=[]
+          apps_dir="/workspace/{{workflow.parameters.directory}}/apps"
+          for f in os.listdir(apps_dir):
+              p = f"{apps_dir}/{f}"
+              if os.path.isdir(p):
+                  if os.path.isfile(f"{p}/requirements.txt"):
+                      apps.append(f)
+          print(json.dumps(apps))
+
+    - name: freeze-dependencies
+      inputs:
+        parameters:
+          - name: directory # the path to the root directory where the repository was cloned
+          - name: app # the app name, must match the directory in /apps
+      container:
+        image: python:3.9 # (!) user will be root
+        volumeMounts:
+          - name: "workspace"
+            mountPath: /workspace
+        command: [sh, -c]
+        args:
+          - |
+            set -x
+
+            WORKDIR=/workspace/{{inputs.parameters.directory}}
+            APP={{inputs.parameters.directory}}
+
+            ## ack for winery
+            apt update
+            apt install -y libcmph-dev
+
+            cd ${WORKDIR}
+            scripts/generate-frozen-requirements ${APP}
+
+
+    - name: ls # for debug
+      container:
+        image: python:3.9 # TODO use an image where the user is not root
+        volumeMounts:
+          - name: "workspace"
+            mountPath: /workspace
+        command: [sh, -c]
+        args:
+          - |
+            set -x
+            cd /workspace
+            ls
+            cd default
+            ls
+            cd apps
+            ls

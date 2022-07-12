@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: refresh-swh-apps-
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: workspace
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+  entrypoint: build
+  arguments:
+    parameters:
+      - name: repository
+        value: https://forge.softwareheritage.org/source/swh-apps.git
+      - name: branch
+        value: master
+      - name: directory
+        value: default
+  templates:
+    - name: build
+      steps:
+        - - name: clone
+            templateRef:
+              name: git-clone
+              template: clone
+        - - name: list-all-apps
+            templateRef:
+              name: swh-apps
+              template: list-all-apps
+        - - name: update-app
+            templateRef:
+              name: swh-apps
+              template: update-app
+            arguments:
+              parameters:
+              - name: app
+                value: "{{item}}"
+              - name: directory
+                value: "{{item}}"
+            withParam: "{{steps.list-all-apps.outputs.result}}"
