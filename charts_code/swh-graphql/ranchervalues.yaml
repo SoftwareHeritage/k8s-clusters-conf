@@ -1,0 +1,5 @@
+# The ingress host to listen for
+ingressHost: graphql.ranchercluster
+
+#namespace
+namespace: graphql-rancher

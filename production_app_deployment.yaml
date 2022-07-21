@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ranchercluster # Application name
+  namespace: argocd # Argocd namespace installation
+
+spec:
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-fvnrx # Destination cluster url
+    namespace: graphql-rancher # Application deployment namespace
+    
+  project: default # name of project
+  source:
+    repoURL: https://github.com/amadouth6/argocd.git # repo URL
+    targetRevision: internship-cluster # Branch content helm charts
+    path: swh-graphql/ # helm chart path
+    helm:
+      releaseName: ranchercluster # release name same as application name
+      valueFiles: # List of values files
+        - myvalues.yaml
+        - ranchervalues.yaml
+
+  # Custom sync policy and automate task
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true    
+    
+    automated:
+      selfHeal: true
+      prune: true
