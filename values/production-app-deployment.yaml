@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1alpha1
+/apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ranchercluster # Application name
@@ -8,7 +8,7 @@ spec:
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-fvnrx # Destination cluster url
     namespace: graphql-rancher # Application deployment namespace
-    
+
   project: default # name of project
   source:
     repoURL: https://github.com/amadouth6/argocd.git # repo URL
@@ -23,8 +23,8 @@ spec:
   # Custom sync policy and automate task
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true    
-    
+      - CreateNamespace=true
+
     automated:
       selfHeal: true
       prune: true

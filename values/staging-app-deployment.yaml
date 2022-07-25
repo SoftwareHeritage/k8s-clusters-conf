@@ -3,12 +3,12 @@ kind: Application
 metadata:
   name: minikubegraphql # Application name
   namespace: argocd # Argocd namespace installation
- 
+
 spec:
   destination:
-    server: https://kubernetes.default.svc # Destination cluster url  
+    server: https://kubernetes.default.svc # Destination cluster url
     namespace: graphql-minikube # Application deployment namespace
-    
+
   project: default # name of project
   source:
     repoURL: https://github.com/amadouth6/argocd.git # repo URL
@@ -19,12 +19,12 @@ spec:
       valueFiles: # list of values files
         - myvalues.yaml
         - minikube-value.yml
-  
+
   # Custom sync policy and automate task
-  syncPolicy: 
+  syncPolicy:
     syncOptions:
-      - CreateNamespace=true    
-    
+      - CreateNamespace=true
+
     automated:
       selfHeal: true
       prune: true
