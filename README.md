@@ -63,7 +63,7 @@ kind: Secret
 metadata:
   # must match $NS at the top of the readme
   namespace: argocd
-  name: mycluster-secret
+  name: $environment-cluster-config
   labels:
     argocd.argoproj.io/secret-type: cluster
 type: Opaque
