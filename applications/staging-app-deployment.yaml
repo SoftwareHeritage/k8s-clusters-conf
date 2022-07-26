@@ -1,24 +1,30 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: minikubegraphql # Application name
+  name: graphql # Application name
   namespace: argocd # Argocd namespace installation
 
 spec:
   destination:
-    server: https://kubernetes.default.svc # Destination cluster url
-    namespace: graphql-minikube # Application deployment namespace
+    # Destination cluster url
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-sm5l9
+    # Application deployment namespace
+    namespace: default
 
-  project: default # name of project
+  # project name
+  project: default
   source:
-    repoURL: https://github.com/amadouth6/argocd.git # repo URL
-    targetRevision: minikube-cluster # Branch content helm charts
-    path: swh-graphql/ # helm chart path
+    repoURL: https://forge.softwareheritage.org/source/swh-charts.git
+     # Branch content helm charts
+    targetRevision: master
+    # helm chart path
+    path: swh-graphql/
     helm:
-      releaseName: minikubegraphql # release name same as application name
+      # release name same as application name
+      releaseName: graphql
       valueFiles: # list of values files
-        - myvalues.yaml
-        - minikube-value.yml
+        - values/default.yaml
+        - values/staging.yaml
 
   # Custom sync policy and automate task
   syncPolicy:
