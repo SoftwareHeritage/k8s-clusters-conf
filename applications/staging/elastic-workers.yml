@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elastic-workers # Application name
+  namespace: argocd # Argocd namespace installation
+
+spec:
+  destination:
+    # Destination cluster url
+    server: "https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-bp26n"
+    # Application deployment namespace
+    namespace: ns-loaders-git
+
+  # project name
+  project: default
+  source:
+    repoURL: https://forge.softwareheritage.org/source/swh-charts.git
+     # Branch content helm charts
+    targetRevision: master
+    # helm chart path
+    path: worker/
+    helm:
+      # release name same as application name
+      releaseName: graphql
+      valueFiles: # list of values files
+        - instances/loaders-git.staging.values.yaml
+
+  # Custom sync policy and automate task
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true
