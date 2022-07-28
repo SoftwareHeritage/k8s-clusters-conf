@@ -1,5 +1,0 @@
-# The ingress host to listen for
-ingressHost: graphql.minikube-cluster
-
-#Minikube namespace deployment
-namespace: graphql-minikube
