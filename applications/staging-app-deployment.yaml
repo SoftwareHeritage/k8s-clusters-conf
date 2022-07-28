@@ -7,7 +7,7 @@ metadata:
 spec:
   destination:
     # Destination cluster url
-    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-sm5l9
+    server: "https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-9mqhw"
     # Application deployment namespace
     namespace: default
 
