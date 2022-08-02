@@ -125,39 +125,10 @@ kubectl apply -f cluster-config.secret.yaml
 
 [1] https://rancher.euwest.azure.internal.softwareheritage.org/ ("download kubeconfig")
 
-# Jenkinsfile in "charts_code/worker" directory
-
-- Custom this fields
-  - credentialsID
-  - passwordVariable
-  - usernameVariable
-
-- Custom sh commands
-
-# Jenkinsfile in "image_code"
-
-- Custom stage
-
-# Values files
-
-- Custom values files
-  - myvalues.yaml
-  - ranchervalues.yaml
-  - myvalues.yaml
-
-# Custom argocd app file
-
-- Custom stag_app_deployment.yaml
-- Custom production_app_deployment.yaml
-
-# Create stag argocd app
+# Create staging argocd app
 
 ```
-kubectl apply -f staging-app-deployment.yaml
+kubectl apply -f applications/staging/graphql.yaml
+kubectl apply -f applications/staging/elastic-workers.yaml
 ```
 
-# Create production argocd app
-
-```
-kubectl apply -f production-app-deployment.yaml
-```
