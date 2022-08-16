@@ -14,3 +14,8 @@ spec:
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-pcndd
     namespace: default
+  syncPolicy:
+    automated:
+    prune: true
+    selfHeal: true
+    allowEmpty: false
