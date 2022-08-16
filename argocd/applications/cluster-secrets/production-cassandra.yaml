@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default # Todo define a project to limit the deployment types
   source:
-    repoURL: https://forge.softwareheritage.org/source/k8s-private-config.git
+    repoURL: ssh://git@forge.softwareheritage.org/source/k8s-swh-private-data.git
     targetRevision: HEAD
     path: production-cassandra
     directory:
