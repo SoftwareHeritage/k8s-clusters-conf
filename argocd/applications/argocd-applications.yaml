@@ -1,5 +1,5 @@
-# Declare the application applying the argocd applications
-# basically apply the changes on this repository in argocd
+# Declare the argocd application application applying the argocd directory
+# content to the argocd cluster
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
