@@ -1,0 +1,6 @@
+---
+# Namespace dedicated to the production of the archive
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh
