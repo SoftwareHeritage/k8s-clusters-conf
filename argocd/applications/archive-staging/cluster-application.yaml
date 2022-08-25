@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://forge.softwareheritage.org/source/k8s-clusters-config.git
+    repoURL: https://forge.softwareheritage.org/source/k8s-clusters-conf.git
     targetRevision: HEAD
     path: archive-staging
     directory:
