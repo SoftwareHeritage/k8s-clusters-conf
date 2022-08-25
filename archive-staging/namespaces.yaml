@@ -1,0 +1,13 @@
+---
+# Namespace dedicated to keda
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keda
+---
+# Namespace dedicated to the swh services (e.g. loaders, rpc, ...)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh
+
