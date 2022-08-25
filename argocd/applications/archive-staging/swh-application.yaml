@@ -1,0 +1,25 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-staging-swh
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://forge.softwareheritage.org/source/swh-charts.git'
+    path: swh
+    targetRevision: master
+    helm:
+      valueFiles:
+        - ../values-swh-application-versions.yaml
+        - values/default.yaml
+        - values/staging.yaml
+      releaseName: swh
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-cx2bq
+    namespace: swh
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
