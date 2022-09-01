@@ -11,9 +11,9 @@ kind: Namespace
 metadata:
   name: swh
 ---
-# Namespace dedicated to the monitoring services
+# Namespace dedicated to cluster monitoring services
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: monitoring
+  name: cattle-monitoring-system
 
