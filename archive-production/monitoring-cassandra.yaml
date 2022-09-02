@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: cassandra-servers-svc
+    namespace: cassandra
+    labels:
+        app: cassandra
+spec:
+    type: ExternalName
+    externalName: "fake-url"
+    selector:
+      app: cassandra
+    ports:
+    - name: jmx-exporter
+      port: 7070
+      protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+    name: cassandra-servers-svc
+    namespace: cassandra
+    labels:
+        app: cassandra
+subsets:
+    - addresses:
+      - ip: 192.168.100.181
+      - ip: 192.168.100.182
+      - ip: 192.168.100.183
+      - ip: 192.168.100.184
+      - ip: 192.168.100.185
+      - ip: 192.168.100.186
+      ports:
+        - name: jmx-exporter
+          port: 7070
+          protocol: TCP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+    namespace: cassandra
+    name: cassandra-jmx-exporter
+    labels:
+        app: cassandra
+spec:
+    selector:
+        matchLabels:
+            app: cassandra
+    namespaceSelector:
+      any: true
+    endpoints:
+    - port: jmx-exporter
+      interval: 30s
+      honorLabels: true

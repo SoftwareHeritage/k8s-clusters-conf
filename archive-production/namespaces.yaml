@@ -1,0 +1,18 @@
+---
+# Namespace dedicated to the production of the archive
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh
+---
+# Namespace for keda
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keda
+---
+# Namespace for cassandra monitoring
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cassandra
