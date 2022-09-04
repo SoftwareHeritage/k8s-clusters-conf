@@ -1,9 +1,9 @@
 ---
-# Namespace dedicated to the production of the archive
+# Namespace dedicated to the cassandra replaying
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: swh
+  name: cassandra-replay
 ---
 # Namespace for keda
 apiVersion: v1
