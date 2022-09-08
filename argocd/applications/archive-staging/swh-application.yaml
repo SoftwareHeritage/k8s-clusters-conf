@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://forge.softwareheritage.org/source/swh-charts.git'
     path: swh
-    targetRevision: loader-with-init-container
+    targetRevision: master
     helm:
       valueFiles:
         - ../values-swh-application-versions.yaml
