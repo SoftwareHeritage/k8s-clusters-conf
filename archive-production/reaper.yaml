@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reaper
   namespace: cassandra
+  name: reaper
   labels:
     app: reaper
 spec:
@@ -43,39 +43,39 @@ spec:
           livenessProbe:
             httpGet:
               path: /ping
-              port: rpc
+              port: admin
             initialDelaySeconds: 10
             periodSeconds: 5
           env:
-          - name: REAPER_METRICS_ENABLED
-            value: "true"
-          - name: REAPER_STORAGE_TYPE
-            value: cassandra
-          - name: REAPER_CASS_CLUSTER_NAME
-            value: archive_production
-          - name: REAPER_CASS_CONTACT_POINTS
-            value: "[cassandra01.internal.softwareheritage.org]"
-          - name: REAPER_CASS_KEYSPACE
-            value: reaper_db
-          - name: REAPER_CASS_AUTH_ENABLED
-            value: "true"
-          - name: CRYPTO_SYSTEM_PROPERTY_SECRET
-            value: CRYPTO_ENCODING_KEY
-          - name: REAPER_JMX_AUTH_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: reaper-secrets
-                key: JMX_AUTH_USERNAME
-          - name: REAPER_JMX_AUTH_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: reaper-secrets
-                key: JMX_AUTH_PASSWORD
-          - name: CRYPTO_ENCODING_KEY
-            valueFrom:
-              secretKeyRef:
-                name: reaper-secrets
-                key: CRYPTO_ENCODING_KEY
+            - name: REAPER_METRICS_ENABLED
+              value: "true"
+            - name: REAPER_STORAGE_TYPE
+              value: cassandra
+            - name: REAPER_CASS_CLUSTER_NAME
+              value: archive_production
+            - name: REAPER_CASS_CONTACT_POINTS
+              value: "[cassandra01.internal.softwareheritage.org]"
+            - name: REAPER_CASS_KEYSPACE
+              value: reaper_db
+            - name: REAPER_CASS_AUTH_ENABLED
+              value: "true"
+            - name: CRYPTO_SYSTEM_PROPERTY_SECRET
+              value: CRYPTO_ENCODING_KEY
+            - name: REAPER_JMX_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: JMX_AUTH_USERNAME
+            - name: REAPER_JMX_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: JMX_AUTH_PASSWORD
+            - name: CRYPTO_ENCODING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: CRYPTO_ENCODING_KEY
 ---
 # for now, the webui is reachable at http://localhost:8080/webui
 # through a port forward
@@ -83,8 +83,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: reaper
   namespace: cassandra
+  name: reaper
+  labels:
+    app: reaper
 spec:
   type: ClusterIP
   selector:
@@ -96,3 +98,23 @@ spec:
     - name: admin
       port: 8081
       targetPort: 8081
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: cassandra
+  name: reaper-metrics
+  labels:
+    app: reaper
+spec:
+  selector:
+    matchLabels:
+      app: reaper
+  namespaceSelector:
+    any: true
+  endpoints:
+    - port: admin
+      scheme: http
+      scrapeTimeout: "60"
+      interval: 30s
+      path: /prometheusMetrics
