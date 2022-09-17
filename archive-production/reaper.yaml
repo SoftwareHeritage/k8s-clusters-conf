@@ -115,6 +115,5 @@ spec:
   endpoints:
     - port: admin
       scheme: http
-      scrapeTimeout: "60"
       interval: 30s
       path: /prometheusMetrics
