@@ -6,7 +6,7 @@ metadata:
   labels:
      grafana_dashboard: "1"
 data:
-  cassamdra-dashboard.json: |
+  cassandra-dashboard.json: |
     {
       "annotations": {
         "list": [
@@ -31,8 +31,7 @@ data:
       "editable": true,
       "gnetId": null,
       "graphTooltip": 1,
-      "id": 46,
-      "iteration": 1661351381911,
+      "iteration": 1663580219313,
       "links": [],
       "panels": [
         {
@@ -968,9 +967,109 @@ data:
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
-            "h": 9,
-            "w": 24,
+            "h": 8,
+            "w": 12,
             "x": 0,
+            "y": 72
+          },
+          "hiddenSeries": false,
+          "id": 14,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "7.5.11",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "exemplar": true,
+              "expr": "sum by (keyspace, table) ( cassandra_table_bytesunrepaired{instance=~\"${instance}\", keyspace != \"\"})",
+              "interval": "",
+              "legendFormat": "{{keyspace}}.{{table}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Unrepaired size",
+          "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "$$hashKey": "object:95",
+              "format": "bytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "$$hashKey": "object:96",
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
             "y": 72
           },
           "hiddenSeries": false,
@@ -1064,10 +1163,10 @@ data:
             "current": {
               "selected": true,
               "text": [
-                "192.168.100.181:7070"
+                "All"
               ],
               "value": [
-                "192.168.100.181:7070"
+                "$__all"
               ]
             },
             "datasource": null,
@@ -1104,5 +1203,5 @@ data:
       "timezone": "",
       "title": "Cassandra",
       "uid": "ta3ruAgnk",
-      "version": 5
+      "version": 6
     }
