@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://forge.softwareheritage.org/source/k8s-clusters-conf.git
-    targetRevision: HEAD
+    targetRevision: master
     path: archive-staging
     directory:
       recurse: true
