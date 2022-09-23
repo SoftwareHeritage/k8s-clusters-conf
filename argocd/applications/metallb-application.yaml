@@ -1,0 +1,23 @@
+# Declare the argocd application application applying the argocd directory
+# content to the argocd cluster
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-metallb-application
+  namespace: argocd
+spec:
+  project: default # Todo define a project to limit the deployment types
+  source:
+    chart: metallb
+    repoURL: https://metallb.github.io/metallb
+    targetRevision: 0.13.5
+    helm:
+      releaseName: metallb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false

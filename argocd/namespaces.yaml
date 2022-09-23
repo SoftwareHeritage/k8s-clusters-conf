@@ -1,0 +1,5 @@
+# Namespace dedicated to the swh elastic environment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb
