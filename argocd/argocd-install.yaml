@@ -1,0 +1,37 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-argocd-install
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/argoproj/argo-cd.git'
+    path: manifests
+    targetRevision: v2.4.11
+
+    directory:
+      recurse: false
+      include: install.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+  syncPolicy:
+    syncOptions:
+    - RespectIgnoreDifferences=true
+
+  ignoreDifferences:
+  # The argocd-ssh-known-hosts-cm ConfigMap is redeclared in our descritor to add the forge keys
+  - kind: ConfigMap
+    name: argocd-ssh-known-hosts-cm
+    jsonPointers:
+      - /data
+      - /metadata/labels
+
+  revisionHistoryLimit: 2
