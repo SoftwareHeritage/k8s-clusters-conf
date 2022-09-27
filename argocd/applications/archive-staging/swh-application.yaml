@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://forge.softwareheritage.org/source/swh-charts.git'
     path: swh
-    targetRevision: staging
+    targetRevision: staging-dev
     helm:
       valueFiles:
         - ../values-swh-application-versions.yaml
