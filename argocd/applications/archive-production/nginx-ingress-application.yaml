@@ -11,6 +11,9 @@ spec:
     targetRevision: 0.14.1
     helm:
       releaseName: ingress-nginx
+      parameters:
+        - name: "controller.setAsDefaultIngress"
+          value: "true"
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-2mwgb
     namespace: ingress-nginx
