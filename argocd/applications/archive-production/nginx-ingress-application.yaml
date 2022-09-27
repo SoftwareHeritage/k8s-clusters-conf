@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default # Todo define a project to limit the deployment types
   source:
-    chart: ingress-nginx
+    chart: nginx-ingress
     repoURL: https://helm.nginx.com/stable
     targetRevision: 0.14.1
     helm:
