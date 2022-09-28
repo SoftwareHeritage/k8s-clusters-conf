@@ -6,13 +6,13 @@ metadata:
 spec:
   project: default # Todo define a project to limit the deployment types
   source:
-    chart: nginx-ingress
-    repoURL: https://helm.nginx.com/stable
-    targetRevision: 0.14.1
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.2.5
     helm:
       releaseName: ingress-nginx
       parameters:
-        - name: "controller.setAsDefaultIngress"
+        - name: "controller.ingressClassResource.default"
           value: "true"
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-2mwgb
