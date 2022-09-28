@@ -13,18 +13,3 @@ kind: L2Advertisement
 metadata:
   name: l2-advertisement
   namespace: metallb
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-lb
-  namespace: ingress-nginx
-  # annotations:
-  #   metallb.universe.tf/address-pool: production-public-ips
-spec:
-  ports:
-  - port: 80
-    targetPort: 8080
-  selector:
-    app: default-http-backend
-  type: LoadBalancer
