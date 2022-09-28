@@ -1,5 +1,9 @@
-# Namespace dedicated to the swh elastic environment
 apiVersion: v1
 kind: Namespace
 metadata:
   name: metallb
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
