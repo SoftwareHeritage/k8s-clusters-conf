@@ -54,7 +54,7 @@ spec:
             - name: REAPER_CASS_CLUSTER_NAME
               value: archive_production
             - name: REAPER_CASS_CONTACT_POINTS
-              value: "[cassandra01.internal.softwareheritage.org]"
+              value: "[cassandra01.internal.softwareheritage.org, cassandra02.internal.softwareheritage.org, cassandra03.internal.softwareheritage.org]"
             - name: REAPER_CASS_KEYSPACE
               value: reaper_db
             - name: REAPER_CASS_AUTH_ENABLED
@@ -117,3 +117,27 @@ spec:
       scheme: http
       interval: 30s
       path: /prometheusMetrics
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reaper-webui-ingress
+  namespace: cassandra
+  annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/app-root: /webui
+spec:
+  rules:
+  - host: reaper.internal.softwareheritage.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: reaper
+            port:
+              name: http
