@@ -14,7 +14,7 @@ spec:
     directory:
       recurse: true
   destination:
-    server: https://192.168.200.113
+    server: https://192.168.200.13
     namespace: default
   syncPolicy:
     automated:
