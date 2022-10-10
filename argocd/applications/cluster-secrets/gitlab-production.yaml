@@ -1,0 +1,23 @@
+# Declare the application applying the gitlab production cluster secrets
+# like the repositories credentials, the cluster definitions, ...
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-production-argocd-secrets
+  namespace: argocd
+spec:
+  project: default # Todo define a project to limit the deployment types
+  source:
+    repoURL: ssh://git@forge.softwareheritage.org/source/k8s-swh-private-data.git
+    targetRevision: HEAD
+    path: gitlab-production
+    directory:
+      recurse: true
+  destination:
+    server: https://192.168.200.4
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
