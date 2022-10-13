@@ -47,6 +47,8 @@ spec:
                   resources:
                     requests:
                       storage: 10Gi
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
   destination:
     server: https://192.168.200.13
     namespace: monitoring
