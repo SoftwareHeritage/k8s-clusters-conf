@@ -4,8 +4,6 @@ kind: Application
 metadata:
   name: gitlab-staging-prometheus
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-options: Replace=true
 spec:
   revisionHistoryLimit: 2
   project: default
@@ -22,9 +20,7 @@ spec:
       # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#from-33x-to-34x
       skipCrds: true
       values: |
-        commonLabels:
-          environment: staging
-          instance: gitlab-staging
+
         alertmanager:
           enabled: true  # Temporary for tests
         grafana:
@@ -52,6 +48,12 @@ spec:
                       storage: 10Gi
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
+            prometheusExternalLabelName: euwest-gitlab-staging
+            externalLabels:
+              environment: staging
+              infrastructure: kubernetes
+              domain: staging
+              cluster: euwest-gitlab-staging
   destination:
     server: https://192.168.200.13
     namespace: monitoring
