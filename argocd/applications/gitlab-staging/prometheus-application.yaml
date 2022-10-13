@@ -22,6 +22,9 @@ spec:
       # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#from-33x-to-34x
       skipCrds: true
       values: |
+        commonLabels:
+          environment: staging
+          instance: gitlab-staging
         alertmanager:
           enabled: true  # Temporary for tests
         grafana:
