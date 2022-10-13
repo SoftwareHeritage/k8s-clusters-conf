@@ -1,0 +1,70 @@
+# Declare the application to manage cert-manager
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-staging-prometheus
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: Replace=true
+spec:
+  revisionHistoryLimit: 2
+  project: default
+  source:
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: v41.3.2
+    helm:
+      releaseName: prometheus
+      # The crds must be manually applied to avoid the following error:
+      # one or more objects failed to apply, reason: CustomResourceDefinition.apiextensions.k8s.io "prometheuses.monitoring.coreos.com" is invalid: metadata.annotations: Too long: must have at most 262144 bytes
+      # it should be possible to fix this error
+      # The commands to run can be found on the operator page:
+      # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#from-33x-to-34x
+      skipCrds: true
+      values: |
+        alertmanager:
+          enabled: true  # Temporary for tests
+        grafana:
+          enabled: true  # Temporary before federation with pergamon
+          service:
+            port: 3000
+            type: LoadBalancer
+            loadBalancerIP: 10.240.0.100
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        prometheus:
+          service:
+            annotations:
+            type: LoadBalancer
+            loadBalancerIP: 10.240.0.100
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          prometheusSpec:
+            storageSpec: # Make the data persistent across the redeployments
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: default
+                  resources:
+                    requests:
+                      storage: 10Gi
+  destination:
+    server: https://192.168.200.13
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: '*'
+      kind: Service
+      name: prometheus-kube-prometheus-kube-controller-manager
+      jqPathExpressions:
+        - .metadata.labels."app.kubernetes.io/instance"
+        - .spec.ports[] | select(.name == "http-metrics")
+    - group: '*'
+      kind: CustomResourceDefinition
+      name: prometheuses.monitoring.coreos.com
+      jqPathExpressions:
+        - .metadata.annotations."controller-gen.kubebuilder.io/version"
