@@ -48,12 +48,31 @@ spec:
                       storage: 10Gi
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
-            prometheusExternalLabelName: euwest-gitlab-staging
+            prometheusExternalLabelName: euwest_gitlab_staging
             externalLabels:
               environment: staging
               infrastructure: kubernetes
               domain: staging
               cluster: euwest-gitlab-staging
+            thanos:
+              # thanos-objstore-config-secret is installed in namespace cattle-monitoring-system
+              # see k8s-private-data:archive-production/thanos-objstore-config-secret.yaml. And
+              # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
+              objectStorageConfig:
+                key: thanos.yaml
+                name: thanos-objstore-config-secret
+          # thanosServiceExternal:
+          #   enable: false
+          #   loadBalancerIP: 10.240.0.100
+          thanosIngress:
+            enabled: true
+            ingressClassName: nginx
+            hosts: ["gitlab-staging-thanos.internal.softwareheritage.org"]
+            loadBalancerIP: 10.240.0.100
+            pathType: Prefix
+            annotations:
+              kubernetes.io/tls-acme: "true"
+              nginx.ingress.kubernetes.io/backend-protocol: GRPC
   destination:
     server: https://192.168.200.13
     namespace: monitoring
