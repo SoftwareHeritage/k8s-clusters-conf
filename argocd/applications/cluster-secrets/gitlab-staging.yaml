@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default # Todo define a project to limit the deployment types
   source:
-    repoURL: ssh://git@gitlab.softwareheritage.org/infra/ci-cd/k8s-swh-private-data.git
+    repoURL: https://gitlab.softwareheritage.org/infra/ci-cd/k8s-swh-private-data.git
     targetRevision: HEAD
     path: gitlab-staging
     directory:
