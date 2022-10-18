@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default # Todo define a project to limit the deployment types
   source:
-    repoURL: https://forge.softwareheritage.org/source/k8s-clusters-conf.git
+    repoURL: https://gitlab.softwareheritage.org/infra/ci-cd/k8s-clusters-conf.git
     targetRevision: HEAD
     path: argocd
     directory:
