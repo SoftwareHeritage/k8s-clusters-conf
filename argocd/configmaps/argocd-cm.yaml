@@ -8,4 +8,5 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
+  users.anonymous.enabled: "true"
   accounts.vsellier: apiKey, login
