@@ -4,7 +4,7 @@ metadata:
   name: argocd-cm
   namespace: argocd
   labels:
-    app.kubernetes.io/instance: argocd-argocd-install
+    app.kubernetes.io/instance: production-argocd-applications
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:

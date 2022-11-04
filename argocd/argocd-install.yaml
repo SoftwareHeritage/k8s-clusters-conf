@@ -35,9 +35,11 @@ spec:
     name: argocd-cm
     jsonPointers:
       - /data
+      - /metadata/labels
   - kind: ConfigMap
     name: argocd-rbac-cm
     jsonPointers:
       - /data
+      - /metadata/labels
 
   revisionHistoryLimit: 2
