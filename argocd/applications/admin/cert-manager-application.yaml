@@ -1,0 +1,33 @@
+# Declare the application to manage cert-manager
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-staging-certmanager
+  namespace: argocd
+spec:
+  revisionHistoryLimit: 2
+  project: default
+  source:
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.10.0
+    helm:
+      releaseName: cert-manager
+      parameters:
+        - name: "installCRDs"
+          value: "true"
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: cert-manager-webhook
+      jqPathExpressions:
+        - .webhooks[].namespaceSelector.matchExpressions[] | select(.key == "control-plane")
