@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gitlab-staging-certmanager
+  name: admin-certmanager
   namespace: argocd
 spec:
   revisionHistoryLimit: 2
