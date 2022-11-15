@@ -1,0 +1,37 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-webhook-gandi
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/3rdparty/cert-manager-webhook-gandi.git'
+    path: deploy/cert-manager-webhook-gandi
+    targetRevision: v0.2.0
+    helm:
+      parameters:
+        - name: "installCRDs"
+          value: "true"
+      values: |
+        image:
+          repository: container-registry.softwareheritage.org/infra/ci-cd/3rdparty/cert-manager-webhook-gandi
+          tag: v0.2.0
+          pullPolicy: IfNotPresent
+          features.apiPriorityAndFairness: true
+      releaseName: cert-manager-webhook-gandi
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: cert-manager.io
+      kind: Certificate
+      jqPathExpressions:
+        - .spec.duration
