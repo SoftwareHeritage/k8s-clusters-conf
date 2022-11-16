@@ -12,10 +12,15 @@ spec:
     repoURL: https://charts.jetstack.io
     targetRevision: v1.9.1
     helm:
-      releaseName: cert-manager
+      releaseName: gitlab-production-certmanager # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
       parameters:
         - name: "installCRDs"
           value: "true"
+      values: |
+          prometheus:
+            enabled: true
+            servicemonitor:
+              enabled: true
   destination:
     server: https://192.168.200.4
     namespace: cert-manager

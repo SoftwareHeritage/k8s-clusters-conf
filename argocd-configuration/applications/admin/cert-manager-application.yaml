@@ -12,7 +12,7 @@ spec:
     repoURL: https://charts.jetstack.io
     targetRevision: v1.10.0
     helm:
-      releaseName: cert-manager
+      releaseName: admin-certmanager # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
       parameters:
         - name: "installCRDs"
           value: "true"
@@ -22,6 +22,10 @@ spec:
           extraArgs:
             - --dns01-recursive-nameservers=ns-246-a.gandi.net:53,ns-239-b.gandi.net:53,ns-228-c.gandi.net:53
             - --dns01-recursive-nameservers-only
+          prometheus:
+            enabled: true
+            servicemonitor:
+              enabled: true
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
     namespace: cert-manager
