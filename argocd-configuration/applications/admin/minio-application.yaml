@@ -1,0 +1,233 @@
+# Needed to internally expose thanos
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: admin-minio-application
+  namespace: argocd
+spec:
+  project: default # Todo define a project to limit the deployment types
+  source:
+    chart: minio
+    repoURL: https://charts.min.io/
+    targetRevision: 5.0.1
+    helm:
+      releaseName: admin-minio-application
+      # Complete values.yaml example available at:
+      # https://github.com/minio/minio/blob/master/helm/minio/values.yaml
+      values: |
+        clusterDomain: admin.swh.network
+        mode: standalone
+        minioAPIPort: "9000"
+        minioConsolePort: "9001"
+
+        ## Use existing Secret that store following variables:
+        ##
+        ## | Chart var             | .data.<key> in Secret    |
+        ## |:----------------------|:-------------------------|
+        ## | rootUser              | rootUser                 |
+        ## | rootPassword          | rootPassword             |
+        ##
+        ## All mentioned variables will be ignored in values file.
+        ## .data.rootUser and .data.rootPassword are mandatory,
+        ## others depend on enabled status of corresponding sections.
+        existingSecret: minio-secrets
+
+        # Number of drives attached to a node
+        drivesPerNode: 1
+        # Number of MinIO containers running
+        replicas: 1
+        # Number of expanded MinIO clusters
+        pools: 1
+
+        ## Enable persistence using Persistent Volume Claims
+        ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+        ##
+        persistence:
+          enabled: true
+          existingClaim: "minio-storage"
+          annotations: {}
+          storageClass: "nfs-volume"
+          VolumeName: ""
+          accessMode: ReadWriteOnce
+          size: 100Gi
+          subPath: ""
+
+        service:
+          type: ClusterIP
+          clusterIP: ~
+          port: "9000"
+          nodePort: 32000
+
+        ingress:
+          enabled: true
+          hosts:
+            - minio.internal.admin.swh.network
+          tls:
+          - hosts:
+            - minio.internal.admin.swh.network
+            secretName: minio-crt
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-production
+            kubernetes.io/ingress.class: nginx
+            kubernetes.io/tls-acme: "true"
+
+        consoleService:
+          type: ClusterIP
+          clusterIP: ~
+          port: "9001"
+          nodePort: 32001
+
+        consoleIngress:
+          enabled: true
+          hosts:
+            - minio-console.internal.admin.swh.network
+          tls:
+          - hosts:
+            - minio-console.internal.admin.swh.network
+            secretName: minio-crt
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-production
+            kubernetes.io/ingress.class: nginx
+            kubernetes.io/tls-acme: "true"
+
+        resources:
+          requests:
+            memory: 1Gi # TODO: tune according the real behavior (default 16Gi)
+
+        ## List of policies to be created after minio install
+        ##
+        ## In addition to default policies [readonly|readwrite|writeonly|consoleAdmin|diagnostics]
+        ## you can define additional policies with custom supported actions and resources
+        policies:
+        - name: backupgitlabpolicy
+          statements:
+            - resources:
+                - 'arn:aws:s3:::backup-gitlab*/*'
+              actions:
+                - "s3:AbortMultipartUpload"
+                - "s3:GetObject"
+                - "s3:DeleteObject"
+                - "s3:PutObject"
+                - "s3:ListMultipartUploadParts"
+            - resources:
+                - 'arn:aws:s3:::backup-gitlab*'
+              actions:
+                - "s3:CreateBucket"
+                - "s3:DeleteBucket"
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+                - "s3:ListBucketMultipartUploads"
+        - name: backuprancherpolicy
+          statements:
+            - resources:
+                - 'arn:aws:s3:::backup-rancher*/*'
+              actions:
+                - "s3:AbortMultipartUpload"
+                - "s3:GetObject"
+                - "s3:DeleteObject"
+                - "s3:PutObject"
+                - "s3:ListMultipartUploadParts"
+            - resources:
+                - 'arn:aws:s3:::backup-rancher*'
+              actions:
+                - "s3:CreateBucket"
+                - "s3:DeleteBucket"
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+                - "s3:ListBucketMultipartUploads"
+        ## writeexamplepolicy policy grants creation or deletion of buckets with name
+        ## starting with example. In addition, grants objects write permissions on buckets starting with
+        ## example.
+        # - name: writeexamplepolicy
+        #   statements:
+        #     - resources:
+        #         - 'arn:aws:s3:::example*/*'
+        #       actions:
+        #         - "s3:AbortMultipartUpload"
+        #         - "s3:GetObject"
+        #         - "s3:DeleteObject"
+        #         - "s3:PutObject"
+        #         - "s3:ListMultipartUploadParts"
+        #     - resources:
+        #         - 'arn:aws:s3:::example*'
+        #       actions:
+        #         - "s3:CreateBucket"
+        #         - "s3:DeleteBucket"
+        #         - "s3:GetBucketLocation"
+        #         - "s3:ListBucket"
+        #         - "s3:ListBucketMultipartUploads"
+        ## readonlyexamplepolicy policy grants access to buckets with name starting with example.
+        ## In addition, grants objects read permissions on buckets starting with example.
+        # - name: readonlyexamplepolicy
+        #   statements:
+        #     - resources:
+        #         - 'arn:aws:s3:::example*/*'
+        #       actions:
+        #         - "s3:GetObject"
+        #     - resources:
+        #         - 'arn:aws:s3:::example*'
+        #       actions:
+        #         - "s3:GetBucketLocation"
+        #         - "s3:ListBucket"
+        #         - "s3:ListBucketMultipartUploads"
+        ## conditionsexample policy creates all access to example bucket with aws:username="johndoe" and source ip range 10.0.0.0/8 and 192.168.0.0/24 only
+        # - name: conditionsexample
+        #   statements:
+        #     - resources:
+        #       - 'arn:aws:s3:::example/*'
+        #       actions:
+        #       - 's3:*'
+        #       conditions:
+        #         - StringEquals: '"aws:username": "johndoe"'
+        #         - IpAddress: |
+        #             "aws:SourceIp": [
+        #               "10.0.0.0/8",
+        #               "192.168.0.0/24"
+        #             ]
+        #
+
+        ## List of users to be created after minio install
+        ##
+        users:
+          - accessKey: gitlab
+            existingSecret: minio-secrets
+            existingSecretKey: gitlab-secretKey
+            policy: backupgitlabpolicy
+          - accessKey: rancher
+            existingSecret: minio-secrets
+            existingSecretKey: rancher-secretKey
+            policy: backuprancherpolicy
+          - accessKey: console
+            existingSecret: minio-secrets
+            existingSecretKey: console-secretKey
+            policy: consoleAdmin
+
+        ## List of buckets to be created after minio install
+        ##
+        buckets:
+          - name: backup-gitlab
+            versioning: false
+            purge: false
+            policy: none
+          - name: backup-rancher
+            versioning: false
+            purge: false
+            policy: none
+
+        metrics:
+          serviceMonitor:
+            enabled: true
+            includeNode: true
+            public: true
+            additionalLabels: {}
+            relabelConfigs: {}
+            relabelConfigsCluster: {}
+
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+    namespace: minio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
