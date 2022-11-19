@@ -20,6 +20,8 @@ spec:
           tag: v0.2.0
           pullPolicy: IfNotPresent
           features.apiPriorityAndFairness: true
+        certManager:
+          serviceAccountName: admin-certmanager-cert-manager
       releaseName: cert-manager-webhook-gandi
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
