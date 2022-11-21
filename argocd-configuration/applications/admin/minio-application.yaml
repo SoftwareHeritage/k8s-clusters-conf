@@ -51,6 +51,10 @@ spec:
           accessMode: ReadWriteOnce
           size: 100Gi
           subPath: ""
+        securityContext:
+          enabled: true
+          fsGroup: 42000
+          runAsGroup: 42000
 
         service:
           type: ClusterIP
