@@ -231,6 +231,10 @@ spec:
             versioning: false
             purge: false
             policy: none
+          - name: backup-gitlab-staging
+            versioning: false
+            purge: false
+            policy: none
           - name: backup-rancher
             versioning: false
             purge: false
