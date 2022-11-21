@@ -84,7 +84,7 @@ spec:
           tls:
           - hosts:
             - minio-console.internal.admin.swh.network
-            secretName: minio-crt
+            secretName: minio-console-crt
           annotations:
             cert-manager.io/cluster-issuer: letsencrypt-production
             kubernetes.io/ingress.class: nginx
