@@ -88,6 +88,7 @@ spec:
             cert-manager.io/cluster-issuer: letsencrypt-production
             kubernetes.io/ingress.class: nginx
             kubernetes.io/tls-acme: "true"
+            nginx.ingress.kubernetes.io/proxy-body-size: "4096m"
         resources:
           requests:
             memory: 1Gi # TODO: tune according the real behavior (default 16Gi)
