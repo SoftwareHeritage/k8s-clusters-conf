@@ -1,0 +1,15 @@
+apiVersion: resources.cattle.io/v1
+kind: Backup
+metadata:
+  name: recurring-to-minio
+spec:
+  resourceSetName: rancher-resource-set
+  retentionCount: 15
+  schedule: 0 22,10 * * *
+  storageLocation:
+    s3:
+      credentialSecretName: rancher-backup-credentials
+      credentialSecretNamespace: cattle-system
+      endpoint: minio.admin.swh.network/
+      bucketName: backup-rancher
+      folder: /rancher
