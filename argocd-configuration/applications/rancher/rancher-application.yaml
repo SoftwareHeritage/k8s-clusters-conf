@@ -1,0 +1,23 @@
+# Declare the application to manage keda
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rancher-application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: rancher
+    repoURL: "https://releases.rancher.com/server-charts/latest"
+    targetRevision: 2.6.4
+    helm:
+      releaseName: rancher
+      values: |
+        hostname: rancher.euwest.azure.internal.softwareheritage.org
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
+    namespace: cattle-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
