@@ -11,3 +11,4 @@ data:
   policy.default: role:readonly
   policy.csv: |
     g, vsellier, role:admin
+    g, olasd, role:admin

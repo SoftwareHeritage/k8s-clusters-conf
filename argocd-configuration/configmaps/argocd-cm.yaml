@@ -10,3 +10,4 @@ metadata:
 data:
   users.anonymous.enabled: "true"
   accounts.vsellier: apiKey, login
+  accounts.olasd: apiKey, login
