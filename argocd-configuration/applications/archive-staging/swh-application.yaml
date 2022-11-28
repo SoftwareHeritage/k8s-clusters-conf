@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
     path: swh
-    targetRevision: staging-dev
+    targetRevision: staging
     helm:
       valueFiles:
         - ../values-swh-application-versions.yaml
