@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-staging-local-path-provisioner
+  name: archive-production-local-path-provisioner
   namespace: argocd
 spec:
   project: default
