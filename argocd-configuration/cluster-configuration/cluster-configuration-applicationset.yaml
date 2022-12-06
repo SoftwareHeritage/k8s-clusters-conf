@@ -9,6 +9,7 @@ spec:
       elements:
       - cluster: admin
       - cluster: gitlab-staging
+      - cluster: rancher
   template:
     metadata:
       name: '{{cluster}}-cluster-configuration'
