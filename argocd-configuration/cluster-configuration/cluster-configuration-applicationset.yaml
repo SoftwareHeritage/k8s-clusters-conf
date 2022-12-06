@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-configuraotion
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: admin
+  template:
+    metadata:
+      name: '{{cluster}}-cluster-configuration'
+      namespace: argocd
+    spec:
+      revisionHistoryLimit: 2
+      project: default
+      source:
+        repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
+        path: cluster-configuration
+        targetRevision: mr/cluster_configuration
+        helm:
+          valueFiles:
+            - values/{{ cluster }}.yaml
+          releaseName: {{ cluster }} -cluster-configuration  # TODO: Change to production when stabilized
+      destination:
+        # always apply the configuration on the argocd cluster
+        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
