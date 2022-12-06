@@ -1,0 +1,24 @@
+# Declare the application to manage cert-manager
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: admin-cluster-configuration
+  namespace: argocd
+spec:
+  revisionHistoryLimit: 2
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
+    path: cluster-configuration
+    targetRevision: mr/cluster_configuration
+    helm:
+      valueFiles:
+        - values/admin.yaml
+      releaseName: admin-cluster-configuration  # TODO: Change to production when stabilized
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
