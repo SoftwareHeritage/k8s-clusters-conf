@@ -8,6 +8,7 @@ spec:
   - list:
       elements:
       - cluster: admin
+      - cluster: gitlab-staging
   template:
     metadata:
       name: '{{cluster}}-cluster-configuration'
