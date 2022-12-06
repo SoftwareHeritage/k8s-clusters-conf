@@ -21,8 +21,8 @@ spec:
         targetRevision: mr/cluster_configuration
         helm:
           valueFiles:
-            - values/{{ cluster }}.yaml
-          releaseName: {{ cluster }} -cluster-configuration  # TODO: Change to production when stabilized
+            - 'values/{{cluster}}.yaml'
+          releaseName: '{{cluster}}-cluster-configuration'  # TODO: Change to production when stabilized
       destination:
         # always apply the configuration on the argocd cluster
         server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
