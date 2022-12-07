@@ -18,6 +18,6 @@ spec:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-cx2bq
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: false
+      selfHeal: false
       allowEmpty: false
