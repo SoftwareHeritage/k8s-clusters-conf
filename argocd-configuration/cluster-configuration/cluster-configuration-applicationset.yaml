@@ -11,6 +11,7 @@ spec:
       - cluster: archive-staging
       - cluster: archive-production
       - cluster: gitlab-staging
+      - cluster: gitlab-production
       - cluster: rancher
   template:
     metadata:
