@@ -18,5 +18,6 @@ spec:
     namespace: cattle-system
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      # Be careful with this app
+      prune: false
+      selfHeal: false
