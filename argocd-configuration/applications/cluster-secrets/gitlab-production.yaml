@@ -18,6 +18,7 @@ spec:
     namespace: default
   syncPolicy:
     automated:
-      prune: true
+      # Be careful with this sensitive app
+      prune: false
       selfHeal: true
       allowEmpty: false
