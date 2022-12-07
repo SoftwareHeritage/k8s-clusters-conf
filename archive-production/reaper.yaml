@@ -49,6 +49,8 @@ spec:
           env:
             - name: REAPER_METRICS_ENABLED
               value: "true"
+            - name: REAPER_MAX_PARALLEL_REPAIRS
+              value: "4"  # Default 2
             - name: REAPER_STORAGE_TYPE
               value: cassandra
             - name: REAPER_CASS_CLUSTER_NAME
