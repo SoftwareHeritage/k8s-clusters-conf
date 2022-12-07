@@ -20,5 +20,5 @@ spec:
     automated:
       # Be careful with this sensitive app
       prune: false
-      selfHeal: true
+      selfHeal: false
       allowEmpty: false
