@@ -9,6 +9,7 @@ spec:
       elements:
       - cluster: admin
       - cluster: archive-staging
+      - cluster: archive-production
       - cluster: gitlab-staging
       - cluster: rancher
   template:
