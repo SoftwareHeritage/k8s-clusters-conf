@@ -23,7 +23,7 @@ spec:
       source:
         repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
         path: cluster-configuration
-        targetRevision: mr/cluster_configuration
+        targetRevision: mr/ingress-template
         helm:
           valueFiles:
             - 'values/{{cluster}}.yaml'
