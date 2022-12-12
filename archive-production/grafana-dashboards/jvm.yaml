@@ -285,7 +285,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "jvm_classes_loaded{instance=~\"$instance\"}",
+              "expr": "jvm_classes_currently_loaded{instance=~\"$instance\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 5,
