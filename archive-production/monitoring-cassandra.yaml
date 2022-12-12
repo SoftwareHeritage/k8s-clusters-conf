@@ -53,10 +53,11 @@ spec:
     - port: jmx-exporter
       interval: 30s
       honorLabels: true
-      metricRelabelings:
+      relabelings:
+        # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
         - sourceLabels:
-            - instance
-          targetLabel: instance
+            - __address__
+          targetLabel: __address__
           regex: "192.168.100.18(\\d)(.*)"
           replacement: "cassandra0$1.internal.softwareheritage.org$2"
           action: replace
