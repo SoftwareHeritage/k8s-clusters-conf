@@ -53,3 +53,10 @@ spec:
     - port: jmx-exporter
       interval: 30s
       honorLabels: true
+      metricRelabelings:
+        - sourceLabels:
+            - instance
+          targetLabel: instance
+          regex: "192.168.100.18(\\d)(.*)"
+          replacement: "cassandra0$1.internal.softwareheritage.org$2"
+          action: replace
