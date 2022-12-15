@@ -28,8 +28,8 @@ spec:
     namespace: cert-manager
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: false
+      selfHeal: false
     syncOptions:
     - RespectIgnoreDifferences=true
   ignoreDifferences:
