@@ -32,11 +32,7 @@ spec:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
         prometheus:
           service:
-            annotations:
-            type: LoadBalancer
-            loadBalancerIP: 10.224.0.100
-            annotations:
-              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+            enabled: false
           prometheusSpec:
             storageSpec: # Make the data persistent across the redeployments
               volumeClaimTemplate:
@@ -62,14 +58,24 @@ spec:
                 key: thanos.yaml
                 name: thanos-objstore-config-secret
           thanosIngress:
-            enabled: true
-            ingressClassName: nginx
-            hosts: ["gitlab-thanos.internal.softwareheritage.org"]
-            loadBalancerIP: 10.224.0.100
-            pathType: Prefix
             annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production-gandi
+              kubernetes.io/ingress.class: nginx
               kubernetes.io/tls-acme: "true"
               nginx.ingress.kubernetes.io/backend-protocol: GRPC
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+              # for kubernetes 1.24+ on azure
+              service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+            enabled: true
+            hosts:
+              - "k8s-gitlab-production-thanos.internal.staging.swh.network"
+            ingressClassName: nginx
+            loadBalancerIP: 10.240.0.100
+            pathType: Prefix
+            tls:
+            - hosts:
+              - k8s-gitlab-production-thanos.internal.staging.swh.network
+              secretName: thanos-crt
   destination:
     server: https://192.168.200.4
     namespace: monitoring
