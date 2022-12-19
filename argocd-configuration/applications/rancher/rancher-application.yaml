@@ -13,14 +13,12 @@ spec:
       releaseName: rancher
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
-        # ingress:
-        #   extraAnnotations:
-        #     cert-manager.io/cluster-issuer: letsencrypt-production-gandi
-        #     kubernetes.io/tls-acme: "true"
-        #   tls:
-        #   - hosts:
-        #     - rancher.azure.internal.softwareheritage.org
-        #     secretName: tls-rancher-ingress
+        ingress:
+          extraAnnotations:
+            cert-manager.io/cluster-issuer: letsencrypt-production-gandi
+            kubernetes.io/tls-acme: "true"
+          tls:
+            source: secret
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
     namespace: cattle-system
