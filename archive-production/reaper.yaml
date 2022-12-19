@@ -143,3 +143,7 @@ spec:
             name: reaper
             port:
               name: http
+  tls:
+  - hosts:
+    - reaper.internal.softwareheritage.org
+    secretName: reaper-crt
