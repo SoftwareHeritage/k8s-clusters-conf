@@ -68,13 +68,16 @@ spec:
               service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
             enabled: true
             hosts:
-              - "k8s-gitlab-production-thanos.internal.softwareheritage.org"
+              - "k8s-gitlab-production-thanos.euwest.azure.internal.softwareheritage.org"
             ingressClassName: nginx
             loadBalancerIP: 10.240.0.100
             pathType: Prefix
             tls:
             - hosts:
-              - k8s-gitlab-production-thanos.internal.softwareheritage.org
+              # This is needed because the real hostname is too long for the CN field allowed by le
+              # (Error: "NewOrder request did not include a SAN short enough to fit in CN")
+              - kgpt.euwest.azure.internal.softwareheritage.org
+              - k8s-gitlab-production-thanos.euwest.azure.internal.softwareheritage.org
               secretName: thanos-crt
   destination:
     server: https://192.168.200.4
