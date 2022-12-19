@@ -13,6 +13,14 @@ spec:
       releaseName: rancher
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
+        # ingress:
+        #   extraAnnotations:
+        #     cert-manager.io/cluster-issuer: letsencrypt-production-gandi
+        #     kubernetes.io/tls-acme: "true"
+        #   tls:
+        #   - hosts:
+        #     - rancher.azure.internal.softwareheritage.org
+        #     secretName: tls-rancher-ingress
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
     namespace: cattle-system
@@ -20,4 +28,9 @@ spec:
     automated:
       # Be careful with this app
       prune: false
-      selfHeal: false
+  ignoreDifferences:
+    - group: '*'
+      kind: ServiceMonitor
+      name: rancher-prometheus-kube-pr-kubelet
+      jqPathExpressions:
+        - .spec.endpoints[].relabelings
