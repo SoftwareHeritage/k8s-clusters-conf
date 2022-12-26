@@ -30,6 +30,16 @@ spec:
             loadBalancerIP: 10.224.0.100
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        prometheus-node-exporter:
+          prometheus:
+            monitor:
+              relabelings:
+              - sourceLabels:
+                  - __meta_kubernetes_pod_node_name
+                regex: ^(.*)$
+                replacement: $1
+                targetLabel: instance
+                action: replace
         prometheus:
           service:
             enabled: false
