@@ -10,6 +10,7 @@ spec:
       - cluster: admin
       - cluster: archive-staging
       - cluster: archive-production
+      - cluster: archive-production-rke2
       - cluster: gitlab-staging
       - cluster: gitlab-production
       - cluster: rancher
