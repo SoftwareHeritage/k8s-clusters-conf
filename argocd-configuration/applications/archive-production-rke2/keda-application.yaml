@@ -1,0 +1,34 @@
+# Declare the application to manage keda
+# from https://github.com/kedacore/charts
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke2-keda
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: keda
+    repoURL: "https://kedacore.github.io/charts"
+    targetRevision: 2.9.1
+    helm:
+      releaseName: keda
+      values: |
+        metricsServer:
+          enabled: true
+        prometheus:
+          metricsServer:
+            enabled: true
+            podMonitor:
+              enabled: true
+          operator:
+            enabled: true
+            podMonitor:
+              enabled: true
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: keda
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
