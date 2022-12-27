@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-production-cassandra-replay
+  name: archive-production--rke2-cassandra-replay
   namespace: argocd
 spec:
   project: default
@@ -17,7 +17,7 @@ spec:
         - values/cassandra-replay.yaml
       releaseName: swh
   destination:
-    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-2mwgb
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
     namespace: cassandra-replay
   syncPolicy:
     automated:
