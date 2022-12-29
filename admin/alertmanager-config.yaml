@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: irc-relay-config
+  namespace: cattle-monitoring-system
+spec:
+  route:
+    groupBy: ['job']
+    groupWait: 30s
+    groupInterval: 120s
+    repeatInterval: 12h
+    receiver: ircrelay
+    continue: true
+  receivers:
+  - name: ircrelay
+    webhookConfigs:
+    - sendResolved: true
+      url: "http://alertmanager-irc-relay:8000/swh-sysadm"
