@@ -82,6 +82,7 @@ spec:
       for: 1h
       labels:
         severity: critical
+        namespace: cattle-monitoring-system
     - alert: ArgoCDApplicationOutOfSyncWarning
       annotations:
         description: The application {{ $labels.name }} is out of sync since more than 1h.
@@ -91,6 +92,7 @@ spec:
       for: 1h
       labels:
         severity: warning
+        namespace: cattle-monitoring-system
     - alert: ArgoCDApplicationOutOfSyncCritical
       annotations:
         description: The application {{ $labels.name }} is out of sync since more than 1d.
@@ -100,6 +102,7 @@ spec:
       for: 1d
       labels:
         severity: critical
+        namespace: cattle-monitoring-system
     - alert: ArgoCDClusterConnectionLost
       annotations:
         description: The connection to the cluster {{ $labels.server }} is lost since more the 1h.
@@ -109,6 +112,7 @@ spec:
       for: 1h
       labels:
         severity: critical
+        namespace: cattle-monitoring-system
     - alert: ArgoCDInternalRedisError
       annotations:
         description: Argocd internal redis error rate detected
@@ -118,3 +122,4 @@ spec:
       for: 1h
       labels:
         severity: warning
+        namespace: cattle-monitoring-system

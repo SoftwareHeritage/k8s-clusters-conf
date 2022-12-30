@@ -6,14 +6,15 @@ metadata:
   namespace: cattle-monitoring-system
 spec:
   route:
-    groupBy: ['job']
-    groupWait: 30s
+    groupBy: ["cluster"
+    ]
+    groupWait: 31s
     groupInterval: 120s
     repeatInterval: 12h
     receiver: ircrelay
     continue: true
   receivers:
-  - name: ircrelay
-    webhookConfigs:
-    - sendResolved: true
-      url: "http://alertmanager-irc-relay:8000/swh-sysadm"
+    - name: ircrelay
+      webhookConfigs:
+        - sendResolved: true
+          url: "http://alertmanager-irc-relay:8000/swh-sysadm"
