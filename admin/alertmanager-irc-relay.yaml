@@ -34,7 +34,7 @@ data:
     msg_template: "Alert {{ .Labels.severity | ToUpper }} {{ .Status }} - {{ .Labels.environment }}/{{ .Labels.cluster }} - {{ .Labels.alertname }} - {{ .Annotations.description }}"
 
     # Set the internal buffer size for alerts received but not yet sent to IRC.
-    alert_buffer_size: 100 # small buffer to avoid keeping alerts in buffer
+    alert_buffer_size: 2048
 ---
 apiVersion: v1
 kind: Service
