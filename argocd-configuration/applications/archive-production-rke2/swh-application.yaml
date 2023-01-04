@@ -1,0 +1,25 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke-swh
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
+    path: swh
+    targetRevision: production
+    helm:
+      valueFiles:
+        - ../values-swh-application-versions.yaml
+        - values/default.yaml
+        - values/production.yaml
+      releaseName: swh
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: swh
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
