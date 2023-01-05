@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-production--rke2-cassandra-replay
+  name: archive-production-rke2-cassandra-replay
   namespace: argocd
 spec:
   project: default
