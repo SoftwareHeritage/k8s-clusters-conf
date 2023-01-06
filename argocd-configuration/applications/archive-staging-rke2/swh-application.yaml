@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-staging-swh
+  name: archive-staging-rke2-swh
   namespace: argocd
 spec:
   project: default

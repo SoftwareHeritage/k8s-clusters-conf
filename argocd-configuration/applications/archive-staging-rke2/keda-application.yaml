@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-staging-keda
+  name: archive-staging-rke2-keda
   namespace: argocd
 spec:
   project: default
