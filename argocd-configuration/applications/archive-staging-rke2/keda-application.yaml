@@ -1,0 +1,21 @@
+# Declare the application to manage keda
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-staging-keda
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: keda
+    repoURL: "https://kedacore.github.io/charts"
+    targetRevision: 2.8.1
+    helm:
+      releaseName: keda
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: keda
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
