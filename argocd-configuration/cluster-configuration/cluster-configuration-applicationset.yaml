@@ -21,7 +21,7 @@ spec:
       revisionHistoryLimit: 2
       project: default
       source:
-        repoURL: 'https://gitlab.softwareheritage.org/infra/ci-cd/swh-charts.git'
+        repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
         path: cluster-configuration
         targetRevision: production
         helm:
