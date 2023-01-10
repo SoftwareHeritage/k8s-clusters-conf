@@ -1,4 +1,4 @@
-# from https://github.com/rancher/rancher/tree/release/v2.6.9/chart
+# from https://github.com/rancher/rancher/tree/v2.6.9/chart
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -15,6 +15,11 @@ spec:
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
         replicas: 2
+        resources:
+          requests:
+            memory: 1Gi
+          limits:
+            memory: 1536Mi
         ingress:
           extraAnnotations:
             cert-manager.io/cluster-issuer: letsencrypt-production-gandi
