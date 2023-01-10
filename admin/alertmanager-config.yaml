@@ -6,8 +6,7 @@ metadata:
   namespace: cattle-monitoring-system
 spec:
   route:
-    groupBy: ["cluster"
-    ]
+    groupBy: ['...']
     groupWait: 31s
     groupInterval: 120s
     repeatInterval: 12h
