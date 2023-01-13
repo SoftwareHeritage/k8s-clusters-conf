@@ -41,7 +41,7 @@ spec:
     staticConfig:
       static:
         - "https://archive.softwareheritage.org"
-        - "https://hedgedoc.softwareheritage.org"
+        # - "https://hedgedoc.softwareheritage.org"
       labels:
         level: critical
         domain: production
