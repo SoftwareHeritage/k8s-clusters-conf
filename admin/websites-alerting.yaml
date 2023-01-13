@@ -1,0 +1,44 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: website
+  name: websites-critical-alertmanager.rules
+  namespace: cattle-monitoring-system
+spec:
+  groups:
+  - name: critical-website.rules
+    rules:
+    - alert: WebsiteNotHealthy
+      annotations:
+        description: The {{ $labels.domain }} website {{ $labels.instance }} is not healthy since more than 5m.
+        summary: A blackbox probe is failing since more then 5mn
+      expr: |-
+        max_over_time(probe_success{level="critical"}[1m]) == 0
+      for: 5m
+      labels:
+        severity: critical
+        namespace: cattle-monitoring-system
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: website
+  name: websites-warning-alertmanager.rules
+  namespace: cattle-monitoring-system
+spec:
+  groups:
+  - name: warning-website.rules
+    rules:
+    - alert: WebsiteNotHealthy
+      annotations:
+        description: The {{ $labels.domain }} website {{ $labels.instance }} is not healthy since more than 5m.
+        summary: A blackbox probe is failing since more then 5mn
+      expr: |-
+        max_over_time(probe_success{level='warning'}[1m]) == 0
+      for: 5m
+      labels:
+        severity: warning
+        namespace: cattle-monitoring-system
