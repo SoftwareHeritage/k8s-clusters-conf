@@ -2,6 +2,29 @@
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
+  name: production-wordpress-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: production-websites-monitoring
+  module: swh_www
+  prober:
+    url: admin-blackbox-exporter-application-prometheus-blackbox-exporte:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://www.softwareheritage.org"
+      labels:
+        level: critical
+        domain: production
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
   name: production-websites-monitoring
   namespace: cattle-monitoring-system
   labels:
@@ -17,7 +40,6 @@ spec:
   targets:
     staticConfig:
       static:
-        - "https://www.softwareheritage.org"
         - "https://archive.softwareheritage.org"
         - "https://hedgedoc.softwareheritage.org"
       labels:

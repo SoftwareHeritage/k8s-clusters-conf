@@ -26,6 +26,50 @@ kind: PrometheusRule
 metadata:
   labels:
     app: website
+  name: websites-body-critical-alertmanager.rules
+  namespace: cattle-monitoring-system
+spec:
+  groups:
+  - name: critical-website-body.rules
+    rules:
+    - alert: WebsiteIncorrectBody
+      annotations:
+        description: The {{ $labels.domain }} website {{ $labels.instance }} has an incorrect body since more than 5m.
+        summary: A blackbox probe regex check is failing since more then 5mn
+      expr: |-
+        max_over_time(probe_failed_due_to_regex{level="critical"}[1m]) == 1
+      for: 5m
+      labels:
+        severity: critical
+        namespace: cattle-monitoring-system
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: website
+  name: websites-body-warning-alertmanager.rules
+  namespace: cattle-monitoring-system
+spec:
+  groups:
+  - name: warning-website-body.rules
+    rules:
+    - alert: WebsiteIncorrectBody
+      annotations:
+        description: The {{ $labels.domain }} website {{ $labels.instance }} has an incorrect body since more than 5m.
+        summary: A blackbox probe regex check is failing since more then 5mn
+      expr: |-
+        max_over_time(probe_failed_due_to_regex{level="critical"}[1m]) == 1
+      for: 5m
+      labels:
+        severity: warning
+        namespace: cattle-monitoring-system
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: website
   name: websites-warning-alertmanager.rules
   namespace: cattle-monitoring-system
 spec:
