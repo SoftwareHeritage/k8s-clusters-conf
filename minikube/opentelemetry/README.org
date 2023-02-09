@@ -1,0 +1,74 @@
+#+title: Minikube tryout opentelemetry -> elasticsearch
+
+* cert-manager
+
+Install cert-manager in the cluster first:
+
+#+begin_src sh
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+#+end_src
+source: https://cert-manager.io/docs/installation/
+
+* opentelemetry-operator
+
+Then install opentelemetry operator:
+
+#+begin_src sh
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+#+end_src
+source: https://github.com/open-telemetry/opentelemetry-operator
+
+* Install elasticsearch
+
+#+begin_src sh
+curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
+mv values.yaml elasticsearch-values.yaml
+helm install elasticsearch elastic/elasticsearch -f ./elasticsearch-values.yaml
+#+end_src
+source: https://phoenixnap.com/kb/elasticsearch-helm-chart
+
+output:
+#+begin_src sh
+helm install elasticsearch elastic/elasticsearch -f ./elasticsearch-values.yaml
+NAME: elasticsearch
+LAST DEPLOYED: Thu Feb  9 15:54:53 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Watch all cluster members come up.
+  $ kubectl get pods --namespace=default -l app=elasticsearch-master -w
+2. Retrieve elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Test cluster health using Helm test.
+  $ helm --namespace=default test elasticsearch
+#+end_src
+
+* Install kibana
+
+To ease elasticsearch introspection, it's easier to check data from the webui
+
+#+begin_src sh
+helm install kibana elastic/kibana
+NAME: kibana
+LAST DEPLOYED: Thu Feb  9 16:10:32 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Watch all containers come up.
+  $ kubectl get pods --namespace=default -l release=kibana -w
+2. Retrieve the elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Retrieve the kibana service account token.
+  $ kubectl get secrets --namespace=default kibana-kibana-es-token -ojsonpath='{.data.token}' | base64 -d
+#+end_src
+
+* Connect all together
+
+Then apply the local CRD:
+
+#+begin_src sh
+kubectl apply -f opentelemetry-collector.yaml
+#+end_src
