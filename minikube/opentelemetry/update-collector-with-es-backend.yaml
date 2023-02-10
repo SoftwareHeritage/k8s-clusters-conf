@@ -1,11 +1,11 @@
-components:
-  # frontendProxy:
-  #   serviceType: LoadBalancer
-
-  frontend:
-    env:
-      - name: PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-        value: "http://otel-demo-collector.mydomain.com:4318/v1/traces"
+# components:
+#   frontendProxy:
+#     serviceType: LoadBalancer
+#
+#   frontend:
+#     env:
+#       - name: PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+#         value: "http://otel-demo-collector.mydomain.com:4318/v1/traces"
 
 opentelemetry-collector:
   config:
@@ -15,19 +15,19 @@ opentelemetry-collector:
           grpc:
           http:
 
-    processors:
-      memory_limiter:
-        check_interval: 1s
-        limit_percentage: 75
-        spike_limit_percentage: 15
-      batch:
-        send_batch_size: 10000
-        timeout: 10s
+    # processors:
+    #   memory_limiter:
+    #     check_interval: 1s
+    #     limit_percentage: 75
+    #     spike_limit_percentage: 15
+    #   batch:
+    #     send_batch_size: 10000
+    #     timeout: 10s
 
     exporters:
       logging:
         loglevel: info
-      elasticsearch/logs:
+      elasticsearch/trace:
         endpoints:
           - https://elasticsearch-master:9200
         user: elastic
@@ -35,12 +35,25 @@ opentelemetry-collector:
         api_key:
         tls:
           insecure_skip_verify: true
+      elasticsearch/log:
+        # can be replaced by using the env variable ELASTICSEARCH_URL
+        endpoints:
+          - https://elasticsearch-master:9200
+        user: elastic
+        password: foobar
+        api_key:
+        tls:
+          insecure_skip_verify: true
+        logs_index: logs-generic-default
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
+          exporters: [elasticsearch/trace]
+        logs:
+          receivers: [otlp]
+          processors: []
           exporters:
-            - logging
-            - elasticsearch/logs
+            - elasticsearch/log
