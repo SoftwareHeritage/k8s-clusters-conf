@@ -1,12 +1,15 @@
-# manually install:
+# manually install (after installing the operator through helm)
 # kubectl apply -f opentelemetry-collector.yaml
 ---
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: simplest
+  namespace: default
 spec:
-  # mode: sidecar
+  mode: sidecar
+  # mode: statefulset
+  # replicas: 3
   config: |
     receivers:
       otlp:
@@ -14,26 +17,7 @@ spec:
           grpc:
           http:
 
-    processors:
-      memory_limiter:
-        check_interval: 1s
-        limit_percentage: 75
-        spike_limit_percentage: 15
-      batch:
-        send_batch_size: 10000
-        timeout: 10s
-
     exporters:
-      # logging:
-      #   loglevel: info
-      elasticsearch/trace:
-        endpoints:
-          - https://elasticsearch-master:9200
-        user: elastic
-        password: foobar
-        api_key:
-        tls:
-          insecure_skip_verify: true
       elasticsearch/log:
         # can be replaced by using the env variable ELASTICSEARCH_URL
         endpoints:
@@ -47,10 +31,6 @@ spec:
 
     service:
       pipelines:
-        traces:
-          receivers: [otlp]
-          processors: []
-          exporters: [elasticsearch/trace]
         logs:
           receivers: [otlp]
           processors: []

@@ -165,10 +165,12 @@ Port forward on your machine to access kibana through localhost:5601:
 kubectl port-forward deployment/kibana-kibana 5601
 #+end_src
 
+
 ** Install opentelemetry-demo
 
-Using an extra elasticsearch backend:
+Let's give a try to the demo to check we can override and send logs to es.
 
+Using an extra elasticsearch backend:
 #+begin_src sh
 helm install my-otel-demo open-telemetry/opentelemetry-demo \
  -f update-collector-with-es-backend.yaml
@@ -208,4 +210,17 @@ NOTES:
 - OpenTelemetry Collector OTLP/HTTP receiver (required for browser spans to be emitted):
   by running these commands:
      kubectl port-forward svc/my-otel-demo-otelcol 4318:4318
+#+end_src
+
+And traces are sent to es, no logs propagated to es yet though:
+
+#+begin_src sh
+$ curl -q -k -u elastic:foobar https://localhost:9200/_cat/indices
+green open traces-generic-default THvwZu1AREKmeSNMcnLhjw 1 1 26948 0 24.5mb 12.3mb
+#+end_src
+
+* Install configured collector
+
+#+begin_src sh
+
 #+end_src

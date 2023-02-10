@@ -57,3 +57,4 @@ opentelemetry-collector:
           processors: []
           exporters:
             - elasticsearch/log
+

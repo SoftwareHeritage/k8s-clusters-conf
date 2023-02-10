@@ -1,0 +1,16 @@
+# manually install
+# kubectl apply -f app0.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app0
+  annotations:
+    # required for collector configured as mode 'sidecar'
+    sidecar.opentelemetry.io/inject: "true"
+spec:
+  containers:
+  - name: count
+    image: python:3.10-bullseye
+    args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 5; done']
