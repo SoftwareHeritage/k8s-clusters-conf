@@ -1,4 +1,15 @@
 ---
+secret:
+  enabled: true
+  password: "foobar" # generated randomly if not defined
+
+ingress:
+  enabled: true
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+
 # Permit co-located instances for solitary minikube virtual machines.
 antiAffinity: "soft"
 

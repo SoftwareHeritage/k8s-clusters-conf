@@ -1,6 +1,7 @@
 #+title: Minikube tryout opentelemetry -> elasticsearch
 
-* cert-manager
+* first round
+** cert-manager
 
 Install cert-manager in the cluster first:
 
@@ -9,16 +10,18 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 #+end_src
 source: https://cert-manager.io/docs/installation/
 
-* opentelemetry-operator
+** opentelemetry-operator
 
 Then install opentelemetry operator:
 
 #+begin_src sh
-kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+wget https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
+# sed -e 's/otelcol/otelcol-contrib/' opentelemetry-operator.yaml
+kubectl apply -f opentelemetry-operator.yaml
 #+end_src
 source: https://github.com/open-telemetry/opentelemetry-operator
 
-* Install elasticsearch
+** Install elasticsearch
 
 #+begin_src sh
 curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
@@ -44,7 +47,7 @@ NOTES:
   $ helm --namespace=default test elasticsearch
 #+end_src
 
-* Install kibana
+** Install kibana
 
 To ease elasticsearch introspection, it's easier to check data from the webui
 
@@ -65,10 +68,109 @@ NOTES:
   $ kubectl get secrets --namespace=default kibana-kibana-es-token -ojsonpath='{.data.token}' | base64 -d
 #+end_src
 
-* Connect all together
+** Connect all together
 
 Then apply the local CRD:
 
 #+begin_src sh
 kubectl apply -f opentelemetry-collector.yaml
+#+end_src
+
+** conclusion
+
+The installation steps is missing the proper elasticsearch exporter. We need to install
+the collector-contrib which contains such exporter. It's not easily doable with the
+crds.
+
+* second round: use helm chart
+** cert-manager
+#+begin_src sh
+helm repo add jetstack https://charts.jetstack.io
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.11.0 \
+  --set installCRDs=true
+#+end_src
+
+** operator
+
+The operator is enough to install the collector:
+#+begin_src sh
+helm install \
+  opentelemetry-operator open-telemetry/opentelemetry-operator
+#+end_src
+
+** Install elasticsearch
+
+#+begin_src sh
+curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
+mv values.yaml elasticsearch-values.yaml
+helm install elasticsearch elastic/elasticsearch -f ./elasticsearch-values.yaml
+#+end_src
+source: https://phoenixnap.com/kb/elasticsearch-helm-chart
+
+output:
+#+begin_src sh
+$ helm install elasticsearch elastic/elasticsearch -f ./elasticsearch-values.yaml
+NAME: elasticsearch
+LAST DEPLOYED: Thu Feb  9 15:54:53 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Watch all cluster members come up.
+  $ kubectl get pods --namespace=default -l app=elasticsearch-master -w
+2. Retrieve elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Retrieve elastic user.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.username}' | base64 -d
+4. Test cluster health using Helm test.
+  $ helm --namespace=default test elasticsearch
+#+end_src
+
+** Install opentelemetry-demo
+
+Using an extra elasticsearch backend:
+
+#+begin_src sh
+helm install my-otel-demo open-telemetry/opentelemetry-demo \
+ -f update-collector-with-es-backend.yaml
+#+end_src
+source: https://opentelemetry.io/docs/demo/kubernetes-deployment/#bring-your-own-backend
+
+output:
+#+begin_src sh
+NAME: my-otel-demo
+LAST DEPLOYED: Fri Feb 10 11:24:16 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+=======================================================================================
+
+
+ ██████╗ ████████╗███████╗██╗         ██████╗ ███████╗███╗   ███╗ ██████╗
+██╔═══██╗╚══██╔══╝██╔════╝██║         ██╔══██╗██╔════╝████╗ ████║██╔═══██╗
+██║   ██║   ██║   █████╗  ██║         ██║  ██║█████╗  ██╔████╔██║██║   ██║
+██║   ██║   ██║   ██╔══╝  ██║         ██║  ██║██╔══╝  ██║╚██╔╝██║██║   ██║
+╚██████╔╝   ██║   ███████╗███████╗    ██████╔╝███████╗██║ ╚═╝ ██║╚██████╔╝
+ ╚═════╝    ╚═╝   ╚══════╝╚══════╝    ╚═════╝ ╚══════╝╚═╝     ╚═╝ ╚═════╝
+
+
+- All services are available via the Frontend proxy: http://localhost:8080
+  by running these commands:
+     kubectl port-forward svc/my-otel-demo-frontendproxy 8080:8080
+
+  The following services are available at these paths once the proxy is exposed:
+  Webstore             http://localhost:8080/
+  Grafana              http://localhost:8080/grafana/
+  Feature Flags UI     http://localhost:8080/feature/
+  Load Generator UI    http://localhost:8080/loadgen/
+  Jaeger UI            http://localhost:8080/jaeger/ui/
+
+- OpenTelemetry Collector OTLP/HTTP receiver (required for browser spans to be emitted):
+  by running these commands:
+     kubectl port-forward svc/my-otel-demo-otelcol 4318:4318
 #+end_src

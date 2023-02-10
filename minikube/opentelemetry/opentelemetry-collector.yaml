@@ -1,9 +1,12 @@
+# manually install:
+# kubectl apply -f opentelemetry-collector.yaml
 ---
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: simplest
 spec:
+  # mode: sidecar
   config: |
     receivers:
       otlp:
@@ -21,23 +24,35 @@ spec:
         timeout: 10s
 
     exporters:
-      logging:
-        loglevel: info
-
-    # elasticsearch/trace:
-    #   endpoints:
-    #     - https://elasticsearch-master:9200
-    #   user: elasticsearch
-    #   password: 0YucK4zZ2Xx0tLzQ
-    #   api_key:
-    #   tls:
-    #     insecure_skip_verify: true
+      # logging:
+      #   loglevel: info
+      elasticsearch/trace:
+        endpoints:
+          - https://elasticsearch-master:9200
+        user: elastic
+        password: foobar
+        api_key:
+        tls:
+          insecure_skip_verify: true
+      elasticsearch/log:
+        # can be replaced by using the env variable ELASTICSEARCH_URL
+        endpoints:
+          - https://elasticsearch-master:9200
+        user: elastic
+        password: foobar
+        api_key:
+        tls:
+          insecure_skip_verify: true
+        logs_index: logs-generic-default
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
+          exporters: [elasticsearch/trace]
+        logs:
+          receivers: [otlp]
+          processors: []
           exporters:
-            - logging
-            # - elasticsearch/trace
+            - elasticsearch/log
