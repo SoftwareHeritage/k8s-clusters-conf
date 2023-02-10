@@ -94,15 +94,16 @@ helm install \
   --set installCRDs=true
 #+end_src
 
-** operator
+** opentelemetry-operator
 
 The operator is enough to install the collector:
 #+begin_src sh
-helm install \
-  opentelemetry-operator open-telemetry/opentelemetry-operator
+helm install opentelemetry-operator open-telemetry/opentelemetry-operator
 #+end_src
 
 ** Install elasticsearch
+
+To have the extra backend to push logs to:
 
 #+begin_src sh
 curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
@@ -128,6 +129,40 @@ NOTES:
   $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.username}' | base64 -d
 4. Test cluster health using Helm test.
   $ helm --namespace=default test elasticsearch
+#+end_src
+
+Port forward on your machine to access kibana through localhost:5601:
+#+begin_src sh
+kubectl port-forward svc/elasticsearch-master 9200
+#+end_src
+
+** Install kibana
+
+To check the indexed logs:
+#+begin_src sh
+helm install kibana elastic/kibana
+#+end_src
+
+output:
+#+begin_src sh
+NAME: kibana
+LAST DEPLOYED: Fri Feb 10 14:45:32 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Watch all containers come up.
+  $ kubectl get pods --namespace=default -l release=kibana -w
+2. Retrieve the elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Retrieve the kibana service account token.
+  $ kubectl get secrets --namespace=default kibana-kibana-es-token -ojsonpath='{.data.token}' | base64 -d
+#+end_src
+
+Port forward on your machine to access kibana through localhost:5601:
+#+begin_src sh
+kubectl port-forward deployment/kibana-kibana 5601
 #+end_src
 
 ** Install opentelemetry-demo
