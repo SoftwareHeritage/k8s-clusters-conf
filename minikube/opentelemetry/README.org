@@ -227,3 +227,6 @@ applications which logs to stdout. And check whether those logs are written to e
 kubectl apply -f app0.yaml
 kubectl apply -f app1.yaml
 #+end_src
+
+They were not as, for minikube, it was missing volume mounts (2 for minikube). For
+staging or production, we will have to declare the volume on /var/log/pods/.
