@@ -165,7 +165,6 @@ Port forward on your machine to access kibana through localhost:5601:
 kubectl port-forward deployment/kibana-kibana 5601
 #+end_src
 
-
 ** Install opentelemetry-demo
 
 Let's give a try to the demo to check we can override and send logs to es.
@@ -212,15 +211,19 @@ NOTES:
      kubectl port-forward svc/my-otel-demo-otelcol 4318:4318
 #+end_src
 
-And traces are sent to es, no logs propagated to es yet though:
+Conclusion: Traces are sent to es, no logs are propagated to es yet though:
 
 #+begin_src sh
 $ curl -q -k -u elastic:foobar https://localhost:9200/_cat/indices
 green open traces-generic-default THvwZu1AREKmeSNMcnLhjw 1 1 26948 0 24.5mb 12.3mb
 #+end_src
 
-* Install configured collector
+* third round
+
+Same steps as previously (besides the demo installation). Then Install basic
+applications which logs to stdout. And check whether those logs are written to es.
 
 #+begin_src sh
-
+kubectl apply -f app0.yaml
+kubectl apply -f app1.yaml
 #+end_src
