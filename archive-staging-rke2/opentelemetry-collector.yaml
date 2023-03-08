@@ -1,0 +1,134 @@
+# manually install (after installing the operator through helm)
+# kubectl apply -f opentelemetry-collector.yaml
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: simplest
+  namespace: default
+spec:
+  # mode: deployment  # default, as a standalone application (managed like other apps)
+  mode: daemonset   # run as agent in kubernetes node (so each node has 1 collector)
+  # mode: statefulset # like other too but names of pods becomes predictable
+  # replicas: 3
+  # mode: sidecar       # running alongside the applications to monitor
+  #                     # (the application configurations must be slightly adapted)
+
+  # Required to let access to the filelog receiver
+  volumeMounts:
+    - mountPath: /var/log/pods
+      name: varlogpods
+    - mountPath: /var/lib/docker/containers
+      name: varlibdocker
+  volumes:
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+        type: Directory
+    - name: varlibdocker
+      hostPath:
+        path: /var/lib/docker/containers
+        type: Directory
+
+  config: |
+    receivers:
+      filelog:
+        include:
+          - /var/log/pods/default_app*/*/*.log
+        exclude:
+          # Exclude logs from all containers named otel-collector
+          - /var/log/pods/*/otel-collector/*.log
+        start_at: beginning
+        include_file_path: false
+        include_file_name: false
+        operators:
+          - type: json_parser
+            parse_to: body
+          - type: time_parser
+            parse_from: body.time
+            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # second tryout
+          # Find out which format is used by kubernetes
+          # - type: router
+          #   id: get-format
+          #   routes:
+          #     - output: parser-docker
+          #       expr: '$$record matches "^\\{"'
+          #     - output: parser-crio
+          #       expr: '$$record matches "^[^ Z]+ "'
+          #     - output: parser-containerd
+          #       expr: '$$record matches "^[^ Z]+Z"'
+          # Parse CRI-O format
+          # - type: regex_parser
+          #   id: parser-crio
+          #   regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
+          #   output: extract_metadata_from_filepath
+          #   timestamp:
+          #     parse_from: time
+          #     layout_type: gotime
+          #     layout: '2006-01-02T15:04:05.000000000-07:00'
+          # Parse CRI-Containerd format
+          # - type: regex_parser
+          #   id: parser-containerd
+          #   regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
+          #   output: extract_metadata_from_filepath
+          #   timestamp:
+          #     parse_from: time
+          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # Parse Docker format
+          # - type: json_parser
+          #   id: parser-docker
+          #   output: extract_metadata_from_filepath
+          #   timestamp:
+          #     parse_from: time
+          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # Extract metadata from file path
+          # - type: regex_parser
+          #   id: extract_metadata_from_filepath
+          #   regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
+          #   parse_from: $$attributes.file_path
+          # Move out attributes to Attributes
+          # - type: metadata
+          #   attributes:
+          #     stream: 'EXPR($.stream)'
+          #     k8s.container.name: 'EXPR($.container_name)'
+          #     k8s.namespace.name: 'EXPR($.namespace)'
+          #     k8s.pod.name: 'EXPR($.pod_name)'
+          #     run_id: 'EXPR($.run_id)'
+          #     k8s.pod.uid: 'EXPR($.uid)'
+          # Clean up log record
+          # - type: restructure
+          #   id: clean-up-log-record
+          #   ops:
+          #     - remove: logtag
+          #     - remove: stream
+          #     - remove: container_name
+          #     - remove: namespace
+          #     - remove: pod_name
+          #     - remove: run_id
+          #     - remove: uid
+
+      otlp:
+        protocols:
+          grpc:
+          http:
+
+    exporters:
+      elasticsearch/log:
+        # can be replaced by using the env variable ELASTICSEARCH_URL
+        endpoints:
+          - https://quickstart-es-http:9200
+        user: elastic
+        # to store in a secret instead
+        password: <redacted>
+        api_key:
+        tls:
+          insecure_skip_verify: true
+        logs_index: logs
+
+    service:
+      pipelines:
+        logs:
+          receivers: [otlp,filelog]
+          processors: []
+          exporters: [elasticsearch/log]

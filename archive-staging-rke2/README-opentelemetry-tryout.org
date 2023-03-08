@@ -1,0 +1,82 @@
+#+title: opentelemetry -> elasticsearch tryout in staging
+
+* Install a dedicated elasticsearch instance in cluster
+
+Install es:
+#+begin_src org
+helm install -f ../argocd-configuration/applications/archive-staging-rke2/crt-elasticsearch.yaml
+#+end_src
+
+Checking it's up from a machine with network access to the es instance:
+#+begin_src sh
+# connect to a machine from k9s or run kubectl run...
+root@debian:/# export CREDS=elastic:$(kubectl get secrets \
+  --namespace=default quickstart-es-elastic-user \
+  -ojsonpath='{.data.elastic}' | base64 -d)
+root@debian:/# export ES_SERVER=quickstart-es-http:9200
+root@debian:/# curl -k -u $CREDS https://$ES_SERVER
+{
+  "name" : "quickstart-es-default-0",
+  "cluster_name" : "quickstart",
+  "cluster_uuid" : "be-MACITSp-cFptCqaJy8Q",
+  "version" : {
+    "number" : "8.6.2",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "2d58d0f136141f03239816a4e360a8d17b6d8f29",
+    "build_date" : "2023-02-13T09:35:20.314882762Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.4.2",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+# no index just yet
+root@debian:/# curl -k -u $CREDS https://$ES_SERVER/_cat/indices
+#+end_src
+
+** Install opentelemetry-operator
+
+The operator is enough to install the collector definitions:
+#+begin_src sh
+helm install opentelemetry-operator open-telemetry/opentelemetry-operator
+#+end_src
+
+** Wire to the staging elasticsearch
+
+Instantiate the collector with specific setup to discuss with elasticsearch:
+#+begin_src sh
+# replace the <redacted> password with the actual one (see the kubectl get
+# secret from previous snippets)
+$ kubectl apply -f opentelemetry-collector.yaml
+#+end_src
+
+Then we can install a basic application whose logs should be written to es:
+#+begin_src sh
+kubectl apply -f ../minikube/opentelemetry/app0.yaml
+#+end_src
+
+This logs basic date and counter:
+#+begin_src sh
+493: Wed Mar  8 15:43:47 UTC 2023
+494: Wed Mar  8 15:43:48 UTC 2023
+495: Wed Mar  8 15:43:49 UTC 2023
+496: Wed Mar  8 15:43:50 UTC 2023
+497: Wed Mar  8 15:43:51 UTC 2023
+498: Wed Mar  8 15:43:52 UTC 2023
+499: Wed Mar  8 15:43:53 UTC 2023
+#+end_src
+
+From the node with access to elasticsearch, ensure a new index named 'logs'
+exists:
+#+begin_src sh
+root@debian:/# export CREDS=elastic:<redacted>
+root@debian:/# export ES_SERVER=quickstart-es-http:9200
+root@debian:/# curl -k -u $CREDS https://$ES_SERVER/_cat/indices
+yellow open logs x3H05jNeSCiEj1tZCme8Lg 1 1 18 0 9.6kb 9.6kb
+#+end_src
+
+* Next step
+
+Wire properly some loader to check it's doing the right job.
