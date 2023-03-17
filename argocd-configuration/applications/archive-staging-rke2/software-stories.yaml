@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: software-stories-staging-rke2
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
+    path: software-stories
+    targetRevision: staging
+    helm:
+      releaseName: software-stories
+      parameters:
+        - name: "host"
+          # internal hostname used by reverse proxy
+          value: software-stories.internal.staging.swh.network
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: software-stories
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
