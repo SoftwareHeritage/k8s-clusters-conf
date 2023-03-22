@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-staging-rke2-redis-operator
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: redis-operator
+    repoURL: 'https://ot-container-kit.github.io/helm-charts/'
+    targetRevision: 0.14.3
+    helm:
+      releaseName: redis-operator
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: redis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+

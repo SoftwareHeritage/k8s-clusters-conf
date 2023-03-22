@@ -48,3 +48,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: software-stories
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redis
