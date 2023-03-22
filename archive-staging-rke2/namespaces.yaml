@@ -11,6 +11,12 @@ kind: Namespace
 metadata:
   name: swh
 ---
+# Namespace dedicated to the swh using cassandra as backend
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh-cassandra
+---
 # Namespace dedicated to cluster monitoring services
 apiVersion: v1
 kind: Namespace
