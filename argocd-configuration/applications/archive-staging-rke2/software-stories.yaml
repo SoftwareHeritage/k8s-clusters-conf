@@ -15,7 +15,7 @@ spec:
       parameters:
         - name: "host"
           # internal hostname used by reverse proxy
-          value: software-stories.internal.staging.swh.network
+          value: software-stories.staging.swh.network
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
     namespace: software-stories
