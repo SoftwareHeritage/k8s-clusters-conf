@@ -1,0 +1,149 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cassandra
+  name: reaper
+  labels:
+    app: reaper
+spec:
+  revisionHistoryLimit: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reaper
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: reaper
+    spec:
+      containers:
+        - name: reaper
+          image: thelastpickle/cassandra-reaper:3.2.1
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1000Mi
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 8081
+              name: admin # for metrics
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: admin
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: admin
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          env:
+            - name: REAPER_METRICS_ENABLED
+              value: "true"
+            - name: REAPER_MAX_PARALLEL_REPAIRS
+              value: "4"  # Default 2
+            - name: REAPER_STORAGE_TYPE
+              value: cassandra
+            - name: REAPER_CASS_CLUSTER_NAME
+              value: archive_staging
+            - name: REAPER_CASS_CONTACT_POINTS
+              value: "[cassandra1.internal.staging.swh.network, cassandra2.internal.staging.swh.network, cassandra3.internal.staging.swh.network]"
+            - name: REAPER_CASS_KEYSPACE
+              value: reaper_db
+            - name: REAPER_CASS_AUTH_ENABLED
+              value: "true"
+            - name: CRYPTO_SYSTEM_PROPERTY_SECRET
+              value: CRYPTO_ENCODING_KEY
+            - name: REAPER_JMX_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: JMX_AUTH_USERNAME
+            - name: REAPER_JMX_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: JMX_AUTH_PASSWORD
+            - name: CRYPTO_ENCODING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: CRYPTO_ENCODING_KEY
+---
+# for now, the webui is reachable at http://localhost:8080/webui
+# through a port forward
+# kubectl port-forward -n cassandra service/reaper 8080:8080 8081:8081
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: cassandra
+  name: reaper
+  labels:
+    app: reaper
+spec:
+  type: ClusterIP
+  selector:
+    app: reaper
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: admin
+      port: 8081
+      targetPort: 8081
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: cassandra
+  name: reaper-metrics
+  labels:
+    app: reaper
+spec:
+  selector:
+    matchLabels:
+      app: reaper
+  namespaceSelector:
+    any: true
+  endpoints:
+    - port: admin
+      scheme: http
+      interval: 30s
+      path: /prometheusMetrics
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reaper-webui-ingress
+  namespace: cassandra
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production-gandi
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/app-root: /webui
+spec:
+  rules:
+  - host: reaper.internal.staging.swh.network
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: reaper
+            port:
+              name: http
+  tls:
+  - hosts:
+    - reaper.internal.staging.swh.network
+    secretName: reaper-crt
