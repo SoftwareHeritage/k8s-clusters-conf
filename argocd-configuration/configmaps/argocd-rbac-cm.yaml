@@ -12,3 +12,4 @@ data:
   policy.csv: |
     g, vsellier, role:admin
     g, olasd, role:admin
+    g, ardumont, role:admin
