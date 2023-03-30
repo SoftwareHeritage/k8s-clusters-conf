@@ -1,0 +1,55 @@
+# manually install (after installing the operator through helm)
+# kubectl apply -f opentelemetry-collector.yaml
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: simplest
+  namespace: default
+spec:
+  # mode: deployment  # default, as a standalone application (managed like other apps)
+  mode: daemonset   # run as agent in kubernetes node (so each node has 1 collector)
+  # mode: statefulset # like other too but names of pods becomes predictable
+  # replicas: 3
+  # mode: sidecar       # running alongside the applications to monitor
+  #                     # (the application configurations must be slightly adapted)
+
+  # Required to let access to the filelog receiver
+  volumeMounts:
+    - mountPath: /var/log/pods
+      name: varlogpods
+  volumes:
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+        type: Directory
+
+  config: |
+    receivers:
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+        exclude:
+          # Exclude logs from all containers named otel-collector
+          - /var/log/pods/*/otel-collector/*.log
+          - /var/log/pods/*fluent*/*/*.log
+        start_at: beginning
+        include_file_path: false
+        include_file_name: false
+
+      otlp:
+        protocols:
+          grpc:
+          http:
+
+    exporters:
+      otlphttp:
+        endpoint: http://fluent-bit:4318
+        compression: none
+
+    service:
+      pipelines:
+        logs:
+          receivers: [otlp,filelog]
+          processors: []
+          exporters: [otlphttp]
