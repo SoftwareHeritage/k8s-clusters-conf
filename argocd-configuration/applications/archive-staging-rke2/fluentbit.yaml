@@ -1,0 +1,46 @@
+# Declare the application to manage fluentbit
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-staging-rke2-fluentbit
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: fluent-bit
+    repoURL: "https://fluent.github.io/helm-charts"
+    targetRevision: 0.25.0
+    helm:
+      releaseName: fluent-bit
+      values: |
+        kind: Deployment
+        replicaCount: 2
+
+        # serviceMonitor:
+        #   enabled: true
+        #   namespace: default
+        extraPorts:
+          - port: 4318
+            containerPort: 4318
+            protocol: TCP
+            name: opentelemetry
+
+        config:
+          inputs: |
+            [INPUT]
+                name opentelemetry
+                listen 0.0.0.0
+                port 4318
+
+          outputs: |
+            [OUTPUT]
+                name stdout
+                match *
+
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: default  # same as opentelemetry
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
