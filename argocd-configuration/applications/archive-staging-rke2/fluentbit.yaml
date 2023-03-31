@@ -34,8 +34,18 @@ spec:
 
           outputs: |
             [OUTPUT]
+                Name  es
+                Match *
+                Host esnode1.internal.softwareheritage.org
+                Port 9200
+                Logstash_Format On
+                Logstash_Prefix wip_fluentbit
+                Generate_ID On
+                Trace_Output On
+
+            [OUTPUT]
                 name stdout
-                match *
+                Match *
 
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
