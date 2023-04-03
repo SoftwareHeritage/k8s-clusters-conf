@@ -15,6 +15,7 @@ spec:
       values: |
         kind: Deployment
         replicaCount: 2
+        logLevel: debug
 
         # serviceMonitor:
         #   enabled: true
@@ -42,6 +43,8 @@ spec:
                 Logstash_Prefix wip_fluentbit
                 Generate_ID On
                 Trace_Output On
+                Trace_Error On
+                Suppress_Type_Name On
 
             [OUTPUT]
                 name stdout
