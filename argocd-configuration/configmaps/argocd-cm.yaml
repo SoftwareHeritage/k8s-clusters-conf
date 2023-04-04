@@ -12,3 +12,4 @@ data:
   accounts.vsellier: apiKey, login
   accounts.olasd: apiKey, login
   accounts.ardumont: apiKey, login
+  accounts.gsamson: apiKey, login
