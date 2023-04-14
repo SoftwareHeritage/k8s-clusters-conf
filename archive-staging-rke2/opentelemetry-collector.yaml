@@ -35,12 +35,12 @@ spec:
         start_at: beginning
         include_file_path: false
         include_file_name: false
-        operators:
-          - type: json_parser
-            parse_to: body
-          - type: time_parser
-            parse_from: body.time
-            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+        # operators:
+        #   - type: json_parser
+        #     parse_to: body
+        #   - type: time_parser
+        #     parse_from: body.time
+        #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
           # second tryout
           # Find out which format is used by kubernetes
           # - type: router
