@@ -18,16 +18,10 @@ spec:
   volumeMounts:
     - mountPath: /var/log/pods
       name: varlogpods
-    - mountPath: /var/lib/docker/containers
-      name: varlibdocker
   volumes:
     - name: varlogpods
       hostPath:
         path: /var/log/pods
-        type: Directory
-    - name: varlibdocker
-      hostPath:
-        path: /var/lib/docker/containers
         type: Directory
 
   config: |
