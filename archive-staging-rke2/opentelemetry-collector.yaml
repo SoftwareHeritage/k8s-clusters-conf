@@ -28,7 +28,8 @@ spec:
     receivers:
       filelog:
         include:
-          - /var/log/pods/default_app*/*/*.log
+          # FIXME: as a tryout, limit to only bzr loader logs
+          - /var/log/pods/swh_loader-bzr*/*/*.log
         exclude:
           # Exclude logs from all containers named otel-collector
           - /var/log/pods/*/otel-collector/*.log
