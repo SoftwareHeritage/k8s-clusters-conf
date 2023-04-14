@@ -112,14 +112,11 @@ spec:
       elasticsearch/log:
         # can be replaced by using the env variable ELASTICSEARCH_URL
         endpoints:
-          - https://quickstart-es-http:9200
-        user: elastic
-        # to store in a secret instead
-        password: <redacted>
+          - http://esnode1.internal.softwareheritage.org:9200
+          - http://esnode2.internal.softwareheritage.org:9200
+          - http://esnode3.internal.softwareheritage.org:9200
         api_key:
-        tls:
-          insecure_skip_verify: true
-        logs_index: logs
+        logs_index: staging-logs
 
     service:
       pipelines:
