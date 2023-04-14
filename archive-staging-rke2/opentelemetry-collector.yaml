@@ -29,59 +29,59 @@ spec:
       filelog:
         include:
           # FIXME: as a tryout, limit to only loaders' logs
-          - /var/log/pods/swh_loader*/*/*.log
+          - /var/log/pods/swh_loader-bzr*/*/*.log
         exclude:
           # Exclude logs from all containers named otel-collector
           - /var/log/pods/*/otel-collector/*.log
         start_at: beginning
-        include_file_path: false
+        include_file_path: true
         include_file_name: false
-        # operators:
-        #   - type: json_parser
-        #     parse_to: body
-        #   - type: time_parser
-        #     parse_from: body.time
-        #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          # second tryout
+        operators:
+        # - type: json_parser
+        #   parse_to: body
+        # - type: time_parser
+        #   parse_from: body.time
+        #   layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+        # second tryout
           # Find out which format is used by kubernetes
-          # - type: router
-          #   id: get-format
+          # - id: get-format
+          #   type: router
           #   routes:
-          #     - output: parser-docker
-          #       expr: '$$record matches "^\\{"'
-          #     - output: parser-crio
-          #       expr: '$$record matches "^[^ Z]+ "'
+          # #     - output: parser-json
+          # #       expr: '$$record matches "^\\{"'
+          # #     - output: parser-crio
+          # #       expr: '$$record matches "^[^ Z]+ "'
           #     - output: parser-containerd
           #       expr: '$$record matches "^[^ Z]+Z"'
+          # Parse Docker format
+          # - id: parser-json
+          #   type: json_parser
+          #   output: extract_metadata_from_filepath
+          #   timestamp:
+          #     parse_from: time
+          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
           # Parse CRI-O format
-          # - type: regex_parser
-          #   id: parser-crio
+          # - id: parser-crio
+          #   type: regex_parser
           #   regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
           #   output: extract_metadata_from_filepath
           #   timestamp:
           #     parse_from: time
           #     layout_type: gotime
           #     layout: '2006-01-02T15:04:05.000000000-07:00'
-          # Parse CRI-Containerd format
-          # - type: regex_parser
-          #   id: parser-containerd
-          #   regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
-          #   output: extract_metadata_from_filepath
-          #   timestamp:
-          #     parse_from: time
-          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          # Parse Docker format
-          # - type: json_parser
-          #   id: parser-docker
-          #   output: extract_metadata_from_filepath
-          #   timestamp:
-          #     parse_from: time
-          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # # Parse CRI-Containerd format
+          - id: parser-containerd
+            type: regex_parser
+            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
+            # output: extract_metadata_from_filepath
+            timestamp:
+              parse_from: attributes.time
+              layout: '%Y-%m-%dT%H:%M:%S.%LZ'
           # Extract metadata from file path
-          # - type: regex_parser
-          #   id: extract_metadata_from_filepath
+          # - id: extract_metadata_from_filepath
+          #   type: regex_parser
           #   regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
-          #   parse_from: $$attributes.file_path
+          #   parse_from: attributes.log.file.path
           # Move out attributes to Attributes
           # - type: metadata
           #   attributes:
@@ -92,8 +92,8 @@ spec:
           #     run_id: 'EXPR($.run_id)'
           #     k8s.pod.uid: 'EXPR($.uid)'
           # Clean up log record
-          # - type: restructure
-          #   id: clean-up-log-record
+          # - id: clean-up-log-record
+          #   type: restructure
           #   ops:
           #     - remove: logtag
           #     - remove: stream
