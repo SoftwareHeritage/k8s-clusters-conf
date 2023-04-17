@@ -81,33 +81,26 @@ spec:
           - id: extract_metadata_from_filepath
             type: regex_parser
             regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
-            # parse_from: attributes["file.path"]
-            # parse_from: attributes.file_path
-            # parse_from: attributes.log.file.path
-            # parse_from: Attributes.log.file.path
             parse_from: attributes["log.file.path"]
-            # parse_to: attributes
-          # Move out attributes to Attributes
-          # - id: metadata
-          #   type: metadata
-          #   attributes:
-          #     stream: 'EXPR($.stream)'
-          #     k8s.container.name: 'EXPR($.container_name)'
-          #     k8s.namespace.name: 'EXPR($.namespace)'
-          #     k8s.pod.name: 'EXPR($.pod_name)'
-          #     run_id: 'EXPR($.run_id)'
-          #     k8s.pod.uid: 'EXPR($.uid)'
-          # Clean up log record
-          # - id: clean-up-log-record
+          # - id: move
+          #   type: move
+          #     from: attributes.log.value
+          #     to: message
+          # Clean up log record (unsupported type 'restructure' for now)
+          # - id: clean-up-record
           #   type: restructure
           #   ops:
-          #     - remove: logtag
+          #     # Drop unused fields
           #     - remove: stream
-          #     - remove: container_name
-          #     - remove: namespace
-          #     - remove: pod_name
+          #     - remove: logtag
           #     - remove: run_id
-          #     - remove: uid
+          #     - remove: attributes["log.file.path"]
+          #     # 'time' is redundant with @timestamp, so drop it
+          #     - remove: attributes.time
+          #     # Rename body to message
+          #     - move:
+          #         from: "Body"
+          #         to: "message"
 
       otlp:
         protocols:
