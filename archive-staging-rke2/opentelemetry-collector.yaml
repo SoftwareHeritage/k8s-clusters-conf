@@ -29,7 +29,7 @@ spec:
       filelog:
         include:
           # FIXME: as a tryout, limit to only loaders' logs
-          - /var/log/pods/swh_loader-bzr*/*/*.log
+          - /var/log/pods/swh_loader-*/*/*.log
         exclude:
           # Exclude logs from all containers named otel-collector
           - /var/log/pods/*/otel-collector/*.log
@@ -72,18 +72,24 @@ spec:
           # # Parse CRI-Containerd format
           - id: parser-containerd
             type: regex_parser
-            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
-            # output: extract_metadata_from_filepath
+            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<log>.*)|.*)$'
+            output: extract_metadata_from_filepath
             timestamp:
               parse_from: attributes.time
               layout: '%Y-%m-%dT%H:%M:%S.%LZ'
           # Extract metadata from file path
-          # - id: extract_metadata_from_filepath
-          #   type: regex_parser
-          #   regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
-          #   parse_from: attributes.log.file.path
+          - id: extract_metadata_from_filepath
+            type: regex_parser
+            regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
+            # parse_from: attributes["file.path"]
+            # parse_from: attributes.file_path
+            # parse_from: attributes.log.file.path
+            # parse_from: Attributes.log.file.path
+            parse_from: attributes["log.file.path"]
+            # parse_to: attributes
           # Move out attributes to Attributes
-          # - type: metadata
+          # - id: metadata
+          #   type: metadata
           #   attributes:
           #     stream: 'EXPR($.stream)'
           #     k8s.container.name: 'EXPR($.container_name)'
