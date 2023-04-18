@@ -120,9 +120,23 @@ spec:
         api_key:
         logs_index: staging-logs
 
+    processors:
+      batch:
+        # send_batch_size: 10000
+        send_batch_size: 100
+      attributes/insert:
+        actions:
+        - key: environment
+          value: staging
+          action: insert
+        - key: k8s.cluster.name
+          value: archive-staging-rke2
+          action: insert
     service:
       pipelines:
         logs:
           receivers: [otlp,filelog]
-          processors: []
+          processors:
+            - batch
+            - attributes/insert
           exporters: [elasticsearch/log]
