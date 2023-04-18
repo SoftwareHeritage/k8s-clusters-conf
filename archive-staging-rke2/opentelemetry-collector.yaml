@@ -28,8 +28,11 @@ spec:
     receivers:
       filelog:
         include:
-          # FIXME: as a tryout, limit to only loaders' logs
-          - /var/log/pods/swh_loader-*/*/*.log
+          # FIXME: tryout: limit to only loaders' logs
+          # - /var/log/pods/swh_loader-*/*/*.log
+          # FIXME: tryout: limit to only swh logs
+          - /var/log/pods/swh_*/*/*.log
+          # - /var/log/pods/*/*/*.log
         exclude:
           # Exclude logs from all containers named otel-collector
           - /var/log/pods/*/otel-collector/*.log
