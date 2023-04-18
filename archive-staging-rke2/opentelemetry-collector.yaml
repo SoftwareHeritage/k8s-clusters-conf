@@ -85,25 +85,6 @@ spec:
             type: regex_parser
             regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
             parse_from: attributes["log.file.path"]
-          # - id: move
-          #   type: move
-          #     from: attributes.log.value
-          #     to: message
-          # Clean up log record (unsupported type 'restructure' for now)
-          # - id: clean-up-record
-          #   type: restructure
-          #   ops:
-          #     # Drop unused fields
-          #     - remove: stream
-          #     - remove: logtag
-          #     - remove: run_id
-          #     - remove: attributes["log.file.path"]
-          #     # 'time' is redundant with @timestamp, so drop it
-          #     - remove: attributes.time
-          #     # Rename body to message
-          #     - move:
-          #         from: "Body"
-          #         to: "message"
 
       otlp:
         protocols:
@@ -132,6 +113,24 @@ spec:
         - key: k8s.cluster.name
           value: archive-staging-rke2
           action: insert
+        # - key: message
+        #   action: insert
+        #   from_attribute: log.value
+      attributes/clean-records:
+        actions:
+        - key: time
+          action: delete
+        - key: logtag
+          action: delete
+        - key: log
+          action: delete
+        - key: log.keyword
+          action: delete
+        - key: log.file.path
+          action: delete
+        - key: log.value
+          action: delete
+
     service:
       pipelines:
         logs:
@@ -139,4 +138,5 @@ spec:
           processors:
             - batch
             - attributes/insert
+            - attributes/clean-records
           exporters: [elasticsearch/log]
