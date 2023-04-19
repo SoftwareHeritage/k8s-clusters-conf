@@ -1,0 +1,25 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke2-swh-cassandra
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
+    path: swh
+    targetRevision: production
+    helm:
+      valueFiles:
+        - ../values-swh-application-versions.yaml
+        - values/default.yaml
+        - values/production-cassandra.yaml
+      releaseName: swh-cassandra
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: swh-cassandra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
