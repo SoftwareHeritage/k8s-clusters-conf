@@ -67,6 +67,11 @@ spec:
         type: Directory
 
   config: |
+    # extensions:
+    #   # with port-forward, allows to display the pipeline status to see what's been
+    #   # deployed
+    #   zpages:
+    #     endpoint: "0.0.0.0:8889"
     receivers:
       filelog/swh:
         include:
@@ -132,6 +137,9 @@ spec:
           http:
 
     exporters:
+      # Generalize the default logging (needs to be activated in the exporters)
+      # logging/debug:
+      #   loglevel: debug
       elasticsearch/log:
         # can be replaced by using the env variable ELASTICSEARCH_URL
         endpoints:
@@ -172,15 +180,15 @@ spec:
               name: k8s.pod.ip
       batch:
         # send_batch_size: 10000
-        send_batch_size: 100
+        send_batch_size: 1
       attributes/insert:
         actions:
         - key: environment
           value: staging
           action: insert
-        - key: k8s.cluster.name
-          value: archive-staging-rke2
-          action: insert
+        # - key: k8s.cluster.name
+        #   value: archive-staging-rke2
+        #   action: insert
         # - key: message
         #   action: insert
         #   from_attribute: log.value
@@ -200,6 +208,12 @@ spec:
           action: delete
 
     service:
+      # telemetry:
+      #   logs:
+      #     level: "debug"
+      # extensions:
+      #   # global extension
+      #   - zpages
       pipelines:
         logs:
           receivers: [otlp,filelog/swh]
@@ -208,4 +222,5 @@ spec:
             - batch
             - attributes/insert
             - attributes/clean-records
+          # exporters: [elasticsearch/log, logging/debug]
           exporters: [elasticsearch/log]
