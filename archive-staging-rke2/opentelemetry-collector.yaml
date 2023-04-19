@@ -218,6 +218,7 @@ spec:
         logs:
           receivers: [otlp,filelog/swh]
           processors:
+            - resource
             - k8sattributes
             - batch
             - attributes/insert
