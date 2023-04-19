@@ -121,8 +121,8 @@ spec:
           # Parse CRI-Containerd format
           - id: parser-containerd
             type: regex_parser
-            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<log>.*)|.*)$'
             output: extract_metadata_from_filepath
+            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<message>.*)|.*)$'
             timestamp:
               parse_from: attributes.time
               layout: '%Y-%m-%dT%H:%M:%S.%LZ'
