@@ -156,8 +156,8 @@ spec:
             from_attribute: pod_name
             action: upsert
       k8sattributes:
-        # filter:
-        #   node_from_env_var: KUBE_NODE_NAME
+        filter:
+          node_from_env_var: KUBE_NODE_NAME
         passthrough: false
         extract:
           metadata:
