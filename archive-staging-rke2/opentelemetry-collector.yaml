@@ -126,6 +126,14 @@ spec:
             timestamp:
               parse_from: attributes.time
               layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # following not working: it aggregates all kinds of unrelated records together
+          # probably the conditional which is not ideal
+          # - id: deal-with-stack-trace
+          #   type: recombine
+          #   combine_field: attributes.message
+          #   combine_with: "\n"
+          #   is_first_entry: attributes.message matches '^[^ ]'
+          #   overwrite_with: "newest"
           # Extract metadata from file path
           - id: extract_metadata_from_filepath
             type: regex_parser
