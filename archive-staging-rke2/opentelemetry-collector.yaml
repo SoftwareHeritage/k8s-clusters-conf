@@ -68,13 +68,10 @@ spec:
 
   config: |
     receivers:
-      filelog:
+      filelog/swh:
         include:
-          # FIXME: tryout: limit to only loaders' logs
-          # - /var/log/pods/swh_loader-*/*/*.log
           # FIXME: tryout: limit to only swh logs
           - /var/log/pods/swh_*/*/*.log
-          # - /var/log/pods/*/*/*.log
         exclude:
           # Exclude logs from all containers named otel-collector
           - /var/log/pods/*/otel-collector/*.log
@@ -82,20 +79,20 @@ spec:
         include_file_path: true
         include_file_name: false
         operators:
-        # - type: json_parser
-        #   parse_to: body
-        # - type: time_parser
-        #   parse_from: body.time
-        #   layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-        # second tryout
+          # - type: json_parser
+          #   parse_to: body
+          # - type: time_parser
+          #   parse_from: body.time
+          #   layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # second tryout
           # Find out which format is used by kubernetes
           # - id: get-format
           #   type: router
           #   routes:
-          # #     - output: parser-json
-          # #       expr: '$$record matches "^\\{"'
-          # #     - output: parser-crio
-          # #       expr: '$$record matches "^[^ Z]+ "'
+          #     - output: parser-json
+          #       expr: '$$record matches "^\\{"'
+          #     - output: parser-crio
+          #       expr: '$$record matches "^[^ Z]+ "'
           #     - output: parser-containerd
           #       expr: '$$record matches "^[^ Z]+Z"'
           # Parse Docker format
@@ -114,7 +111,7 @@ spec:
           #     parse_from: time
           #     layout_type: gotime
           #     layout: '2006-01-02T15:04:05.000000000-07:00'
-          # # Parse CRI-Containerd format
+          # Parse CRI-Containerd format
           - id: parser-containerd
             type: regex_parser
             regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<log>.*)|.*)$'
@@ -205,7 +202,7 @@ spec:
     service:
       pipelines:
         logs:
-          receivers: [otlp,filelog]
+          receivers: [otlp,filelog/swh]
           processors:
             - k8sattributes
             - batch
