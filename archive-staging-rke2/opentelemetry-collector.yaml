@@ -84,7 +84,8 @@ spec:
         include_file_path: true
         include_file_name: false
         multiline:
-          line_start_pattern: '^(\\{"|^[^ Z]+ |^[^ Z]+Z")'
+          # start as either a json pattern or one of a date pattern
+          line_start_pattern: '^(\\{"|[^ Z]+ |[^ Z]+Z")'
         operators:
           # - type: json_parser
           #   parse_to: body
