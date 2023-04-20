@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-staging-rke2-redis-operator
+  name: archive-production-rke2-redis-operator
   namespace: argocd
 spec:
   project: default
