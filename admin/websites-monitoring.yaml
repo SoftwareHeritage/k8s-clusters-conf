@@ -41,10 +41,37 @@ spec:
     staticConfig:
       static:
         - "https://archive.softwareheritage.org"
-        # - "https://hedgedoc.softwareheritage.org"
+        - "https://archive.softwareheritage.org/graphql/"
+        - "https://hedgedoc.softwareheritage.org"
+        - "https://stories.softwareheritage.org"
       labels:
         level: critical
         domain: production
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: staging-websites-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: staging-websites-monitoring
+  module: http_2xx
+  prober:
+    url: admin-blackbox-exporter-application-prometheus-blackbox-exporte:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://webapp.staging.swh.network"
+        - "https://webapp.staging.swh.network/graphql/"
+        - "https://software-stories.staging.swh.network"
+      labels:
+        level: warning
+        domain: staging
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -63,6 +90,7 @@ spec:
     staticConfig:
       static:
         - "https://reaper.internal.softwareheritage.org/webui/login.html"
+        - "https://reaper.internal.staging.swh.network/webui/login.html"
         - "https://inventory.internal.admin.swh.network"
       labels:
         level: warning
