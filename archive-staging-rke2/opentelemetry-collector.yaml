@@ -87,60 +87,45 @@ spec:
           # start as either a json pattern or one of a date pattern
           line_start_pattern: '^(\\{"|[^ Z]+ |[^ Z]+Z")'
         operators:
-          # - type: json_parser
-          #   parse_to: body
-          # - type: time_parser
-          #   parse_from: body.time
-          #   layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          # second tryout
-          # Find out which format is used by kubernetes
-          # - id: get-format
-          #   type: router
-          #   routes:
-          #     - output: parser-json
-          #       expr: '$$record matches "^\\{"'
-          #     - output: parser-crio
-          #       expr: '$$record matches "^[^ Z]+ "'
-          #     - output: parser-containerd
-          #       expr: '$$record matches "^[^ Z]+Z"'
-          # Parse Docker format
-          # - id: parser-json
-          #   type: json_parser
-          #   output: extract_metadata_from_filepath
-          #   timestamp:
-          #     parse_from: time
-          #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          # Parse CRI-O format
-          # - id: parser-crio
-          #   type: regex_parser
-          #   regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
-          #   output: extract_metadata_from_filepath
-          #   timestamp:
-          #     parse_from: time
-          #     layout_type: gotime
-          #     layout: '2006-01-02T15:04:05.000000000-07:00'
-          # Parse CRI-Containerd format
-          - id: parser-containerd
-            type: regex_parser
-            output: extract_metadata_from_filepath
-            regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<message>.*)|.*)$'
-            timestamp:
-              parse_from: attributes.time
-              layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          # following not working: it aggregates all kinds of unrelated records together
-          # probably the conditional which is not ideal
-          # - id: deal-with-stack-trace
-          #   type: recombine
-          #   combine_field: attributes.message
-          #   combine_with: "\n"
-          #   is_first_entry: attributes.message matches '^[^ ]'
-          #   overwrite_with: "newest"
-          # Extract metadata from file path
-          - id: extract_metadata_from_filepath
-            type: regex_parser
-            regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
-            parse_from: attributes["log.file.path"]
-            parse_to: resource
+        # Find out which log format is used to route it to proper parsers
+        # Extract metadata from file path
+        - id: extract_metadata_from_filepath
+          type: regex_parser
+          regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
+          parse_from: attributes["log.file.path"]
+          parse_to: resource
+        # Parse CRI-Containerd format
+        - id: parser-containerd
+          type: regex_parser
+          regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<message>.*)|.*)$'
+          timestamp:
+            parse_from: attributes.time
+            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+        # then parse it json format
+        - id: json-router
+          type: router
+          routes:
+            - output: parser-json-message
+              expr: attributes.stream == 'stdout' && attributes.message matches "^\\{"
+          default: noop
+        - id: parser-json-message
+          type: json_parser
+          parse_from: attributes['message']
+          parse_to: attributes
+        # Those were an attempt to inline the json further but those entries are python
+        # dict and not json so we cannot parse them.
+        # - id: parser-json-kwargs
+        #   type: json_parser
+        #   parse_from: attributes.data.kwargs
+        #   parse_to: attributes
+        #   if: attributes.stream == 'stdout' && attributes.data?.kwargs != nil
+        # - id: parser-json-return-value
+        #   type: json_parser
+        #   parse_from: attributes.return_value
+        #   parse_to: attributes
+        #   if: attributes.stream == 'stdout' && attributes?.return_value != nil
+        - id: noop
+          type: noop
 
       otlp:
         protocols:
