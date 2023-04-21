@@ -223,12 +223,6 @@ spec:
         - key: environment
           value: staging
           action: insert
-        # - key: k8s.cluster.name
-        #   value: archive-staging-rke2
-        #   action: insert
-        # - key: message
-        #   action: insert
-        #   from_attribute: log.value
       attributes/clean-records:
         actions:
         - key: time
