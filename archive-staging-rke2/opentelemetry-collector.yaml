@@ -216,8 +216,8 @@ spec:
             - from: resource_attribute
               name: k8s.pod.ip
       batch:
-        # send_batch_size: 10000
-        send_batch_size: 1
+        send_batch_size: 1000
+        # send_batch_size: 1
       attributes/insert:
         actions:
         - key: environment
