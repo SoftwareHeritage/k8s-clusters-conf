@@ -77,10 +77,8 @@ spec:
         include:
           - /var/log/pods/*/*/*.log
         exclude:
-          # Exclude logs from all containers named otel-collector
-          - /var/log/pods/*/otel-collector/*.log
-          # Exclude swh logs
-          - /var/log/pods/swh_*/*/*.log
+          # Exclude 'swh*' namespaced logs
+          - /var/log/pods/swh*_*/*/*.log
         start_at: beginning
         include_file_path: true
         include_file_name: false
@@ -113,11 +111,8 @@ spec:
 
       filelog/swh:
         include:
-          # FIXME: tryout: limit to only swh logs
-          - /var/log/pods/swh_*/*/*.log
-        exclude:
-          # Exclude logs from all containers named otel-collector
-          - /var/log/pods/*/otel-collector/*.log
+          # Only keep 'swh*' namespaces
+          - /var/log/pods/swh*_*/*/*.log
         start_at: beginning
         include_file_path: true
         include_file_name: false
