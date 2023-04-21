@@ -85,7 +85,7 @@ spec:
         include_file_name: false
         multiline:
           # as of now, starts as a date pattern (see parser-containerd below)
-          line_start_pattern: '^[^ Z]+Z"'
+          line_start_pattern: '^[^ Z]+Z'
         operators:
         # Find out which log format is used to route it to proper parsers
         # Extract metadata from file path
