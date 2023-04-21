@@ -101,19 +101,14 @@ spec:
           timestamp:
             parse_from: attributes.time
             layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-        # then parse it json format
-        - id: json-router
-          type: router
-          routes:
-            - output: parser-json-message
-              expr: attributes.stream == 'stdout' && attributes.message matches "^\\{"
-          default: noop
+        # then parse the json formatted message if any
         - id: parser-json-message
           type: json_parser
           parse_from: attributes['message']
           parse_to: attributes
-        # Those were an attempt to inline the json further but those entries are python
-        # dict and not json so we cannot parse them.
+          if: attributes.stream == 'stdout' && attributes.message matches "^\\{"
+        # Those were an attempt to inline the json further but entries 'data.kwargs' and
+        # 'return_value' are python dict and not json so we cannot parse them.
         # - id: parser-json-kwargs
         #   type: json_parser
         #   parse_from: attributes.data.kwargs
@@ -124,8 +119,6 @@ spec:
         #   parse_from: attributes.return_value
         #   parse_to: attributes
         #   if: attributes.stream == 'stdout' && attributes?.return_value != nil
-        - id: noop
-          type: noop
 
       otlp:
         protocols:
