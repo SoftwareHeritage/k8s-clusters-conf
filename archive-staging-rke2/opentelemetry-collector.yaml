@@ -73,6 +73,36 @@ spec:
     #   zpages:
     #     endpoint: "0.0.0.0:8889"
     receivers:
+      filelog/system:
+        include:
+          - /var/log/pods/*/*/*.log
+        exclude:
+          # Exclude logs from all containers named otel-collector
+          - /var/log/pods/*/otel-collector/*.log
+          # Exclude swh logs
+          - /var/log/pods/swh_*/*/*.log
+        start_at: beginning
+        include_file_path: true
+        include_file_name: false
+        multiline:
+          # as of now, starts as a date pattern (see parser-containerd below)
+          line_start_pattern: '^[^ Z]+Z'
+        operators:
+        # Find out which log format is used to route it to proper parsers
+        # Extract metadata from file path
+        - id: extract_metadata_from_filepath
+          type: regex_parser
+          regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{32,36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
+          parse_from: attributes["log.file.path"]
+          parse_to: resource
+        # Parse CRI-Containerd format
+        - id: parser-containerd
+          type: regex_parser
+          regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr)( (?P<logtag>[^ ]*) (?P<message>.*)|.*)$'
+          timestamp:
+            parse_from: attributes.time
+            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+
       filelog/swh:
         include:
           # FIXME: tryout: limit to only swh logs
@@ -139,15 +169,22 @@ spec:
       # Generalize the default logging (needs to be activated in the exporters)
       # logging/debug:
       #   loglevel: debug
-      elasticsearch/log:
+      elasticsearch/swh-log:
         # can be replaced by using the env variable ELASTICSEARCH_URL
         endpoints:
           - http://esnode1.internal.softwareheritage.org:9200
           - http://esnode2.internal.softwareheritage.org:9200
           - http://esnode3.internal.softwareheritage.org:9200
           - http://esnode7.internal.softwareheritage.org:9200
-        api_key:
         logs_index: staging-logs
+      elasticsearch/system-log:
+        # can be replaced by using the env variable ELASTICSEARCH_URL
+        endpoints:
+          - http://esnode1.internal.softwareheritage.org:9200
+          - http://esnode2.internal.softwareheritage.org:9200
+          - http://esnode3.internal.softwareheritage.org:9200
+          - http://esnode7.internal.softwareheritage.org:9200
+        logs_index: staging-system-logs
 
     processors:
       resource:
@@ -215,7 +252,17 @@ spec:
       #   # global extension
       #   - zpages
       pipelines:
-        logs:
+        logs/system:
+          receivers: [otlp,filelog/system]
+          processors:
+            - resource
+            - k8sattributes
+            - batch
+            - attributes/insert
+            - attributes/clean-records
+          # exporters: [elasticsearch/log, logging/debug]
+          exporters: [elasticsearch/system-log]
+        logs/swh:
           receivers: [otlp,filelog/swh]
           processors:
             - resource
@@ -224,4 +271,4 @@ spec:
             - attributes/insert
             - attributes/clean-records
           # exporters: [elasticsearch/log, logging/debug]
-          exporters: [elasticsearch/log]
+          exporters: [elasticsearch/swh-log]
