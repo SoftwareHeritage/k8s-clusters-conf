@@ -84,8 +84,8 @@ spec:
         include_file_path: true
         include_file_name: false
         multiline:
-          # start as either a json pattern or one of a date pattern
-          line_start_pattern: '^(\\{"|[^ Z]+ |[^ Z]+Z")'
+          # as of now, starts as a date pattern (see parser-containerd below)
+          line_start_pattern: '^[^ Z]+Z"'
         operators:
         # Find out which log format is used to route it to proper parsers
         # Extract metadata from file path
