@@ -122,13 +122,13 @@ spec:
         # This deals with basic key=value logs (it's not able to deal with "multi"
         # values those like key="this is a value" though, so prometheus, memcached logs
         # are not parsed so far)
-        - id: parse-key-value-message
-          type: key_value_parser
-          delimiter: "="
-          pair_delimiter: " "
-          parse_from: attributes['message']
-          parse_to: attributes
-          if: attributes.message matches "^ts="
+        # - id: parse-key-value-message
+        #   type: key_value_parser
+        #   delimiter: "="
+        #   pair_delimiter: " "
+        #   parse_from: attributes['message']
+        #   parse_to: attributes
+        #   if: attributes.message matches "^ts="
 
       otlp:
         protocols:
