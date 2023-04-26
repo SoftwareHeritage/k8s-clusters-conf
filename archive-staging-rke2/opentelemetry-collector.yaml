@@ -235,6 +235,9 @@ spec:
         - key: environment
           value: staging
           action: insert
+        - key: cluster
+          value: archive-staging-rke2
+          action: insert
       attributes/clean-records:
         actions:
         - key: time
