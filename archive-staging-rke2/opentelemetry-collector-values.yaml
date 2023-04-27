@@ -8,7 +8,7 @@ presets:
   # and adds the necessary volumes and volume mounts.
   # Best used with mode = daemonset.
   logsCollection:
-    enabled: true
+    enabled: false
   # Configures the Kubernetes Processor to add Kubernetes metadata.
   # Adds the k8sattributes processor to all the pipelines
   # and adds the necessary rules to ClusteRole.
@@ -20,7 +20,24 @@ presets:
   # and adds the necessary volumes and volume mounts.
   # Best used with mode = daemonset.
   hostMetrics:
-    enabled: true
+    enabled: false
+
+extraEnvs:
+- name: KUBE_NODE_NAME
+  valueFrom:
+    fieldRef:
+      apiVersion: v1
+      fieldPath: spec.nodeName
+
+extraVolumes:
+- name: varlogpods
+  hostPath:
+    path: /var/log/pods
+    type: Directory
+
+extraVolumeMounts:
+- mountPath: /var/log/pods
+  name: varlogpods
 
 config:
   exporters:
@@ -194,8 +211,15 @@ config:
           - from: resource_attribute
             name: k8s.pod.ip
     batch:
-      send_batch_size: 1000
+      # for debug
       # send_batch_size: 1
+      send_batch_size: 1000
+    # If set to null, will be overridden with values based on k8s resource limits
+    memory_limiter: null
+    # memory_limiter:
+    #   check_interval: 10s
+    #   limit_percentage: 75
+    #   spike_limit_percentage: 25
     attributes/insert:
       actions:
       - key: environment
@@ -232,20 +256,24 @@ config:
       logs/system:
         receivers: [otlp,filelog/system]
         processors:
+          - memory_limiter
+          - batch
           - resource
           - k8sattributes
-          - batch
           - attributes/insert
           - attributes/clean-records
-        # exporters: [elasticsearch/log, logging/debug]
         exporters: [elasticsearch/system-log]
       logs/swh:
         receivers: [otlp,filelog/swh]
         processors:
+          - memory_limiter
+          - batch
           - resource
           - k8sattributes
-          - batch
           - attributes/insert
           - attributes/clean-records
-        # exporters: [elasticsearch/log, logging/debug]
         exporters: [elasticsearch/swh-log]
+      # inhibit pipelines
+      logs: {}
+      metrics: {}
+      traces: {}
