@@ -1,4 +1,4 @@
-#+title: opentelemetry -> elasticsearch tryout in staging
+#+title: opentelemetry -> elasticsearch in staging
 
 * Install a dedicated elasticsearch instance in cluster
 
@@ -36,14 +36,14 @@ root@debian:/# curl -k -u $CREDS https://$ES_SERVER
 root@debian:/# curl -k -u $CREDS https://$ES_SERVER/_cat/indices
 #+end_src
 
-** Install opentelemetry-operator
+* Install opentelemetry-operator
 
 The operator is enough to install the collector definitions:
 #+begin_src sh
 helm install opentelemetry-operator open-telemetry/opentelemetry-operator
 #+end_src
 
-** Wire to the staging elasticsearch
+* Wire to the staging elasticsearch
 
 Instantiate the collector with specific setup to discuss with elasticsearch:
 #+begin_src sh
@@ -77,6 +77,22 @@ root@debian:/# curl -k -u $CREDS https://$ES_SERVER/_cat/indices
 yellow open logs x3H05jNeSCiEj1tZCme8Lg 1 1 18 0 9.6kb 9.6kb
 #+end_src
 
-* Next step
+* Install opentelemetry-collector
+This is the part in charge of collecting data to push to es.
 
-Wire properly some loader to check it's doing the right job.
+*** crt
+
+This will install the necessary export, processors to route the logs to elasticsearch
+#+begin_src sh
+kubectl [apply|delete] -f ./opentelemetry-collector.yaml
+#+end_src
+
+Note: delete to uninstall data
+
+*** helm
+
+This does the same as the crt but some configuration is delegated to the chart.
+#+begin_src sh
+helm [install|upgrade] opentelemetry-collector open-telemetry/opentelemetry-collector \
+     --values ./opentelemetry-collector-values.yaml
+#+end_src
