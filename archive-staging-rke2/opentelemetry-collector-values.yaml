@@ -68,7 +68,7 @@ config:
         - http://esnode2.internal.softwareheritage.org:9200
         - http://esnode3.internal.softwareheritage.org:9200
         - http://esnode7.internal.softwareheritage.org:9200
-      logs_index: logs-swh-staging
+      # logs_index: logs-swh-staging
       logs_index: staging-logs
     elasticsearch/system-log:
       # can be replaced by using the env variable ELASTICSEARCH_URL
