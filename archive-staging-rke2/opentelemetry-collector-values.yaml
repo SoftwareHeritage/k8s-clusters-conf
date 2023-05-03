@@ -239,8 +239,9 @@ config:
     # If set to null, will be overridden with values based on k8s resource limits
     memory_limiter: null
     # memory_limiter:
-    #   check_interval: 10s
-    #   limit_percentage: 75
+    #   check_interval: 60s
+    #   limit_percentage: 0
+    #   limit_mib: 0
     #   spike_limit_percentage: 25
     attributes/insert:
       actions:
@@ -274,11 +275,12 @@ config:
     extensions:
       - health_check
       - memory_ballast
+
     pipelines:
       logs/system:
         receivers: [otlp,filelog/system]
         processors:
-          - memory_limiter
+          # - memory_limiter
           - batch
           - resource
           - k8sattributes
@@ -296,6 +298,6 @@ config:
           - attributes/clean-records
         exporters: [elasticsearch/swh-log]
       # inhibit pipelines
-      logs: {}
-      metrics: {}
-      traces: {}
+      logs: null
+      metrics: null
+      traces: null
