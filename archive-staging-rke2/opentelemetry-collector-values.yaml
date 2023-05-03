@@ -39,6 +39,11 @@ extraVolumeMounts:
 - mountPath: /var/log/pods
   name: varlogpods
 
+resources:
+  limits:
+    cpu: 256m
+    memory: 2Gi
+
 config:
   exporters:
     # Generalize the default logging (needs to be activated in the exporters)
