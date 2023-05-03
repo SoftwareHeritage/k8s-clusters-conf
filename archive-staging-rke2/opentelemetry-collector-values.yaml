@@ -288,7 +288,7 @@ config:
       logs/swh:
         receivers: [otlp,filelog/swh]
         processors:
-          - memory_limiter
+          # - memory_limiter
           - batch
           - resource
           - k8sattributes
