@@ -278,7 +278,9 @@ config:
 
     pipelines:
       logs/system:
-        receivers: [otlp,filelog/system]
+        receivers:
+          - otlp
+          - filelog/system
         processors:
           # - memory_limiter
           - batch
@@ -286,9 +288,11 @@ config:
           - k8sattributes
           - attributes/insert
           - attributes/clean-records
-        exporters: [elasticsearch/system-log]
+        exporters:
+          - elasticsearch/system-log
       logs/swh:
-        receivers: [otlp,filelog/swh]
+        receivers:
+          - otlp,filelog/swh
         processors:
           # - memory_limiter
           - batch
@@ -296,7 +300,8 @@ config:
           - k8sattributes
           - attributes/insert
           - attributes/clean-records
-        exporters: [elasticsearch/swh-log]
+        exporters:
+          - elasticsearch/swh-log
       # inhibit pipelines
       logs: null
       metrics: null

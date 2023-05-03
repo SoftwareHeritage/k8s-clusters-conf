@@ -214,8 +214,9 @@ spec:
             # Desired properties (but not working for now
             # 2023/04/26 08:54:58 collector server run finished with error: failed to
             # build pipelines: failed to create "k8sattributes" processor, in pipeline
-            # "logs/system": "k8s.cluster.name" (or "deployment.environment" )is not a
-            # supported metadata field - k8s.cluster.name
+            # "logs/system": "k8s.cluster.name" (or "deployment.environment" ) is not a
+            # supported metadata field
+            # - k8s.cluster.name
             # - deployment.environment
         pod_association:
           - sources:
@@ -262,22 +263,28 @@ spec:
       #   - zpages
       pipelines:
         logs/system:
-          receivers: [otlp,filelog/system]
+          receivers:
+            - otlp
+            - filelog/system
           processors:
             - resource
             - k8sattributes
             - batch
             - attributes/insert
             - attributes/clean-records
-          # exporters: [elasticsearch/log, logging/debug]
-          exporters: [elasticsearch/system-log]
+          exporters:
+            - elasticsearch/system-log
+            # - logging/debug
         logs/swh:
-          receivers: [otlp,filelog/swh]
+          receivers:
+            - otlp
+            - filelog/swh
           processors:
             - resource
             - k8sattributes
             - batch
             - attributes/insert
             - attributes/clean-records
-          # exporters: [elasticsearch/log, logging/debug]
-          exporters: [elasticsearch/swh-log]
+          exporters:
+            - elasticsearch/swh-log
+            # - logging/debug
