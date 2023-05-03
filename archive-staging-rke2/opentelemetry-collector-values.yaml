@@ -235,7 +235,7 @@ config:
     batch:
       # for debug
       # send_batch_size: 1
-      send_batch_size: 1000
+      send_batch_size: 10
     # If set to null, will be overridden with values based on k8s resource limits
     memory_limiter: null
     # memory_limiter:
