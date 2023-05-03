@@ -70,6 +70,10 @@ config:
         - http://esnode7.internal.softwareheritage.org:9200
       # logs_index: logs-swh-staging
       logs_index: staging-logs
+      # Does not work, fail to parse the configmap error
+      # retry_on_failure:
+      #   enabled: true
+      timeout: 10s
     elasticsearch/system-log:
       # can be replaced by using the env variable ELASTICSEARCH_URL
       endpoints:
@@ -79,6 +83,7 @@ config:
         - http://esnode7.internal.softwareheritage.org:9200
       # logs_index: logs-system-staging
       logs_index: staging-system-logs
+      timeout: 10s
 
   extensions:
     # with port-forward, allows to display the pipeline status to see what's been
