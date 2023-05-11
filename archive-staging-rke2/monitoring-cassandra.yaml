@@ -16,26 +16,22 @@ spec:
       port: 7070
       protocol: TCP
 ---
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
+apiVersion: v1
+kind: Endpoints
 metadata:
-  name: cassandra-servers
-  namespace: cassandra
-  labels:
-    app: cassandra
-    kubernetes.io/service-name: cassandra-servers-svc
-addressType: IPv4
-endpoints:
-  - addresses:
-      - "192.168.130.181"
-      - "192.168.130.182"
-      - "192.168.130.183"
-    conditions: {}
-ports:
-  - name: jmx-exporter
-    port: 7070
-    protocol: TCP
-
+    name: cassandra-servers-svc
+    namespace: cassandra
+    labels:
+        app: cassandra
+subsets:
+    - addresses:
+      - ip: 192.168.130.181
+      - ip: 192.168.130.182
+      - ip: 192.168.130.183
+      ports:
+        - name: jmx-exporter
+          port: 7070
+          protocol: TCP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
