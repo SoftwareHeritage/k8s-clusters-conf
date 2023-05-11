@@ -282,7 +282,7 @@ config:
           # - otlp
           - filelog/system
         processors:
-          # - memory_limiter
+          - memory_limiter
           - batch
           - resource
           - k8sattributes
@@ -295,7 +295,7 @@ config:
           # - otlp
           - filelog/swh
         processors:
-          # - memory_limiter
+          - memory_limiter
           - batch
           - resource
           - k8sattributes
