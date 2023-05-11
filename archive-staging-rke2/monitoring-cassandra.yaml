@@ -9,8 +9,6 @@ metadata:
 spec:
   type: ExternalName
   externalName: "fake-url"
-  selector:
-    app: cassandra
   ports:
     - name: jmx-exporter
       port: 7070
