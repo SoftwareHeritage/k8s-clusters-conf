@@ -30,6 +30,7 @@ endpoints:
       - "192.168.130.181"
       - "192.168.130.182"
       - "192.168.130.183"
+    conditions: {}
 ports:
   - name: jmx-exporter
     port: 7070
