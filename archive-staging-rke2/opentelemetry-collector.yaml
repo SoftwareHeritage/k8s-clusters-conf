@@ -67,11 +67,14 @@ spec:
         type: Directory
 
   config: |
-    # extensions:
-    #   # with port-forward, allows to display the pipeline status to see what's been
-    #   # deployed
-    #   zpages:
-    #     endpoint: "0.0.0.0:8889"
+    extensions:
+      # with port-forward, allows to display the pipeline status to see what's been
+      # deployed
+      zpages:
+        endpoint: "0.0.0.0:8889"
+      health_check: {}
+      memory_ballast: {}
+
     receivers:
       filelog/system:
         include:
@@ -229,7 +232,7 @@ spec:
             - from: resource_attribute
               name: k8s.pod.ip
       batch:
-        send_batch_size: 1000
+        send_batch_size: 10
         # send_batch_size: 1
       attributes/insert:
         actions:
@@ -258,9 +261,11 @@ spec:
       # telemetry:
       #   logs:
       #     level: "debug"
-      # extensions:
-      #   # global extension
-      #   - zpages
+      extensions:
+        # global extension
+        - zpages
+        - health_check
+        - memory_ballast
       pipelines:
         logs/system:
           receivers:

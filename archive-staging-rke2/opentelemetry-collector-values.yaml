@@ -273,6 +273,7 @@ config:
       # logs:
       #   level: "debug"
     extensions:
+      - zpages
       - health_check
       - memory_ballast
 
