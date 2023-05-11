@@ -186,12 +186,12 @@ config:
       #   parse_to: attributes
       #   if: attributes.message matches "^ts="
 
-    otlp:
-      protocols:
-        grpc:
-          endpoint: ${MY_POD_IP}:4317
-        http:
-          endpoint: ${MY_POD_IP}:4318
+    # otlp:
+    #   protocols:
+    #     grpc:
+    #       endpoint: ${MY_POD_IP}:4317
+    #     http:
+    #       endpoint: ${MY_POD_IP}:4318
 
   processors:
     resource:
@@ -279,7 +279,7 @@ config:
     pipelines:
       logs/system:
         receivers:
-          - otlp
+          # - otlp
           - filelog/system
         processors:
           # - memory_limiter
@@ -292,7 +292,8 @@ config:
           - elasticsearch/system-log
       logs/swh:
         receivers:
-          - otlp,filelog/swh
+          # - otlp
+          - filelog/swh
         processors:
           # - memory_limiter
           - batch
