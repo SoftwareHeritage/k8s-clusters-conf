@@ -10,7 +10,7 @@ spec:
       - cluster: admin
         branch: production
       - cluster: archive-staging-rke2
-        branch: production
+        branch: staging
       - cluster: archive-production-rke2
         branch: production
       - cluster: gitlab-staging
