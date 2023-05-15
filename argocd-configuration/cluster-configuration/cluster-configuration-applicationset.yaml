@@ -10,7 +10,7 @@ spec:
       - cluster: admin
         branch: production
       - cluster: archive-staging-rke2
-        branch: staging-dev
+        branch: staging
       - cluster: archive-production-rke2
         branch: production
       - cluster: gitlab-staging
@@ -33,7 +33,7 @@ spec:
         helm:
           valueFiles:
             - 'values/{{cluster}}.yaml'
-          releaseName: '{{cluster}}-cluster-configuration'  # TODO: Change to production when stabilized
+          releaseName: '{{cluster}}-cluster-configuration'
       destination:
         # always apply the configuration on the argocd cluster
         server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
