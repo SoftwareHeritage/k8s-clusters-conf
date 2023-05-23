@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-staging-rke2-redis-postgresql-replayer
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: redis
+    repoURL: 'https://ot-container-kit.github.io/helm-charts/'
+    targetRevision: 0.14.2
+    helm:
+      releaseName: redis-postgresql
+      values: |
+        serviceMonitor:
+          enabled: true
+          namespace: redis
+        redisExporter:
+          enabled: true
+        nodeSelector:
+          kubernetes.io/hostname: rancher-node-staging-rke2-worker1
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-persistent
+              accessModes: ["ReadWriteOnce"]
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: redis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
