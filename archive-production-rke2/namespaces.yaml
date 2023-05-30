@@ -1,10 +1,4 @@
 ---
-# Namespace dedicated to the cassandra replaying
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cassandra-replay
----
 # Namespace dedicated to deploy swh using cassandra as backend
 apiVersion: v1
 kind: Namespace
