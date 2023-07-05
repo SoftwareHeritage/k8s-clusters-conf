@@ -15,15 +15,10 @@ spec:
         branch: production
       - cluster: gitlab-staging
         branch: production
-      - cluster: rancher
-        branch: production
-  - list:
-      elements:
       - cluster: gitlab-production
         branch: production
-      template:
-        spec:
-          syncPolicy: {}
+      - cluster: rancher
+        branch: production
   template:
     metadata:
       name: '{{cluster}}-cluster-configuration'
