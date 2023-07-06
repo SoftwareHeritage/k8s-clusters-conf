@@ -61,6 +61,16 @@ spec:
               value: reaper_db
             - name: REAPER_CASS_AUTH_ENABLED
               value: "true"
+            - name: REAPER_CASS_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: CASS_AUTH_USERNAME
+            - name: REAPER_CASS_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: CASS_AUTH_PASSWORD
             - name: CRYPTO_SYSTEM_PROPERTY_SECRET
               value: CRYPTO_ENCODING_KEY
             - name: REAPER_JMX_AUTH_USERNAME
