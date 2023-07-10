@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: swh-cassandra-next-version
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      gitlab:
+        project: '77'
+        api: https://gitlab.softwareheritage.org
+        pullRequestState: opened
+      filters:
+      - branchMatch: "swh-next-version"
+      requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'swh-{{branch}}-{{number}}'
+    spec:
+      source:
+        repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
+        path: swh
+        targetRevision: "{{branch}}"
+        helm:
+          valueFiles:
+            - ../values-swh-application-versions.yaml
+            - values/default.yaml
+            - values/staging-cassandra.yaml
+            - values/overrides/staging-cassandra-next-version.yaml
+          releaseName: swh-cassandra-next-version-{{number}}
+      project: default
+      destination:
+        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+        namespace: swh-cassandra-next-version
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

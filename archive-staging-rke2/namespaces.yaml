@@ -60,6 +60,12 @@ kind: Namespace
 metadata:
   name: cassandra
 ---
+# Namespace for for the next-version validation environment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cassandra-next-version
+---
 apiVersion: v1
 kind: Namespace
 metadata:
