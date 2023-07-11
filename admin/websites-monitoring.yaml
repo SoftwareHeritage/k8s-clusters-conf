@@ -128,7 +128,7 @@ metadata:
   name: admin-websites-critical-monitoring
   namespace: cattle-monitoring-system
   labels:
-    release: rancher-critical-monitoring
+    release: "rancher-monitoring"
 spec:
   interval: 60s
   jobName: admin-websites-monitoring
