@@ -67,7 +67,7 @@ spec:
     staticConfig:
       static:
         - "https://webapp1.internal.softwareheritage.org"
-        - "https://webapp1.internal.softwareheritage.org/graphql"
+        - "https://webapp1.internal.softwareheritage.org/graphql/"
         - "https://webapp-cassandra.internal.softwareheritage.org"
       labels:
         level: warning
