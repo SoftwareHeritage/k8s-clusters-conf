@@ -83,26 +83,15 @@ spec:
       labels:
         severity: critical
         namespace: cattle-monitoring-system
-    - alert: ArgoCDApplicationOutOfSyncWarning
+    - alert: ArgoCDApplicationNotSyncedCritical
       annotations:
-        description: The application {{ $labels.name }} is out of sync since more than 1h.
-        summary: An argocd application is out of sync
-      expr: |-
-        max_over_time(argocd_app_info{sync_status='OutOfSync'}[5m]) == 1
-      for: 1h
+        description: Application {{ $labels.name }} - Sync status is {{ $labels.sync_status }}
+        summary: An argocd application is not in sync
+      expr: max_over_time(argocd_app_info{sync_status!='Synced'}[5m]) == 1
+      for: 5m
       labels:
-        severity: warning
         namespace: cattle-monitoring-system
-    - alert: ArgoCDApplicationOutOfSyncCritical
-      annotations:
-        description: The application {{ $labels.name }} is out of sync since more than 1d.
-        summary: An argocd application is out of sync
-      expr: |-
-        max_over_time(argocd_app_info{sync_status='OutOfSync'}[5m]) == 1
-      for: 1d
-      labels:
         severity: critical
-        namespace: cattle-monitoring-system
     - alert: ArgoCDClusterConnectionLost
       annotations:
         description: The connection to the cluster {{ $labels.server }} is lost since more the 1h.
