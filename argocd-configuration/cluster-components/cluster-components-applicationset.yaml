@@ -42,7 +42,7 @@ spec:
           releaseName: '{{cluster}}-cluster-components'
       destination:
         # always apply the configuration on the argocd cluster
-        server: {{url}}
+        server: '{{url}}'
         namespace: argocd
       syncPolicy:
         automated:
