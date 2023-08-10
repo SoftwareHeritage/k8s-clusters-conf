@@ -8,7 +8,7 @@ spec:
   - list:
       elements:
       - cluster: admin
-        branch: staging-configure-alerting
+        branch: production
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
       # - cluster: archive-staging-rke2
       #   branch: staging
