@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/argoproj/argo-cd.git'
-    path: manifests
+    path: manifests/ha
     targetRevision: v2.5.2
 
     directory:
