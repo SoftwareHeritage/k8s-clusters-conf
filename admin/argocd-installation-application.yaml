@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://github.com/argoproj/argo-cd.git'
     path: manifests/ha
-    targetRevision: v2.7.11
+    targetRevision: v2.8.0
 
     directory:
       recurse: false
