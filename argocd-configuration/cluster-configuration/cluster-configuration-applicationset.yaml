@@ -7,6 +7,8 @@ spec:
   generators:
   - list:
       elements:
+      - cluster: admin-rke2
+        branch: production
       - cluster: admin
         branch: production
       - cluster: archive-staging-rke2
