@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-applications
+  name: admin-rke2-argocd-applications
   namespace: argocd
 spec:
   project: default # Todo define a project to limit the deployment types
