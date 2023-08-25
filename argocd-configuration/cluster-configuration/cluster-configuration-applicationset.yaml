@@ -38,7 +38,7 @@ spec:
           releaseName: '{{cluster}}-cluster-configuration'
       destination:
         # always apply the configuration on the argocd cluster
-        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
+        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
         namespace: argocd
       syncPolicy:
         automated:
