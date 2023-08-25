@@ -1,0 +1,167 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: production-wordpress-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: production-websites-monitoring
+  module: swh_www
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://www.softwareheritage.org"
+      labels:
+        level: critical
+        domain: production
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: production-websites-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: production-websites-monitoring
+  module: http_2xx
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://archive.softwareheritage.org"
+        - "https://archive.softwareheritage.org/graphql/"
+        - "https://hedgedoc.softwareheritage.org"
+        - "https://stories.softwareheritage.org"
+      labels:
+        level: critical
+        domain: production
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: production-non-critical-websites-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: production-noncritical-websites-monitoring
+  module: http_2xx
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://webapp1.internal.softwareheritage.org"
+        - "https://webapp1.internal.softwareheritage.org/graphql/"
+        - "https://webapp-cassandra.internal.softwareheritage.org"
+      labels:
+        level: warning
+        domain: production
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: staging-websites-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: staging-websites-monitoring
+  module: http_2xx
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - "https://webapp.staging.swh.network"
+        - "https://webapp.staging.swh.network/graphql/"
+        - "https://software-stories.staging.swh.network"
+        - "https://webapp-cassandra.internal.staging.swh.network"
+      labels:
+        level: warning
+        domain: staging
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: admin-websites-warning-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: rancher-monitoring
+spec:
+  interval: 60s
+  jobName: admin-websites-warning-monitoring
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - "https://reaper.internal.softwareheritage.org/webui/login.html"
+        - "https://reaper.internal.staging.swh.network/webui/login.html"
+        - "https://inventory.internal.admin.swh.network"
+      labels:
+        level: warning
+        domain: admin
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: admin-websites-critical-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: admin-websites-monitoring
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - "https://minio-console.internal.admin.swh.network"
+        - "https://rancher.euwest.azure.internal.softwareheritage.org"
+        - "https://argocd.internal.admin.swh.network"
+      labels:
+        level: critical
+        domain: admin
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: test-websites-up-info-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: next-version-up-website-monitoring
+  prober:
+    url: admin-cluster-components-blackbox-exporter:9115
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - "https://webapp-cassandra-next-version.internal.staging.swh.network"
+      labels:
+        level: info
+        domain: test
