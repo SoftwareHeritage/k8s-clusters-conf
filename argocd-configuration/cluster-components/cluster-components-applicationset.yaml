@@ -7,9 +7,6 @@ spec:
   generators:
   - list:
       elements:
-      # - cluster: admin
-      #   branch: production
-      #   url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-q2wd4
       - cluster: admin-rke2
         branch: production
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
