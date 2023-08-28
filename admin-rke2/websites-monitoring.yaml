@@ -11,7 +11,7 @@ spec:
   jobName: production-websites-monitoring
   module: swh_www
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
     path: /probe
     scheme: http
   targets:
@@ -34,7 +34,7 @@ spec:
   jobName: production-websites-monitoring
   module: http_2xx
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
     path: /probe
     scheme: http
   targets:
@@ -60,7 +60,7 @@ spec:
   jobName: production-noncritical-websites-monitoring
   module: http_2xx
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
     path: /probe
     scheme: http
   targets:
@@ -85,7 +85,7 @@ spec:
   jobName: staging-websites-monitoring
   module: http_2xx
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
     path: /probe
     scheme: http
   targets:
@@ -110,7 +110,7 @@ spec:
   interval: 60s
   jobName: admin-websites-warning-monitoring
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
   module: http_2xx
   targets:
     staticConfig:
@@ -133,7 +133,7 @@ spec:
   interval: 60s
   jobName: admin-websites-monitoring
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
   module: http_2xx
   targets:
     staticConfig:
@@ -156,7 +156,7 @@ spec:
   interval: 60s
   jobName: next-version-up-website-monitoring
   prober:
-    url: admin-cluster-components-blackbox-exporter:9115
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
   module: http_2xx
   targets:
     staticConfig:
