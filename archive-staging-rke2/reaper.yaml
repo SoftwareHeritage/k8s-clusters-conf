@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: reaper
-          image: thelastpickle/cassandra-reaper:3.2.1
+          image: thelastpickle/cassandra-reaper:3.3.3
           imagePullPolicy: Always
           resources:
             requests:
