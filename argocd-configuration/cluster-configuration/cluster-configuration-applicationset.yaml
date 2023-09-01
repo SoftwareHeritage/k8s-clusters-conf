@@ -13,6 +13,8 @@ spec:
         branch: staging
       - cluster: archive-production-rke2
         branch: production
+      - cluster: test-staging-rke2
+        branch: staging
       - cluster: gitlab-staging
         branch: production
       - cluster: gitlab-production
