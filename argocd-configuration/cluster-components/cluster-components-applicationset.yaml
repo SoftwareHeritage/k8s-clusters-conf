@@ -11,7 +11,7 @@ spec:
         branch: production
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
       - cluster: test-staging-rke2
-        branch: add-ingress-on-irc-relay
+        branch: staging
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-hb9j7h5g
       - cluster: archive-staging-rke2
         branch: staging
