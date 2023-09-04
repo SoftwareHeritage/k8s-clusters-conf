@@ -11,8 +11,9 @@ spec:
     path: deploy/chart
     helm:
       releaseName: gitlab-operator
-      image:
-        tag: 7eb97baa
+      values: |
+        image:
+          tag: 7eb97baa
   destination:
     server: https://192.168.200.13
     namespace: gitlab-system
