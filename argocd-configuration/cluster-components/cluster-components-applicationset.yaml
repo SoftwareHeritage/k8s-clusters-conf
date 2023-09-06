@@ -54,5 +54,4 @@ spec:
       syncPolicy:
         automated:
           prune: true
-          selfHeal: {{selfHeal}}
-
+          selfHeal: '{{selfHeal}}'
