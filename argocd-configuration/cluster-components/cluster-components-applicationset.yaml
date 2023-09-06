@@ -10,19 +10,15 @@ spec:
       - cluster: admin-rke2
         branch: production
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
-        selfHeal: true
       - cluster: test-staging-rke2
         branch: staging
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-hb9j7h5g
-        selfHeal: false
       - cluster: archive-staging-rke2
         branch: staging
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
-        selfHeal: true
       - cluster: archive-production-rke2
         branch: production
         url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
-        selfHeal: true
       # - cluster: gitlab-staging
       #   branch: production
       #   url: https://euwest-gitlab-staging-89229db0.dd8c7b66-1c78-4e28-9fe3-6f454883861d.privatelink.westeurope.azmk8s.io:443
@@ -55,4 +51,4 @@ spec:
       syncPolicy:
         automated:
           prune: true
-          selfHeal: {{ .selfHeal }}
+          selfHeal: true
