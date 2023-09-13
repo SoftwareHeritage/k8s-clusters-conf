@@ -12,9 +12,9 @@ spec:
     targetRevision: production
     helm:
       releaseName: software-stories
-      parameters:
-        - name: "host"
-          value: stories.softwareheritage.org
+      valueFiles:
+        - ../values-swh-application-versions.yaml
+        - values/production.yaml
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
     namespace: software-stories
