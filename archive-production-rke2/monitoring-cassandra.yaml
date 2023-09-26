@@ -31,6 +31,8 @@ subsets:
       - ip: 192.168.100.186
       - ip: 192.168.100.187
       - ip: 192.168.100.188
+      - ip: 192.168.100.189
+      - ip: 192.168.100.190
       ports:
         - name: jmx-exporter
           port: 7070
@@ -60,4 +62,10 @@ spec:
           targetLabel: __address__
           regex: "192.168.100.18(\\d)(.*)"
           replacement: "cassandra0$1.internal.softwareheritage.org$2"
+          action: replace
+        - sourceLabels:
+            - __address__
+          targetLabel: __address__
+          regex: "192.168.100.19(\\d)(.*)"
+          replacement: "cassandra1$1.internal.softwareheritage.org$2"
           action: replace
