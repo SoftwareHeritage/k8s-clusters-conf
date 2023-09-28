@@ -13,6 +13,7 @@ spec:
     helm:
       releaseName: local-persistent-provisioner
       values: |
+        workerThreads: "'8'"
         configmap:
           name: local-persistent-provisioner
         nameOverride: local-persistent-provisioner
