@@ -14,7 +14,8 @@ spec:
       valueFiles:
         - ../values-swh-application-versions.yaml
         - values/default.yaml
-        - values/staging.yaml
+        - values/staging/default.yaml
+        - values/staging/swh.yaml
       releaseName: swh
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf

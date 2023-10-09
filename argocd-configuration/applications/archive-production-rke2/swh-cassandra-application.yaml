@@ -14,7 +14,8 @@ spec:
       valueFiles:
         - ../values-swh-application-versions.yaml
         - values/default.yaml
-        - values/production-cassandra.yaml
+        - values/production/default.yaml
+        - values/production/swh-cassandra.yaml
       releaseName: swh-cassandra
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
