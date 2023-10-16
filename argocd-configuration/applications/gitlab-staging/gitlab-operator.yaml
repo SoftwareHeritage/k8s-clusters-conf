@@ -13,7 +13,7 @@ spec:
       releaseName: gitlab-operator
       values: |
         image:
-          tag: e2f65cba
+          tag: e2f65bca
   destination:
     server: https://192.168.200.13
     namespace: gitlab-system
