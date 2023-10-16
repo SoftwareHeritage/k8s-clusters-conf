@@ -7,13 +7,13 @@ spec:
   project: default
   source:
     repoURL: https://gitlab.com/gitlab-org/cloud-native/gitlab-operator.git
-    targetRevision: 0.23.1
+    targetRevision: 0.24.1
     path: deploy/chart
     helm:
       releaseName: gitlab-operator
       values: |
         image:
-          tag: 7eb97baa
+          tag: e2f65cba
   destination:
     server: https://192.168.200.13
     namespace: gitlab-system
