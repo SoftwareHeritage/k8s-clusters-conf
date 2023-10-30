@@ -18,6 +18,7 @@ spec:
             appendonly yes
             appendfsync everysec
       values: |
+        priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
           namespace: svix-server
