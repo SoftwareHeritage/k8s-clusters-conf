@@ -13,7 +13,7 @@ spec:
       releaseName: redis-svix
       values: |
         redisConfig:
-          additionalRedisConfig: redis-external-config
+          additionalRedisConfig: redis-svix-config
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
