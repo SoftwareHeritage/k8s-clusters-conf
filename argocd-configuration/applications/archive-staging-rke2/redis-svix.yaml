@@ -12,8 +12,6 @@ spec:
     helm:
       releaseName: redis-svix
       values: |
-        redisConfig:
-          additionalRedisConfig: redis-svix-config
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
@@ -27,6 +25,12 @@ spec:
             spec:
               storageClassName: local-persistent
               accessModes: ["ReadWriteOnce"]
+        externalConfig:
+          enabled: true
+          data: |
+            save 60 500
+            appendonly yes
+            appendfsync everysec
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
     namespace: svix-server
