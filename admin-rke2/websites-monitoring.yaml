@@ -95,6 +95,7 @@ spec:
         - "https://webapp.staging.swh.network/graphql/"
         - "https://software-stories.staging.swh.network"
         - "https://webapp-cassandra.internal.staging.swh.network"
+        - "https://svix.internal.staging.swh.network/api/v1/health/"
       labels:
         level: warning
         domain: staging
