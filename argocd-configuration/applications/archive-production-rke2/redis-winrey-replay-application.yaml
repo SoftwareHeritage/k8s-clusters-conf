@@ -9,7 +9,7 @@ spec:
   source:
     chart: redis
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
-    targetRevision: 0.15.1
+    targetRevision: 0.15.11
     helm:
       releaseName: redis-winery-replay
       values: |
