@@ -1,0 +1,34 @@
+# To store replayers errors
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke2-redis-winery-replay
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: redis
+    repoURL: 'https://ot-container-kit.github.io/helm-charts/'
+    targetRevision: 0.15.1
+    helm:
+      releaseName: redis-winery-replay
+      values: |
+        serviceMonitor:
+          enabled: true
+          namespace: redis
+        redisExporter:
+          enabled: true
+        nodeSelector:
+          kubernetes.io/hostname: rancher-node-metal03
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-persistent
+              accessModes: ["ReadWriteOnce"]
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: redis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
