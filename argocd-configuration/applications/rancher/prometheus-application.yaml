@@ -35,6 +35,7 @@ spec:
           service:
             enabled: false
           prometheusSpec:
+            retention: 2d
             storageSpec: # Make the data persistent across the redeployments
               volumeClaimTemplate:
                 spec:
