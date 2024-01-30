@@ -16,3 +16,7 @@ metadata:
 spec:
   ipAddressPools:
   - test-staging-rke2-metallb-pool
+  ipAddressPoolSelectors:
+    - matchExpressions:
+      - key: "swh/metallbExclude"
+        operator: DoesNotExist
