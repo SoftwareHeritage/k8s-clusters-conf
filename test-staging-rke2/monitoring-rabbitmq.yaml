@@ -1,0 +1,59 @@
+# Test on the test-staging-rke2 cluster. Rabbitmq metrics should end up being readable
+# from the prometheus inside this cluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rabbitmq
+  name: rabbitmq-servers-svc
+  labels:
+    app: rabbitmq
+spec:
+  type: ExternalName
+  externalName: "fake-url"
+  ports:
+    - name: rabbitmq-metrics
+      port: 9419
+      targetPort: 9419
+      protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  namespace: rabbitmq
+  name: rabbitmq-servers-svc
+  labels:
+    app: rabbitmq
+subsets:
+  - addresses:
+    - ip: 192.168.130.50
+    ports:
+      - name: rabbitmq-metrics
+        port: 9419
+        protocol: TCP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: rabbitmq
+  name: rabbitmq-metrics
+  labels:
+    app: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  namespaceSelector:
+    any: true
+  endpoints:
+    - port: rabbitmq-metrics
+      interval: 30s
+      honorLabels: true
+      relabelings:
+        # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+        - sourceLabels:
+            - __address__
+          targetLabel: __address__
+          regex: "192.168.130.50(.*)"
+          replacement: "scheduler0.internal.staging.swh.network$1"
+          action: replace
