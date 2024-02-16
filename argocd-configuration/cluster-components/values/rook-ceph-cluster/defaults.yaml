@@ -1,0 +1,10 @@
+---
+operatorNamespace: rook-ceph
+cephClusterSpec:
+  external:
+    enable: true
+  crashCollector:
+    disable: true
+cephBlockPools: []
+cephFileSystems: []
+cephObjectStores: []
