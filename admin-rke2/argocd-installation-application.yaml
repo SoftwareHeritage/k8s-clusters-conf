@@ -9,8 +9,7 @@ spec:
   source:
     repoURL: 'https://github.com/argoproj/argo-cd.git'
     path: manifests/ha
-    targetRevision: v2.8.0
-
+    targetRevision: v2.10.1
     directory:
       recurse: false
       include: install.yaml
