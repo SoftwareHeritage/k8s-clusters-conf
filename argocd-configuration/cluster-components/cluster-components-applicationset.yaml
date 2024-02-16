@@ -1,37 +1,22 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: cluster-components
   namespace: argocd
 spec:
-  generators:
-  - list:
-      elements:
-      - cluster: admin-rke2
-        branch: production
-        url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
-      - cluster: test-staging-rke2
-        branch: staging
-        url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-hb9j7h5g
-      - cluster: archive-staging-rke2
-        branch: staging
-        url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
-      - cluster: archive-production-rke2
-        branch: production
-        url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
-      # - cluster: gitlab-staging
-      #   branch: production
-      #   url: https://euwest-gitlab-staging-89229db0.dd8c7b66-1c78-4e28-9fe3-6f454883861d.privatelink.westeurope.azmk8s.io:443
-      # - cluster: gitlab-production
-      #   branch: production
-      #   url: https://euwest-gitlab-production-0a7cd3d5.26178444-6cf1-498d-88b1-e8182a1b74c6.privatelink.westeurope.azmk8s.io:443
-      # - cluster: rancher
-      #   branch: production
-      #   url: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
   goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            softwareheritage.org/deploy-cluster-components: "true"
+        values:
+          branch: '{{ index .metadata.labels "softwareheritage.org/default-branch" }}'
   template:
     metadata:
-      name: '{{ .cluster }}-cluster-components'
+      name: '{{ .name }}-cluster-components'
       namespace: argocd
     spec:
       revisionHistoryLimit: 2
@@ -39,14 +24,13 @@ spec:
       source:
         repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
         path: cluster-components
-        targetRevision: '{{ .branch }}'
+        targetRevision: '{{ .values.branch }}'
         helm:
           valueFiles:
-            - 'values/{{ .cluster }}.yaml'
-          releaseName: '{{ .cluster }}-cluster-components'
+            - 'values/{{ .name }}.yaml'
+          releaseName: '{{ .name }}-cluster-components'
       destination:
-        # always apply the configuration on the argocd cluster
-        server: '{{ .url }}'
+        name: '{{ .name }}'
         namespace: argocd
       syncPolicy:
         automated:
