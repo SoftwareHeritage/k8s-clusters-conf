@@ -9,11 +9,12 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: v6.0.14
+    targetRevision: v6.2.3
     helm:
       releaseName: argocd
       values: |
         global:
+          hostname: argocd.internal.admin.swh.network
           networkPolicy:
             create: true
 
