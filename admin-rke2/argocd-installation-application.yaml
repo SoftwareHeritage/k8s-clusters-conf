@@ -55,6 +55,9 @@ spec:
             accounts.olasd: apiKey, login
             accounts.ardumont: apiKey, login
             accounts.gsamson: apiKey, login
+          params:
+            # Enable ApplicationSet applicationsSync policy override
+            applicationsetcontroller.enable.policy.override: true
           rbac:
             policy.default: role:readonly
             policy.csv: |
