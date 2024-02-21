@@ -30,9 +30,9 @@ spec:
       revisionHistoryLimit: 2
       project: default
       source:
-        repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
-        path: cluster-configuration
-        targetRevision: '{{branch}}'
+        repoURL: 'https://gitlab.softwareheritage.org/swh/infra/k8s-clusters-conf.git'
+        path: argocd-configuration/chart
+        targetRevision: 'master'
         helm:
           valueFiles:
             - 'values/{{cluster}}.yaml'
