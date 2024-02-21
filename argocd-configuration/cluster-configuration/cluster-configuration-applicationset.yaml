@@ -5,26 +5,17 @@ metadata:
   name: cluster-configuration
   namespace: argocd
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
-  - list:
-      elements:
-      - cluster: admin-rke2
-        branch: production
-      - cluster: archive-staging-rke2
-        branch: staging
-      - cluster: archive-production-rke2
-        branch: production
-      - cluster: test-staging-rke2
-        branch: staging
-      - cluster: gitlab-staging
-        branch: production
-      - cluster: gitlab-production
-        branch: production
-      - cluster: rancher
-        branch: production
+    - clusters:
+        # Filter out the in-cluster cluster, for which we don't have a cluster-configuration
+        selector:
+          matchLabels:
+            argocd.argoproj.io/secret-type: cluster
   template:
     metadata:
-      name: '{{cluster}}-cluster-configuration'
+      name: '{{ .name }}-cluster-configuration'
       namespace: argocd
     spec:
       revisionHistoryLimit: 2
@@ -35,11 +26,11 @@ spec:
         targetRevision: 'master'
         helm:
           valueFiles:
-            - 'values/{{cluster}}.yaml'
-          releaseName: '{{cluster}}-cluster-configuration'
+            - 'values/{{ .name }}.yaml'
+          releaseName: '{{ .name }}-cluster-configuration'
       destination:
-        # always apply the configuration on the argocd cluster
-        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
+        # This chart deploys argocd Applications so we always apply it on the local cluster
+        name: in-cluster
         namespace: argocd
       syncPolicy:
         automated:
