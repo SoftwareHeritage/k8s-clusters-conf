@@ -20,6 +20,12 @@ spec:
 
         redis-ha:
           enabled: true
+          # Disable hard anti affinity rules: we have as many replicas as we
+          # have nodes, so we can't surge the deployment for updates if
+          # podAntiAffinity is set.
+          hardAntiAffinity: false
+          haproxy:
+            hardAntiAffinity: false
 
         controller:
           replicas: 1
