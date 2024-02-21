@@ -11,6 +11,13 @@ spec:
   ignoreApplicationDifferences:
     - jsonPointers:
         - /spec/syncPolicy
+  syncPolicy:
+    # This is critical cluster infrastructure, don't let the Applications remove
+    # their owned resources when the ApplicationSet disappears
+    preserveResourcesOnDeletion: true
+    # Belt and suspenders: do not allow the ApplicationSet to delete
+    # Applications if they're not generated anymore either.
+    applicationsSync: create-update
   generators:
     - matrix:
         generators:
