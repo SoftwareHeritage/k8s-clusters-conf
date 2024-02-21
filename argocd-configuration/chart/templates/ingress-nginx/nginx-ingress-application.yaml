@@ -1,0 +1,67 @@
+{{ if .Values.ingressNginx.enabled }}
+{{- $applicationName := .Values.ingressNginx.applicationNameOverride | default (print .Values.clusterName "-ingress-nginx-application") }}
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $applicationName }}
+  namespace: {{ .Values.argocdNamespace }}
+spec:
+  revisionHistoryLimit: 2
+  project: {{ .Values.defaultProject }}
+  source:
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: {{ .Values.ingressNginx.version }}
+    helm:
+      # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
+      # if not, some selectors like for the ServiceMonitor will not found the services
+      releaseName: {{ $applicationName }}
+      values: |
+        revisionHistoryLimit: 3
+        controller:
+          replicaCount: {{ .Values.ingressNginx.replicaCount | default 1}}
+          watchIngressWithoutClass: {{ .Values.ingressNginx.watchIngressWithoutClass | default "false" }}
+          {{- if .Values.ingressNginx.allowSnippetAnnotations }}
+          allowSnippetAnnotations: {{ .Values.ingressNginx.allowSnippetAnnotations }}
+          {{- end }}
+          service:
+            externalTrafficPolicy: Local
+            {{- if .Values.ingressNginx.loadBalancerIP }}
+            loadBalancerIP: {{ .Values.ingressNginx.loadBalancerIP}}
+            {{- end }}
+            {{- if .Values.ingressNginx.annotations }}
+            annotations:
+              {{ .Values.ingressNginx.annotations | toYaml | nindent 14 }}
+            {{- end }}
+          ingressClassResource:
+            name: {{ .Values.ingressNginx.ingressClassName | default "nginx" | quote }}
+            default: {{ .Values.ingressNginx.defaultClass }}
+            {{- if .Values.ingressNginx.controllerName }}
+            controllerValue: {{ .Values.ingressNginx.controllerName | quote }}
+            {{- end }}
+          {{- if .Values.ingressNginx.monitoringEnabled }}
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+              namespaceSelector:
+                any: true
+          {{- end }}
+          {{- if .Values.ingressNginx.config }}
+          config:
+            {{ .Values.ingressNginx.config | toYaml | nindent 12 }}
+          {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.ingressNginx.requestedCpu | default "100m" }}
+              memory: {{ .Values.ingressNginx.requestedMemory | default "90Mi" }}
+  destination:
+    server: {{ .Values.clusterUrl }}
+    namespace: {{ .Values.ingressNginx.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+{{ end }}

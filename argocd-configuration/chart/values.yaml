@@ -1,0 +1,72 @@
+# Cluster url as declared in argocd
+clusterUrl: https://cluster/url
+# Common mame of the the cluster
+clusterName: changeme
+environment: changeme
+
+argocdNamespace: argocd
+defaultProject: default
+
+defaultPrune: false
+defaultSelfHeal: false
+
+clusterConfiguration:
+  prune: false
+  selfHeal: false
+
+certManager:
+  enabled: false
+  namespace: cert-manager
+  version: v1.10.0
+  webhookGandiEnabled: false
+  webhookGandiVersion: v0.2.0
+  useGandiDNS: false
+
+metallb:
+  enabled: false
+  namespace: metallb
+  version: 0.13.7
+
+ingressNginx:
+  enabled: false
+  version: 4.4.0
+  namespace: ingress-nginx
+  # Needed when a chart use the application name to
+  # name deployed objects. The names can't be longer than 63 characters
+  # Must be unique in argocd
+  # applicationNameOverride: my-application-name
+  defaultClass: false
+  watchIngressWithoutClass: false
+  monitoringEnabled: true
+  # ingressClassName: nginx
+  # avoid to overlap with other deployed ingress-nginx ingress controllers
+  # for example, gitlab deploys another ingress-nginx with this default name
+  # controllerName: "k8s.io/ingress-nginx"
+  # loadBalanceIP: xxx.xxx.xxx.xxx
+  # annotations:
+  #   annotation1: value
+  # config:
+  #   # see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
+  #   # for more configuration options
+  #   worker_processes: 1
+  # requestedCpu: 90m
+  # requestedMemory: 100Mi
+
+otlpCollector:
+  enabled: false
+  debug: false
+  version: 0.62.1
+  # namespace: opentelemetry
+  indexes: {}
+  #   swh: logs
+  #   system: system-logs
+  # resources:
+  #   cpu: 256m
+  #   memory: 2Gi
+  #   batch: 10
+  #   timeout: 10s
+  # endpoints:
+  #   - http://esnode1.internal.softwareheritage.org:9200
+  #   - http://esnode2.internal.softwareheritage.org:9200
+  #   - http://esnode3.internal.softwareheritage.org:9200
+  #   - http://esnode7.internal.softwareheritage.org:9200
