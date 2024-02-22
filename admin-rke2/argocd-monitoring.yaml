@@ -1,26 +1,5 @@
 # from https://argo-cd.readthedocs.io/en/latest/operator-manual/metrics/
 ---
-# Service monitor
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  namespace: argocd
-  name: argocd-metrics
-  labels:
-    app: argocd
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: argocd-metrics
-  namespaceSelector:
-    matchNames:
-     - argocd
-  endpoints:
-    - port: metrics
-      scheme: http
-      interval: 30s
-      path: /metrics
----
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -34,9 +13,9 @@ spec:
       app.kubernetes.io/name: argocd-notifications-controller-metrics
   namespaceSelector:
     matchNames:
-     - argocd
+      - argocd
   endpoints:
-    - port: metrics
+    - port: http-metrics
       scheme: http
       interval: 30s
       path: /metrics
@@ -54,9 +33,69 @@ spec:
       app.kubernetes.io/name: argocd-server-metrics
   namespaceSelector:
     matchNames:
+      - argocd
+  endpoints:
+    - port: http-metrics
+      scheme: http
+      interval: 30s
+      path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: argocd
+  name: argocd-repo-server-metrics
+  labels:
+    app: argocd
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server-metrics
+  namespaceSelector:
+    matchNames:
+      - argocd
+  endpoints:
+    - port: http-metrics
+      scheme: http
+      interval: 30s
+      path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: argocd
+  name: argocd-application-controller-metrics
+  labels:
+    app: argocd
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller-metrics
+  namespaceSelector:
+    matchNames:
+      - argocd
+  endpoints:
+    - port: http-metrics
+      scheme: http
+      interval: 30s
+      path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: argocd
+  name: argocd-applicationset-controller-metrics
+  labels:
+    app: argocd
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-applicationset-controller-metrics
+  namespaceSelector:
+    matchNames:
      - argocd
   endpoints:
-    - port: metrics
+    - port: http-metrics
       scheme: http
       interval: 30s
       path: /metrics
