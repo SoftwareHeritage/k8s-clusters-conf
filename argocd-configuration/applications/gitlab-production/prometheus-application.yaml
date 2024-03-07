@@ -51,6 +51,11 @@ spec:
                   resources:
                     requests:
                       storage: 16Gi
+            resources:
+              requests:
+                cpu: 300m
+                memory: 2500Mi
+            retention: 2d
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
             probeSelectorNilUsesHelmValues: false
