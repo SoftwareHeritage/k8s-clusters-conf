@@ -39,6 +39,8 @@ spec:
                 operator: In
                 values:
                 - "true"
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: cassandra-checks
           command:
