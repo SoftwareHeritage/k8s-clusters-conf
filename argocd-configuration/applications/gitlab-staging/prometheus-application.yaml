@@ -22,6 +22,12 @@ spec:
       values: |
         alertmanager:
           enabled: true  # Temporary for tests
+        defaultRules:
+          rules:
+            kubeControllerManager: false
+            kubeProxy: false
+            kubeSchedulerRecording: false
+            kubeStateMetrics: false
         grafana:
           enabled: true  # Temporary before federation with pergamon
           service:
