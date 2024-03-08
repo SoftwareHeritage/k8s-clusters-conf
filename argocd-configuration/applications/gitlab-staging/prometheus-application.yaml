@@ -93,6 +93,14 @@ spec:
             - hosts:
               - k8s-gitlab-staging-thanos.internal.staging.swh.network
               secretName: thanos-crt
+        kubeControllerManager:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
   destination:
     server: https://192.168.200.13
     namespace: monitoring
