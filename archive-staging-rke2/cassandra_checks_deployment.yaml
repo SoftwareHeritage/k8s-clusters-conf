@@ -41,6 +41,7 @@ spec:
                 - "true"
       securityContext:
         fsGroup: 1000
+      priorityClassName: swh-background-workload
       containers:
         - name: cassandra-checks
           command:
