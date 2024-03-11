@@ -21,7 +21,7 @@ metadata:
   name: cassandra-checks
   namespace: swh-cassandra
 spec:
-  replicas: 0
+  replicas: 3
   selector:
     matchLabels:
       app: cassandra-checks
@@ -50,7 +50,7 @@ spec:
 #            limits:
 #              memory: "128Mi"
 #              cpu: "500m"
-          image: container-registry.softwareheritage.org/swh/infra/swh-apps/cassandra_checks:20240308.2
+          image: container-registry.softwareheritage.org/swh/infra/swh-apps/cassandra_checks:20240311.2
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: cassandra-checks-volume
