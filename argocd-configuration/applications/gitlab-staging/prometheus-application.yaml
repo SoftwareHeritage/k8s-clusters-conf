@@ -10,7 +10,7 @@ spec:
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 43.1.0
+    targetRevision: 45.10.1
     helm:
       releaseName: gitlab-staging-prometheus # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
       # The crds must be manually applied to avoid the following error:
@@ -21,13 +21,10 @@ spec:
       skipCrds: true
       values: |
         alertmanager:
-          enabled: true  # Temporary for tests
-        defaultRules:
-          rules:
-            kubeControllerManager: false
-            kubeProxy: false
-            kubeSchedulerRecording: false
-            kubeStateMetrics: false
+          enabled: true
+          alertmanagerSpec:
+            alertmanagerConfigMatcherStrategy:
+              type: None
         grafana:
           enabled: true  # Temporary before federation with pergamon
           service:
