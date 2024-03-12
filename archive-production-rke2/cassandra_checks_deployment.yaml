@@ -13,6 +13,20 @@ spec:
     requests:
       storage: 8Gi
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cassandra-checks-backup
+  namespace: swh-cassandra
+spec:
+  storageClassName: cephfs
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 20Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,6 +69,8 @@ spec:
           volumeMounts:
           - name: cassandra-checks-volume
             mountPath: /volume
+          - name: cassandra-checks-volume2
+            mountPath: /volume2
           - name: swh-config
             mountPath: /etc/swh/
           env:
@@ -64,6 +80,9 @@ spec:
         - name: cassandra-checks-volume
           persistentVolumeClaim:
             claimName: cassandra-checks-pvc
+        - name: cassandra-checks-volume2
+          persistentVolumeClaim:
+            claimName: cassandra-checks-backup
         - name: swh-config
           secret:
             secretName: cassandra-check-config-secret
