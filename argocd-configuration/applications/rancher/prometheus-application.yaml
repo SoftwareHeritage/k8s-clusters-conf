@@ -18,7 +18,10 @@ spec:
           value: "true"
       values: |
         alertmanager:
-          enabled: true  # Temporary for tests
+          enabled: true
+          alertmanagerSpec:
+            alertmanagerConfigMatcherStrategy:
+              type: None
         grafana:
           enabled: false
         prometheus-node-exporter:
@@ -77,6 +80,14 @@ spec:
             - hosts:
               - k8s-rancher-thanos.euwest.azure.internal.softwareheritage.org
               secretName: thanos-crt
+        kubeControllerManager:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
     namespace: monitoring
