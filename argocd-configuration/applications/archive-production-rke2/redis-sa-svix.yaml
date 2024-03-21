@@ -1,0 +1,55 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke2-redis-sa-svix
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: redis
+    repoURL: 'https://ot-container-kit.github.io/helm-charts/'
+    targetRevision: 0.14.2
+    helm:
+      releaseName: redis-sa-svix
+      values: |
+        labels:
+          app: redis-sa-svix
+        priorityClassName: swh-storages
+        serviceMonitor:
+          enabled: true
+          namespace: svix-server
+        redisExporter:
+          enabled: true
+        # Hopefully, we'll be able to drop this at some point when using a cephfs volume
+        # with success...
+        nodeSelector:
+          kubernetes.io/hostname: rancher-node-metal05
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-persistent
+              accessModes: ["ReadWriteOnce"]
+        # No need for the affinity just yet since we have the nodeSelector above
+        # affinity:
+        #   nodeAffinity:
+        #     requiredDuringSchedulingIgnoredDuringExecution:
+        #       nodeSelectorTerms:
+        #       - matchExpressions:
+        #         - key: svix-server
+        #           operator: In
+        #           values:
+        #           - "true"
+        externalConfig:
+          enabled: true
+          data: |
+            save 60 500
+            appendonly yes
+            appendfsync everysec
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: svix-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
