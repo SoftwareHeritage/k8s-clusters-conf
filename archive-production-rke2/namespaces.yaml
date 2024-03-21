@@ -63,6 +63,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: svix-server
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: rabbitmq
 ---
 apiVersion: v1
