@@ -12,14 +12,14 @@ spec:
     helm:
       releaseName: redis-svix
       values: |
+        redisCluster:
+          clusterSize: 2
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
           namespace: svix-server
         redisExporter:
           enabled: true
-        nodeSelector:
-          kubernetes.io/hostname: rancher-node-staging-rke2-worker2
         storageSpec:
           volumeClaimTemplate:
             spec:
