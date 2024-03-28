@@ -12,9 +12,6 @@ spec:
     helm:
       releaseName: redis-svix
       values: |
-        clusterMode: cluster
-        cluster:
-          size: 2
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
