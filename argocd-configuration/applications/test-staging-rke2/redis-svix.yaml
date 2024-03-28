@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: archive-staging-rke2-redis-svix
+  name: test-staging-rke2-redis-svix
   namespace: argocd
 spec:
   project: default
