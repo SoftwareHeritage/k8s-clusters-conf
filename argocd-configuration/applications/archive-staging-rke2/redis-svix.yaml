@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    chart: redis
+    chart: redis-cluster
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
     targetRevision: 0.14.2
     helm:
