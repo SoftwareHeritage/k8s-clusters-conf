@@ -1,7 +1,8 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: test-staging-rke2-redis-svix
+  name: test-staging-rke2-redis
   namespace: argocd
 spec:
   project: default
@@ -10,28 +11,23 @@ spec:
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
     targetRevision: 0.15.11
     helm:
-      releaseName: redis-svix
+      releaseName: redis
       values: |
-        priorityClassName: storages
         serviceMonitor:
           enabled: true
-          namespace: svix-server
+          namespace: redis
         redisExporter:
           enabled: true
+        nodeSelector:
+          kubernetes.io/hostname: rancher-node-staging-rke2-worker1
         storageSpec:
           volumeClaimTemplate:
             spec:
               storageClassName: local-persistent
               accessModes: ["ReadWriteOnce"]
-        externalConfig:
-          enabled: true
-          data: |
-            save 60 500
-            appendonly yes
-            appendfsync everysec
   destination:
-    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-hb9j7h5gg
-    namespace: svix-server
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-hb9j7h5g
+    namespace: redis
   syncPolicy:
     automated:
       prune: true
