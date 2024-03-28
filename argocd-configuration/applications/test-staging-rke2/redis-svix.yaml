@@ -12,8 +12,11 @@ spec:
     helm:
       releaseName: redis-svix
       values: |
-        redisCluster:
-          clusterSize: 2
+        clusterSize: 2
+        leader:
+          replicas: 1
+        follower:
+          replicas: 1
         priorityClassName: storages
         serviceMonitor:
           enabled: true
