@@ -23,6 +23,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: redis
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: svix-server
 ---
 apiVersion: v1
