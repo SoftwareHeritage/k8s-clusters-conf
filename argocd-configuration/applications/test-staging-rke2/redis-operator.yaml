@@ -8,7 +8,7 @@ spec:
   source:
     chart: redis-operator
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
-    targetRevision: 0.15.1
+    targetRevision: 0.15.9
     helm:
       releaseName: redis-operator
   destination:
