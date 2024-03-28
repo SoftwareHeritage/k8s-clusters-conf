@@ -13,6 +13,8 @@ spec:
     helm:
       releaseName: redis
       values: |
+        redisCluster:
+          clusterSize: 2
         serviceMonitor:
           enabled: true
           namespace: redis
