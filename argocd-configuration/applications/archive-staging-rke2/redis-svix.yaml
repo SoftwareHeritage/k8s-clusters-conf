@@ -16,6 +16,7 @@ spec:
           clusterSize: 2
         externalService:
           enabled: True
+          serviceType: ClusterIP
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
