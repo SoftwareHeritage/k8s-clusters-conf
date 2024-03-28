@@ -13,7 +13,7 @@ spec:
       releaseName: redis-svix
       values: |
         redisCluster:
-          clusterSize: 2
+          clusterSize: 1
           leader:
             replicas: 1
           follower:
