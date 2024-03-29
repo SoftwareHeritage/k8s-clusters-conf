@@ -27,15 +27,6 @@ spec:
                       - "true"
           follower:
             replicas: 2
-            affinity:
-              nodeAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  nodeSelectorTerms:
-                  - matchExpressions:
-                    - key: svix-server
-                      operator: In
-                      values:
-                      - "true"
         labels:
           app: redis-svix-leader
         priorityClassName: storages
