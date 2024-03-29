@@ -16,6 +16,15 @@ spec:
           clusterSize: 1
           leader:
             replicas: 2
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: svix-server
+                      operator: In
+                      values:
+                      - "true"
           # no follower, just leaders
           follower:
             replicas: 0
