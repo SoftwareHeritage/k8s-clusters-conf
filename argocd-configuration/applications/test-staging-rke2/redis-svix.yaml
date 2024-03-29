@@ -13,9 +13,8 @@ spec:
       releaseName: redis-svix
       values: |
         redisCluster:
-          clusterSize: 1
+          clusterSize: 3
           leader:
-            replicas: 2
             affinity:
               nodeAffinity:
                 requiredDuringSchedulingIgnoredDuringExecution:
@@ -25,8 +24,6 @@ spec:
                       operator: In
                       values:
                       - "true"
-          follower:
-            replicas: 2
         labels:
           app: redis-svix-leader
         priorityClassName: storages
