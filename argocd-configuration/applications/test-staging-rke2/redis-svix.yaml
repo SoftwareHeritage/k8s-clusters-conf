@@ -29,6 +29,9 @@ spec:
             spec:
               storageClassName: local-persistent
               accessModes: ["ReadWriteOnce"]
+          nodeConfVolumeClaimTemplate:
+            spec:
+              storageClassName: local-persistent
         externalConfig:
           enabled: true
           data: |
