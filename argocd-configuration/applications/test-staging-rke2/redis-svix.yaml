@@ -25,9 +25,19 @@ spec:
                       operator: In
                       values:
                       - "true"
-          # no follower, just leaders
           follower:
-            replicas: 0
+            replicas: 2
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: svix-server
+                      operator: In
+                      values:
+                      - "true"
+        labels:
+          app: redis-svix-leader
         priorityClassName: storages
         serviceMonitor:
           enabled: true
