@@ -15,9 +15,10 @@ spec:
         redisCluster:
           clusterSize: 1
           leader:
-            replicas: 1
+            replicas: 2
+          # no follower, just leaders
           follower:
-            replicas: 1
+            replicas: 0
         priorityClassName: storages
         serviceMonitor:
           enabled: true
