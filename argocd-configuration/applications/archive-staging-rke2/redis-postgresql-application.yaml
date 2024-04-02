@@ -8,7 +8,7 @@ spec:
   source:
     chart: redis
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
-    targetRevision: 0.15.9
+    targetRevision: 0.15.11
     helm:
       releaseName: redis-postgresql
       values: |
