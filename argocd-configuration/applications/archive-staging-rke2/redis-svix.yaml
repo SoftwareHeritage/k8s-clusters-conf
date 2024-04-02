@@ -8,25 +8,11 @@ spec:
   source:
     chart: redis-cluster
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
-    targetRevision: 0.15.11
+    targetRevision: 0.14.2
     helm:
       releaseName: redis-svix
       values: |
         priorityClassName: swh-storages
-        redisCluster:
-          clusterSize: 3
-          leader:
-            affinity:
-              nodeAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  nodeSelectorTerms:
-                  - matchExpressions:
-                    - key: svix-server
-                      operator: In
-                      values:
-                      - "true"
-        labels:
-          app: redis-svix-leader
         serviceMonitor:
           enabled: true
           namespace: svix-server
@@ -37,9 +23,6 @@ spec:
             spec:
               storageClassName: local-persistent
               accessModes: ["ReadWriteOnce"]
-          nodeConfVolumeClaimTemplate:
-            spec:
-              storageClassName: local-persistent
         externalConfig:
           enabled: true
           data: |
