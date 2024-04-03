@@ -23,6 +23,6 @@ spec:
       # case server-side apply can be used to avoid this issue as the annotation is not
       # used in this case.
       # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
-      - serverSideApply=true
+      - ServerSideApply=true
 
 
