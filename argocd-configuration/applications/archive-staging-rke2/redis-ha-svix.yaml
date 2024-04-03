@@ -36,7 +36,7 @@ spec:
                       values:
                       - "true"
         labels:
-          app: redis-svix-leader
+          app: redis-ha-svix-leader
         serviceMonitor:
           enabled: true
           namespace: svix-server
