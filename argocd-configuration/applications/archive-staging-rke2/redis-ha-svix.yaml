@@ -25,6 +25,16 @@ spec:
                       operator: In
                       values:
                       - "true"
+          follower:
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: svix-server
+                      operator: In
+                      values:
+                      - "true"
         labels:
           app: redis-svix-leader
         serviceMonitor:
