@@ -8,7 +8,7 @@ spec:
   source:
     chart: redis-operator
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
-    targetRevision: 0.14.3
+    targetRevision: 0.15.9
     helm:
       releaseName: redis-operator
   destination:
@@ -18,5 +18,11 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      # CRD metadata is too big to fit in 262144 bytes allowed annotation size. In this
+      # case server-side apply can be used to avoid this issue as the annotation is not
+      # used in this case.
+      # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
+      - serverSideApply=true
 
 
