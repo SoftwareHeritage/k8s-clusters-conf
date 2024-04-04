@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: redis-svix
       values: |
+        labels:
+          app: redis-svix
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
