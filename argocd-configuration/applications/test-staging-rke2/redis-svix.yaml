@@ -24,10 +24,8 @@ spec:
           volumeClaimTemplate:
             spec:
               storageClassName: cephfs
-              accessModes: ["ReadWriteOnce"]
-          nodeConfVolumeClaimTemplate:
-            spec:
-              storageClassName: cephfs
+              accessModes:
+                - ReadWriteMany
         externalConfig:
           enabled: true
           data: |
