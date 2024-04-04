@@ -23,7 +23,7 @@ spec:
             spec:
               storageClassName: cephfs
               accessModes:
-                ReadWriteMany
+                - ReadWriteMany
         externalConfig:
           enabled: true
           data: |
