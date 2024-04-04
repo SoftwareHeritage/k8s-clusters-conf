@@ -23,11 +23,11 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-persistent
+              storageClassName: cephfs
               accessModes: ["ReadWriteOnce"]
           nodeConfVolumeClaimTemplate:
             spec:
-              storageClassName: local-persistent
+              storageClassName: cephfs
         externalConfig:
           enabled: true
           data: |
