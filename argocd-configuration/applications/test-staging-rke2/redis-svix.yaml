@@ -6,26 +6,14 @@ metadata:
 spec:
   project: default
   source:
-    chart: redis-cluster
+    chart: redis
     repoURL: 'https://ot-container-kit.github.io/helm-charts/'
     targetRevision: 0.15.11
     helm:
       releaseName: redis-svix
       values: |
-        redisCluster:
-          clusterSize: 3
-          leader:
-            affinity:
-              nodeAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  nodeSelectorTerms:
-                  - matchExpressions:
-                    - key: svix-server
-                      operator: In
-                      values:
-                      - "true"
         labels:
-          app: redis-svix-leader
+          app: redis-svix
         priorityClassName: storages
         serviceMonitor:
           enabled: true
