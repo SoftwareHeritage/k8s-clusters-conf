@@ -14,6 +14,15 @@ spec:
       values: |
         labels:
           app: redis-svix
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: svix-server
+                  operator: In
+                  values:
+                  - "true"
         priorityClassName: swh-storages
         serviceMonitor:
           enabled: true
