@@ -23,9 +23,9 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: cephfs
+              storageClassName: local-persistent
               accessModes:
-                - ReadWriteMany
+                - ReadWriteOnce
         externalConfig:
           enabled: true
           data: |
