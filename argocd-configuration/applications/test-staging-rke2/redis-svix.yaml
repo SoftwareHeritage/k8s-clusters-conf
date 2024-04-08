@@ -20,6 +20,8 @@ spec:
           namespace: svix-server
         redisExporter:
           enabled: true
+          redisConfig:
+            additionalRedisConfig: redis-svix-ext-config
         storageSpec:
           volumeClaimTemplate:
             spec:
