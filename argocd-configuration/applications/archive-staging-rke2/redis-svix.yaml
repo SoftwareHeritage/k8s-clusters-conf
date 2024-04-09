@@ -32,7 +32,7 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-persistent
+              storageClassName: ceph-rbd
               accessModes:
                 - ReadWriteOnce
         externalConfig:
