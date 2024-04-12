@@ -44,6 +44,7 @@ spec:
         - "https://archive.softwareheritage.org/graphql/"
         - "https://hedgedoc.softwareheritage.org"
         - "https://stories.softwareheritage.org"
+        - "https://svix.internal.softwareheritage.org/api/v1/health/"
       labels:
         level: critical
         domain: production
