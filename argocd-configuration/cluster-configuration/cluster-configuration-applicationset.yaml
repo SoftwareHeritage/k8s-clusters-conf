@@ -5,21 +5,26 @@ metadata:
   name: cluster-configuration
   namespace: argocd
 spec:
-  goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
-  ignoreApplicationDifferences:
-    - jsonPointers:
-        - /spec/syncPolicy
   generators:
-    - clusters:
-        selector:
-          matchLabels:
-            softwareheritage.org/deploy-cluster-configuration: "true"
-        values:
-          branch: '{{ index .metadata.labels "softwareheritage.org/default-branch" }}'
+  - list:
+      elements:
+      - cluster: admin-rke2
+        branch: production
+      - cluster: archive-staging-rke2
+        branch: staging
+      - cluster: archive-production-rke2
+        branch: production
+      - cluster: test-staging-rke2
+        branch: staging
+      - cluster: gitlab-staging
+        branch: production
+      - cluster: gitlab-production
+        branch: production
+      - cluster: rancher
+        branch: production
   template:
     metadata:
-      name: '{{ .name }}-cluster-configuration'
+      name: '{{cluster}}-cluster-configuration'
       namespace: argocd
     spec:
       revisionHistoryLimit: 2
@@ -27,15 +32,17 @@ spec:
       source:
         repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
         path: cluster-configuration
-        targetRevision: '{{ .values.branch }}'
+        targetRevision: '{{branch}}'
         helm:
           valueFiles:
-            - 'values/{{ .name }}.yaml'
-          releaseName: '{{ .name }}-cluster-configuration'
+            - 'values/{{cluster}}.yaml'
+          releaseName: '{{cluster}}-cluster-configuration'
       destination:
-        name: '{{ .name }}'
+        # always apply the configuration on the argocd cluster
+        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
         namespace: argocd
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+
