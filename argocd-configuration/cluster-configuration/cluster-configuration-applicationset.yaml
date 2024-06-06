@@ -33,7 +33,6 @@ spec:
             - 'values/{{ .name }}.yaml'
           releaseName: '{{ .name }}-cluster-configuration'
       destination:
-        server: '{{ .server }}'
         name: '{{ .name }}'
         namespace: argocd
       syncPolicy:
