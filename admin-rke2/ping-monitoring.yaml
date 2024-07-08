@@ -1,0 +1,53 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: production-cea-vpn-addresses-monitoring
+  namespace: cattle-monitoring-system
+  labels:
+    release: "rancher-monitoring"
+spec:
+  interval: 60s
+  jobName: production-cea-monitoring
+  module: icmp
+  prober:
+    url: admin-rke2-cluster-components-blackbox-exporter:9115
+    path: /probe
+    scheme: http
+  targets:
+    staticConfig:
+      static:
+        - angrenost.internal.cea.swh.network
+        - gloin001.internal.cea.swh.network
+        - gloin002.internal.cea.swh.network
+        - dwalin001.internal.cea.swh.network
+        - dwalin002.internal.cea.swh.network
+        - dwalin003.internal.cea.swh.network
+        - balin001.internal.cea.swh.network
+        - balin002.internal.cea.swh.network
+        - balin003.internal.cea.swh.network
+        - balin004.internal.cea.swh.network
+        - balin005.internal.cea.swh.network
+        - balin006.internal.cea.swh.network
+        - balin007.internal.cea.swh.network
+        - balin008.internal.cea.swh.network
+        - balin009.internal.cea.swh.network
+        - balin010.internal.cea.swh.network
+        - balin011.internal.cea.swh.network
+        - balin012.internal.cea.swh.network
+        - balin013.internal.cea.swh.network
+        - balin014.internal.cea.swh.network
+        - balin015.internal.cea.swh.network
+        - balin016.internal.cea.swh.network
+        - balin017.internal.cea.swh.network
+        - balin018.internal.cea.swh.network
+        - balin019.internal.cea.swh.network
+        - balin020.internal.cea.swh.network
+        - dori.admin.cea.swh.network
+        - nori.admin.cea.swh.network
+        - bifur.admin.cea.swh.network
+        - bofur.admin.cea.swh.network
+        - bombur.admin.cea.swh.network
+      labels:
+        level: critical
+        domain: production
