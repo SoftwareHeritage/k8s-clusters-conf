@@ -1,3 +1,8 @@
+# Application that gets started when a new MR is spawned in swh-charts with the
+# swh-next-version branch (for new releases).
+# This spawns the new swh services in the "swh-cassandra-next-version" namespace in the
+# archive-staging-rke2 cluster
+---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:

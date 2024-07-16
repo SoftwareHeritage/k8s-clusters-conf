@@ -1,0 +1,45 @@
+# Application that gets started when a new MR is spawned in swh-charts with the
+# swh-next-version branch (for new releases). This spawns the new cluster-components
+# backends in the "swh-cassandra-next-version" namespace in the archive-staging-rke2
+# cluster. This assumes that the necessary backend operators are installed in the
+# cluster already.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: next-version-cluster-components
+  namespace: argocd
+spec:
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/syncPolicy
+  generators:
+  - pullRequest:
+      gitlab:
+        project: '77'
+        api: https://gitlab.softwareheritage.org
+        pullRequestState: opened
+      filters:
+      - branchMatch: "swh-next-version"
+      requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'cluster-components-{{ branch }}-{{ number }}'
+    spec:
+      source:
+        repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
+        path: cluster-components
+        targetRevision: "{{ branch }}"
+        helm:
+          valueFiles:
+            - 'values/default.yaml'
+            - 'values/{{ .name }}.yaml'
+          releaseName: cluster-components-next-version-{{ number }}
+      project: default
+      destination:
+        server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+        namespace: swh-cassandra-next-version
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
