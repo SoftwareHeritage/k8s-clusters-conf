@@ -168,6 +168,24 @@ spec:
                 - "s3:GetBucketLocation"
                 - "s3:ListBucket"
                 - "s3:ListBucketMultipartUploads"
+        - name: backuprke2etcdpolicy
+          statements:
+            - resources:
+                - 'arn:aws:s3:::backup-rke2-etcd*/*'
+              actions:
+                - "s3:AbortMultipartUpload"
+                - "s3:GetObject"
+                - "s3:DeleteObject"
+                - "s3:PutObject"
+                - "s3:ListMultipartUploadParts"
+            - resources:
+                - 'arn:aws:s3:::backup-rke2-etcd*'
+              actions:
+                - "s3:CreateBucket"
+                - "s3:DeleteBucket"
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+                - "s3:ListBucketMultipartUploads"
         ## writeexamplepolicy policy grants creation or deletion of buckets with name
         ## starting with example. In addition, grants objects write permissions on buckets starting with
         ## example.
@@ -242,6 +260,10 @@ spec:
             existingSecret: minio-secrets
             existingSecretKey: test-secretKey
             policy: testpolicy
+          - accessKey: rke2-etcd
+            existingSecret: minio-secrets
+            existingSecretKey: rke2-etcd-secretKey
+            policy: backuprke2etcdpolicy
 
         ## List of buckets to be created after minio install
         ##
@@ -261,6 +283,10 @@ spec:
           - name: test
             versioning: false
             purge: true
+            policy: none
+          - name: backup-rke2-etcd
+            versioning: false
+            purge: false
             policy: none
 
         metrics:
