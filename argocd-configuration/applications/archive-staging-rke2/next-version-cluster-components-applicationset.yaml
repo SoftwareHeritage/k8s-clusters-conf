@@ -33,7 +33,7 @@ spec:
         helm:
           valueFiles:
             - 'values/default.yaml'
-            - 'values/{{ .name }}.yaml'
+            - 'values/archive-staging-rke2-next-version.yaml'
           releaseName: cluster-components-next-version-{{ number }}
       project: default
       destination:
