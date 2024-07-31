@@ -1,3 +1,5 @@
+# TODO: Migrate to cluster-configuration (redis-operator is installable from
+# there)
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
