@@ -67,9 +67,8 @@ spec:
   targets:
     staticConfig:
       static:
-        - "https://webapp1.internal.softwareheritage.org"
-        - "https://webapp1.internal.softwareheritage.org/graphql/"
-        - "https://webapp-cassandra.internal.softwareheritage.org"
+        - "https://webapp-postgresql.internal.softwareheritage.org"
+        - "https://webapp-postgresql.internal.softwaheritage.org/graphql/"
       labels:
         level: warning
         domain: production
