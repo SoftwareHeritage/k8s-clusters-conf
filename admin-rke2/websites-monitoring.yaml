@@ -68,7 +68,7 @@ spec:
     staticConfig:
       static:
         - "https://webapp-postgresql.internal.softwareheritage.org"
-        - "https://webapp-postgresql.internal.softwaheritage.org/graphql/"
+        - "https://webapp-postgresql.internal.softwareheritage.org/graphql/"
       labels:
         level: warning
         domain: production
