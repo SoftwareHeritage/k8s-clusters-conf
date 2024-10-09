@@ -97,6 +97,7 @@ spec:
         - "https://webapp-cassandra.internal.staging.swh.network"
         - "https://webapp-postgresql.internal.staging.swh.network"
         - "https://svix.internal.staging.swh.network/api/v1/health/"
+        - "http://graph.internal.staging.swh.network"
       labels:
         level: warning
         domain: staging
