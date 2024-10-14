@@ -121,6 +121,7 @@ spec:
         - "https://reaper.internal.softwareheritage.org/webui/login.html"
         - "https://reaper.internal.staging.swh.network/webui/login.html"
         - "https://inventory.internal.admin.swh.network"
+        - "http://rabbitmq.internal.softwareheritage.org:15672"
       labels:
         level: warning
         domain: admin
