@@ -69,6 +69,7 @@ spec:
       static:
         - "https://webapp-postgresql.internal.softwareheritage.org"
         - "https://webapp-postgresql.internal.softwareheritage.org/graphql/"
+        - "http://graph-rpc.internal.softwareheritage.org"
       labels:
         level: warning
         domain: production
