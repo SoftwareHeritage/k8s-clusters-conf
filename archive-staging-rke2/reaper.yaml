@@ -53,6 +53,9 @@ spec:
               value: "4"  # Default 2
             - name: REAPER_STORAGE_TYPE
               value: cassandra
+            # to support subrange incremental repairs (false by default)
+            - name: REAPER_SUBRANGE_INCREMENTAL
+              value: "true"
             - name: REAPER_CASS_CLUSTER_NAME
               value: archive_staging
             - name: REAPER_CASS_CONTACT_POINTS
