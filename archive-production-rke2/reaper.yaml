@@ -50,7 +50,7 @@ spec:
             - name: REAPER_METRICS_ENABLED
               value: "true"
             - name: REAPER_MAX_PARALLEL_REPAIRS
-              value: "4"  # Default 2
+              value: "8"  # Default 2
             - name: REAPER_STORAGE_TYPE
               value: cassandra
             # to support subrange incremental repairs (false by default)
