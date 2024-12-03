@@ -24,6 +24,7 @@ spec:
           extraAnnotations:
             cert-manager.io/cluster-issuer: letsencrypt-production-gandi
             kubernetes.io/tls-acme: "true"
+            nginx.ingress.kubernetes.io/proxy-body-size: 4M
           tls:
             source: secret
   destination:
