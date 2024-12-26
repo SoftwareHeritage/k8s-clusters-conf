@@ -23,6 +23,9 @@ spec:
     spec:
       containers:
         - name: reaper
+          # check before upgrading
+          # https://gitlab.softwareheritage.org/swh/infra/sysadm-environment/-/issues/5520
+          # (comment to remove is cassandra5.0 is fixed)
           image: thelastpickle/cassandra-reaper:3.7.0
           imagePullPolicy: Always
           resources:
@@ -47,6 +50,9 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
           env:
+            # Workaround for https://gitlab.softwareheritage.org/swh/infra/sysadm-environment/-/issues/5520
+            - name: REAPER_SKIP_SCHEMA_MIGRATION
+              value: "true"
             - name: REAPER_METRICS_ENABLED
               value: "true"
             - name: REAPER_MAX_PARALLEL_REPAIRS
