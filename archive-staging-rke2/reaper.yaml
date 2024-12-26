@@ -47,6 +47,9 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
           env:
+            # Workaround for https://gitlab.softwareheritage.org/swh/infra/sysadm-environment/-/issues/5520
+            - name: REAPER_SKIP_SCHEMA_MIGRATION
+              value: "true"
             - name: REAPER_METRICS_ENABLED
               value: "true"
             - name: REAPER_MAX_PARALLEL_REPAIRS
