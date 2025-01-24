@@ -7,7 +7,7 @@ metadata:
   finalizers:
     - ceph.rook.io/disaster-protection
 data:
-  data: "hypervisor3=192.168.100.34:6789,branly=192.168.100.108:6789,mucem=192.168.100.33:6789"
+  data: "chaillot=192.168.100.35:6789,branly=192.168.100.108:6789,mucem=192.168.100.33:6789"
   mapping: '{}'
   maxMonId: '0'
 ---
