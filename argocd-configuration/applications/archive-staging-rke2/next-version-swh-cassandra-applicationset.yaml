@@ -31,7 +31,7 @@ spec:
             - ../values-swh-application-versions.yaml
             - values/default.yaml
             - values/staging/default.yaml
-            - values/staging/swh-cassandra-next-version.yaml
+            - values/staging/next-version.yaml
           releaseName: next-version-{{number}}
       project: default
       destination:
