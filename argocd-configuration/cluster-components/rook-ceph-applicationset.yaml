@@ -70,7 +70,7 @@ spec:
       sources:
         - chart: "{{ .chart }}"
           repoURL: https://charts.rook.io/release
-          targetRevision: "v1.13.4"
+          targetRevision: "v1.13.10"
           helm:
             valueFiles:
               - "$values/argocd-configuration/cluster-components/values/{{ .chart }}/defaults.yaml"
