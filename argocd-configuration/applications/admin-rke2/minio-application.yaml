@@ -186,6 +186,24 @@ spec:
                 - "s3:GetBucketLocation"
                 - "s3:ListBucket"
                 - "s3:ListBucketMultipartUploads"
+        - name: backupcpngpolicy
+          statements:
+            - resources:
+                - 'arn:aws:s3:::backup-cpng*/*'
+              actions:
+                - "s3:AbortMultipartUpload"
+                - "s3:GetObject"
+                - "s3:DeleteObject"
+                - "s3:PutObject"
+                - "s3:ListMultipartUploadParts"
+            - resources:
+                - 'arn:aws:s3:::backup-cpng*'
+              actions:
+                - "s3:CreateBucket"
+                - "s3:DeleteBucket"
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+                - "s3:ListBucketMultipartUploads"
         ## writeexamplepolicy policy grants creation or deletion of buckets with name
         ## starting with example. In addition, grants objects write permissions on buckets starting with
         ## example.
@@ -264,6 +282,10 @@ spec:
             existingSecret: minio-secrets
             existingSecretKey: rke2-etcd-secretKey
             policy: backuprke2etcdpolicy
+          - accessKey: cpng
+            existingSecret: minio-secrets
+            existingSecretKey: cpng-secretKey
+            policy: backupcpngpolicy
 
         ## List of buckets to be created after minio install
         ##
@@ -285,6 +307,10 @@ spec:
             purge: true
             policy: none
           - name: backup-rke2-etcd
+            versioning: false
+            purge: false
+            policy: none
+          - name: backup-cpng
             versioning: false
             purge: false
             policy: none
