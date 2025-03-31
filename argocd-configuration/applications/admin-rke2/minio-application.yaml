@@ -186,10 +186,10 @@ spec:
                 - "s3:GetBucketLocation"
                 - "s3:ListBucket"
                 - "s3:ListBucketMultipartUploads"
-        - name: backupcpngpolicy
+        - name: backupcnpgpolicy
           statements:
             - resources:
-                - 'arn:aws:s3:::backup-cpng*/*'
+                - 'arn:aws:s3:::backup-cnpg*/*'
               actions:
                 - "s3:AbortMultipartUpload"
                 - "s3:GetObject"
@@ -197,7 +197,7 @@ spec:
                 - "s3:PutObject"
                 - "s3:ListMultipartUploadParts"
             - resources:
-                - 'arn:aws:s3:::backup-cpng*'
+                - 'arn:aws:s3:::backup-cnpg*'
               actions:
                 - "s3:CreateBucket"
                 - "s3:DeleteBucket"
@@ -282,10 +282,10 @@ spec:
             existingSecret: minio-secrets
             existingSecretKey: rke2-etcd-secretKey
             policy: backuprke2etcdpolicy
-          - accessKey: cpng
+          - accessKey: cnpg
             existingSecret: minio-secrets
-            existingSecretKey: cpng-secretKey
-            policy: backupcpngpolicy
+            existingSecretKey: cnpg-secretKey
+            policy: backupcnpgpolicy
 
         ## List of buckets to be created after minio install
         ##
@@ -310,7 +310,7 @@ spec:
             versioning: false
             purge: false
             policy: none
-          - name: backup-cpng
+          - name: backup-cnpg
             versioning: false
             purge: false
             policy: none
