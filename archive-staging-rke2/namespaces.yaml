@@ -111,3 +111,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: ot-operators
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh-coar-notify
+# ns dedicated to coar-notify (cluster,pooler,secrets,...)
