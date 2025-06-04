@@ -15,6 +15,7 @@ spec:
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
         replicas: 2
+        rancherImage: mirror.gcr.io/rancher/rancher
         resources:
           requests:
             memory: 1.5Gi
