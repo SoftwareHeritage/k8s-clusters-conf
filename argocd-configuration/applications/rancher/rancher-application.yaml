@@ -9,13 +9,12 @@ spec:
   source:
     chart: rancher
     repoURL: "https://releases.rancher.com/server-charts/latest"
-    targetRevision: 2.9.3
+    targetRevision: 2.10.3
     helm:
       releaseName: rancher
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
         replicas: 2
-        rancherImage: mirror.gcr.io/rancher/rancher
         resources:
           requests:
             memory: 1.5Gi
