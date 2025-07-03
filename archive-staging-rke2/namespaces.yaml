@@ -115,12 +115,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: swh-coar-notify
-# ns dedicated to cnpg managed databases
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: cnpg
 ---
 apiVersion: v1
