@@ -94,6 +94,8 @@ spec:
             - hosts:
               - k8s-gitlab-staging-thanos.internal.staging.swh.network
               secretName: thanos-crt
+          thanosService:
+            enabled: true
         kubeControllerManager:
           enabled: false
         kubeEtcd:
