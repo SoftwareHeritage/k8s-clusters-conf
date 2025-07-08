@@ -62,7 +62,6 @@ spec:
             serviceMonitorSelectorNilUsesHelmValues: false
             prometheusExternalLabelName: euwest_gitlab_staging
             probeSelectorNilUsesHelmValues: false
-            prometheusExternalLabelName: euwest_gitlab_staging
             externalLabels:
               environment: staging
               infrastructure: kubernetes
