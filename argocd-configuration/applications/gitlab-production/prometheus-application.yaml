@@ -10,7 +10,7 @@ spec:
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 45.10.1
+    targetRevision: 69.8.2
     helm:
       releaseName: gitlab-production-prometheus # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
       # The crds must be manually applied to avoid the following error:
@@ -20,6 +20,10 @@ spec:
       # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
       skipCrds: true
       values: |
+        crds:
+          upgradeJob:
+            enabled: true
+            forceConflicts: true
         alertmanager:
           enabled: true
           alertmanagerSpec:
@@ -73,8 +77,9 @@ spec:
               # see k8s-private-data:archive-production/thanos-objstore-config-secret.yaml. And
               # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
               objectStorageConfig:
-                key: thanos.yaml
-                name: thanos-objstore-config-secret
+                existingSecret:
+                  key: thanos.yaml
+                  name: thanos-objstore-config-secret
           thanosIngress:
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt-production-gandi
@@ -97,6 +102,8 @@ spec:
               - kgpt.euwest.azure.internal.softwareheritage.org
               - k8s-gitlab-production-thanos.euwest.azure.internal.softwareheritage.org
               secretName: thanos-crt
+          thanosService:
+            enabled: true
         kubeControllerManager:
           enabled: false
         kubeEtcd:
