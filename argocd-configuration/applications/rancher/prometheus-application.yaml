@@ -10,13 +10,17 @@ spec:
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 45.10.1
+    targetRevision: 69.8.2
     helm:
       releaseName: rancher-prometheus # must match the application name (https://github.com/argoproj/argo-cd/issues/2871)
       parameters:
         - name: "installCRDs"
           value: "true"
       values: |
+        crds:
+          upgradeJob:
+            enabled: true
+            forceConflicts: true
         alertmanager:
           enabled: true
           alertmanagerSpec:
@@ -60,8 +64,9 @@ spec:
               # see k8s-private-data:archive-production/thanos-objstore-config-secret.yaml. And
               # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
               objectStorageConfig:
-                key: thanos.yaml
-                name: thanos-objstore-config-secret
+                existingSecret:
+                  key: thanos.yaml
+                  name: thanos-objstore-config-secret
           thanosIngress:
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt-production-gandi
@@ -80,6 +85,8 @@ spec:
             - hosts:
               - k8s-rancher-thanos.euwest.azure.internal.softwareheritage.org
               secretName: thanos-crt
+          thanosService:
+            enabled: true
         kubeControllerManager:
           enabled: false
         kubeEtcd:
