@@ -126,10 +126,10 @@ spec:
       kind: ValidatingWebhookConfiguration
       jqPathExpressions:
         - '.webhooks[]?.clientConfig.caBundle'
-        - .webhooks[].namespaceSelector
+        - .webhooks[]?.namespaceSelector
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration
       jqPathExpressions:
         - '.webhooks[]?.clientConfig.caBundle'
-        - .webhooks[].namespaceSelector
+        - .webhooks[]?.namespaceSelector
 
