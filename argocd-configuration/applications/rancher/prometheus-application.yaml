@@ -132,4 +132,10 @@ spec:
       jqPathExpressions:
         - '.webhooks[]?.clientConfig.caBundle'
         - .webhooks[]?.namespaceSelector
+    - group: apps
+      kind: DaemonSet
+      name: rancher-prometheus-prometheus-node-exporter
+      namespace: monitoring
+      jqPathExpressions:
+        - '.spec.template.spec.containers[]?.resources'
 
