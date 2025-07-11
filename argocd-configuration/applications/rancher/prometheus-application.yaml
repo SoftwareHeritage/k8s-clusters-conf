@@ -122,3 +122,12 @@ spec:
       name: rancher-prometheus-kube-pr-kubelet
       jqPathExpressions:
         - .spec.endpoints[].relabelings
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - '.webhooks[]?.clientConfig.caBundle'
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - '.webhooks[]?.clientConfig.caBundle'
+
