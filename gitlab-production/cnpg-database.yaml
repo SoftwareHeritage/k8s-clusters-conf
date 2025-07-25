@@ -1,0 +1,47 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: gitlab-system
+spec:
+  instances: 1
+  storage:
+    size: 15Gi
+  walStorage:
+    size: 3Gi
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: postgresql
+    major: 16
+
+  postgresql:
+    parameters:
+      max_connections: "300"
+      pg_stat_statements.max: "100"
+      pg_stat_statements.track: all
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+
+  bootstrap:
+    initdb:
+      owner: gitlab
+      import:
+        type: microservice
+        databases:
+          - gitlabhq_production
+        source:
+          externalCluster: gitlab
+  externalClusters:
+    - name: gitlab
+      connectionParameters:
+        host: gitlab-postgresql
+        user: postgres
+        dbname: postgres
+      password:
+        name: gitlab-postgresql-password
+        key: postgresql-postgres-password
