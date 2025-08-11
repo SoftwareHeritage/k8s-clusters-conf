@@ -13,7 +13,7 @@ spec:
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
-    name: postgresql
+    name: postgresql-penultimate
     major: 16
 
   bootstrap:
