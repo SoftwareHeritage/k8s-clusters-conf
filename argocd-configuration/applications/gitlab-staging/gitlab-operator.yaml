@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://gitlab.com/gitlab-org/cloud-native/gitlab-operator.git
-    targetRevision: 2.2.1
+    targetRevision: 2.3.1
     path: deploy/chart
     helm:
       releaseName: gitlab-operator
