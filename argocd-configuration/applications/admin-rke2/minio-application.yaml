@@ -20,20 +20,6 @@ spec:
         minioAPIPort: "9000"
         minioConsolePort: "9001"
 
-        ## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
-        image:
-          repository: quay.io/minio/minio
-          tag: RELEASE.2025-07-23T15-54-02Z
-          pullPolicy: IfNotPresent
-
-        ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
-        ## client used to create a default bucket).
-        ##
-        mcImage:
-          repository: quay.io/minio/mc
-          tag: RELEASE.2025-07-21T05-28-08Z
-          pullPolicy: IfNotPresent
-
         ## Use existing Secret that store following variables:
         ##
         ## | Chart var             | .data.<key> in Secret    |
