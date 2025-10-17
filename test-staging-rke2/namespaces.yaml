@@ -48,11 +48,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rabbitmq
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: elastic-system
 ---
 apiVersion: v1
