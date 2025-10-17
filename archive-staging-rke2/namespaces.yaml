@@ -79,6 +79,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: rabbitmq
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: rook-ceph
 ---
 apiVersion: v1
