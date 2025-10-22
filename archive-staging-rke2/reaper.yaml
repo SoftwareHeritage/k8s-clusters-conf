@@ -59,9 +59,14 @@ spec:
             - name: REAPER_CASS_CLUSTER_NAME
               value: archive_staging
             - name: REAPER_CASS_CONTACT_POINTS
-              value: "[cassandra1.internal.staging.swh.network, cassandra2.internal.staging.swh.network, cassandra3.internal.staging.swh.network]"
+              value: >-
+                [{ "host": "cassandra1.internal.staging.swh.network", "port": "9042"}, 
+                { "host": "cassandra2.internal.staging.swh.network", "port": "9042"}, 
+                { "host": "cassandra3.internal.staging.swh.network", "port": "9042"}]
             - name: REAPER_CASS_KEYSPACE
               value: reaper_db
+            - name: REAPER_CASS_LOCAL_DC
+              value: sesi_rocquencourt_staging
             - name: REAPER_CASS_AUTH_ENABLED
               value: "true"
             - name: REAPER_CASS_AUTH_USERNAME
@@ -74,6 +79,16 @@ spec:
                 secretKeyRef:
                   name: reaper-secrets
                   key: CASS_AUTH_PASSWORD
+            - name: REAPER_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: AUTH_USER
+            - name: REAPER_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: AUTH_PASSWORD
             - name: CRYPTO_SYSTEM_PROPERTY_SECRET
               value: CRYPTO_ENCODING_KEY
             - name: REAPER_JMX_AUTH_USERNAME
