@@ -23,10 +23,7 @@ spec:
     spec:
       containers:
         - name: reaper
-          # check before upgrading
-          # https://gitlab.softwareheritage.org/swh/infra/sysadm-environment/-/issues/5520
-          # (comment to remove is cassandra5.0 is fixed)
-          image: thelastpickle/cassandra-reaper:3.7.0
+          image: thelastpickle/cassandra-reaper:4.0.1
           imagePullPolicy: Always
           resources:
             requests:
@@ -50,9 +47,6 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
           env:
-            # Workaround for https://gitlab.softwareheritage.org/swh/infra/sysadm-environment/-/issues/5520
-            - name: REAPER_SKIP_SCHEMA_MIGRATION
-              value: "true"
             - name: REAPER_METRICS_ENABLED
               value: "true"
             - name: REAPER_MAX_PARALLEL_REPAIRS
@@ -65,9 +59,14 @@ spec:
             - name: REAPER_CASS_CLUSTER_NAME
               value: archive_production
             - name: REAPER_CASS_CONTACT_POINTS
-              value: "[cassandra01.internal.softwareheritage.org, cassandra02.internal.softwareheritage.org, cassandra03.internal.softwareheritage.org]"
+              value: >-
+                [{ "host": "cassandra01.internal.softwareheritage.org", "port": "9042"}, 
+                { "host": "cassandra02.internal.softwareheritage.org", "port": "9042"}, 
+                { "host": "cassandra03.internal.softwareheritage.org", "port": "9042"}]
             - name: REAPER_CASS_KEYSPACE
               value: reaper_db
+            - name: REAPER_CASS_LOCAL_DC
+              value: sesi_rocquencourt
             - name: REAPER_CASS_AUTH_ENABLED
               value: "true"
             - name: REAPER_CASS_AUTH_USERNAME
@@ -80,6 +79,16 @@ spec:
                 secretKeyRef:
                   name: reaper-secrets
                   key: CASS_AUTH_PASSWORD
+            - name: REAPER_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: AUTH_USER
+            - name: REAPER_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reaper-secrets
+                  key: AUTH_PASSWORD
             - name: CRYPTO_SYSTEM_PROPERTY_SECRET
               value: CRYPTO_ENCODING_KEY
             - name: REAPER_JMX_AUTH_USERNAME
