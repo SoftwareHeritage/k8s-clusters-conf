@@ -22,6 +22,9 @@ spec:
       pg_stat_statements.max: "100"
       pg_stat_statements.track: all
 
+  monitoring:
+    enablePodMonitor: true
+
   resources:
     requests:
       cpu: '1'

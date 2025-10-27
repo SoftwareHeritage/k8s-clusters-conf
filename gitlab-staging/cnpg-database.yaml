@@ -15,7 +15,8 @@ spec:
     kind: ClusterImageCatalog
     name: postgresql-penultimate
     major: 16
-
+  monitoring:
+    enablePodMonitor: true
   bootstrap:
     initdb:
       owner: gitlab
