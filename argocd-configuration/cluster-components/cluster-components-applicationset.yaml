@@ -30,6 +30,7 @@ spec:
         targetRevision: '{{ .values.branch }}'
         helm:
           valueFiles:
+            - ../values-swh-application-versions.yaml
             - 'values/default.yaml'
             - 'values/{{ .name }}.yaml'
           releaseName: '{{ .name }}-cluster-components'
