@@ -53,6 +53,11 @@ spec:
         # Number of expanded MinIO clusters
         pools: 1
 
+        environment:
+          # Bump the drive timeout from the default 30s to a higher value to
+          # account for the slow storage backend
+          MINIO_DRIVE_MAX_TIMEOUT: '2m30s'
+
         ## Enable persistence using Persistent Volume Claims
         ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
         ##
