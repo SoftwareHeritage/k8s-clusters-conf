@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: v6.2.3
+    targetRevision: v6.11.1
     helm:
       releaseName: argocd
       values: |
@@ -66,11 +66,8 @@ spec:
           cm:
             application.instanceLabelKey: app.kubernetes.io/instance
             users.anonymous.enabled: "true"
-            accounts.vsellier: apiKey, login
             accounts.olasd: apiKey, login
             accounts.ardumont: apiKey, login
-            accounts.gsamson: apiKey, login
-            accounts.thibaultd: apiKey, login
             accounts.athiam: apiKey, login
           params:
             # Enable ApplicationSet applicationsSync policy override
@@ -78,11 +75,8 @@ spec:
           rbac:
             policy.default: role:readonly
             policy.csv: |
-              g, vsellier, role:admin
               g, olasd, role:admin
               g, ardumont, role:admin
-              g, gsamson, role:admin
-              g, thibaultd, role:admin
               g, athiam, role:admin
           ssh:
             extraHosts: |
