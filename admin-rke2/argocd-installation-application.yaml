@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: v7.9.1
+    targetRevision: v8.6.4
     helm:
       releaseName: argocd
       values: |
@@ -94,4 +94,6 @@ spec:
     automated:
       prune: true
       selfHeal: true
+  syncOptions:
+    - "ServerSideApply=true"
   revisionHistoryLimit: 2
