@@ -1,0 +1,175 @@
+apiVersion: apps.gitlab.com/v1beta1
+kind: GitLab
+metadata:
+  name: gitlab
+  namespace: gitlab-system
+spec:
+  chart:
+    # obtain list of available chart versions from:
+    #  https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/blob/\<Operator Version>/CHART_VERSIONS
+    version: 9.11.1
+    values:
+      certmanager:
+        install: false
+      certmanager-issuer:
+        email: sysop@softwareheritage.org
+      nginx-ingress:
+        controller:
+          config:
+            allow-snippet-annotations: "true"
+            annotation-value-word-blocklist: load_module,lua_package,_by_lua,location,root,proxy_pass,serviceaccount
+            annotations-risk-level: Critical
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+      prometheus:
+        install: false
+      postgresql:
+        install: false
+      gitlab:
+        webservice:
+          deployments:
+            default:
+              ingress:
+                path: /
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 4Gi
+            browse-endpoints:
+              ingress:
+                # These four endpoints get aggressively scraped
+                path: /.*/-/(commit|commits|tags)(/.*)?
+                pathType: ImplementationSpecific
+                annotations:
+                  # Only let through logged in requests
+                  nginx.ingress.kubernetes.io/configuration-snippet: |
+                    if ($http_cookie !~* "_gitlab_session") {
+                      return 403;
+                    }
+                  # This scraper didn't go away even after a bunch of 403s
+                  nginx.ingress.kubernetes.io/denylist-source-range: 47.79.0.0/16
+                  nginx.ingress.kubernetes.io/use-regex: "true"
+              hpa:
+                # Only allocate a few replicas for these endpoints
+                minReplicas: 1
+                maxReplicas: 2
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+          puma:
+            # Max memory usage for a puma worker in megabytes; matches the
+            # default memory request for these containers, which is 2500MB for 2
+            # worker processes
+            workerMaxMemory: 1250
+          workhorse:
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+          monitoring:
+            ipWhitelist:
+              - 10.0.0.0/8 # from the aks-vnet-xxx in azure
+        gitaly:
+          resources:
+            requests:
+              cpu: 1
+              memory: 2Gi
+          persistence:
+            size: 64Gi
+          git:
+            config:
+              # needed for our dulwich fork
+              - key: "fsck.hasDotgit"
+                value: "ignore"
+              - key: "fetch.fsck.hasDotgit"
+                value: "ignore"
+              - key: "receive.fsck.hasDotgit"
+                value: "ignore"
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+        toolbox:
+          backups:
+            cron:
+              enabled: true
+              schedule: 42 01 * * *
+              resources:
+                requests:
+                  memory: 3Gi
+            objectStorage:
+              config:
+                secret: swh-minio-credentials
+                key: s3cfg-config
+      global:
+        edition: ee
+        psql:
+          database: app
+          host: postgresql-rw
+          password:
+            key: password
+            secret: postgresql-app
+            useSecret: true
+          username: gitlab
+        hosts:
+          domain: softwareheritage.org
+          externalIP: 20.50.42.230
+          # hostSuffix: production
+          https: true
+          registry:
+            name: container-registry.softwareheritage.org
+        appConfig:
+          backups:
+            bucket: backup-gitlab
+          artifacts:
+            bucket: artifacts
+          dependencyProxy:
+            enabled: true
+            bucket: dependency-proxy
+          externalDiffs:
+            bucket: external-diffs
+          lfs:
+            bucket: lfs-objects
+          object_store:
+            connection:
+              secret: swh-azure-storage-credentials
+            enabled: true
+            proxy_download: true
+          packages:
+            bucket: packages
+          pages:
+            bucket: pages
+          registry:
+            bucket: registry
+          terraformState:
+            bucket: terraform
+          uploads:
+            bucket: uploads
+        email:
+          display_name: Gitlab
+          from: gitlab@softwareheritage.org
+          reply-to: noreply@softwareheritage.org
+        ingress:
+          annotations:
+            kubernetes.io/tls-acme: true
+          configureCertmanager: true
+          tls:
+            enabled: true
+        minio:
+          enabled: false
+        smtp:
+          address: mail.gandi.net
+          authentication: plain
+          enabled: true
+          password:
+            secret: swh-smtp-password
+          port: 465
+          tls: true
+          user_name: gitlab@softwareheritage.org
+      registry:
+        storage:
+          secret: swh-azure-storage-registry-credentials
+          key: config
