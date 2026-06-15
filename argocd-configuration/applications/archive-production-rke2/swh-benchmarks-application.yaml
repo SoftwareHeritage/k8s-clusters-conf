@@ -1,0 +1,26 @@
+# Declare the application to deploy the swh-benchmarks services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: archive-production-rke2-swh-benchmarks
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/swh/infra/ci-cd/swh-charts.git'
+    path: swh
+    targetRevision: production
+    helm:
+      # Do not use values/production/defaults: self-contained for flexibility
+      valueFiles:
+        - ../values-swh-application-versions.yaml
+        - values/default.yaml
+        - values/production/swh-benchmarks.yaml
+      releaseName: swh-benchmarks
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-75xcg59s
+    namespace: swh-benchmarks
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
