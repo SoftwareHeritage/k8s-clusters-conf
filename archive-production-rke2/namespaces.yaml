@@ -5,6 +5,12 @@ kind: Namespace
 metadata:
   name: swh-cassandra
 ---
+# Namespace dedicated to deploy a benchmarking environment for swh
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: swh-benchmarks
+---
 # Namespace for keda
 apiVersion: v1
 kind: Namespace
