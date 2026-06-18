@@ -16,6 +16,10 @@ spec:
     name: postgresql
     major: 16
 
+  nodeMaintenanceWindow:
+    inProgress: true
+    reusePVC: true
+
   postgresql:
     parameters:
       max_connections: "300"
