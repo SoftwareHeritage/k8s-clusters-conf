@@ -20,3 +20,6 @@ spec:
   bootstrap:
     initdb:
       owner: gitlab
+  nodeMaintenanceWindow:
+    inProgress: true
+    reusePVC: true
