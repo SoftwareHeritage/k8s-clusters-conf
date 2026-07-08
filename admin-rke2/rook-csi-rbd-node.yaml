@@ -1,0 +1,17 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: rook-csi-rbd-node-vss
+  namespace: rook-ceph
+spec:
+  destination:
+    create: true
+    name: rook-csi-rbd-node
+    overwrite: true
+    type: kubernetes.io/rook
+  mount: secrets-admin-rke2
+  path: rook-csi-rbd-node
+  refreshAfter: 10s
+  type: kv-v2
+  vaultAuthRef: openbao-vso-auth
