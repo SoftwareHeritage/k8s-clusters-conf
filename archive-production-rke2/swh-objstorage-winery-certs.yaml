@@ -1,0 +1,32 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: swh-objstorage-winery-certs-vss
+  namespace: swh
+spec:
+  destination:
+    create: true
+    name: swh-objstorage-winery-certs
+    overwrite: true
+  mount: secrets-archive-production-rke2
+  path: swh-objstorage-winery-certs
+  refreshAfter: 10s
+  type: kv-v2
+  vaultAuthRef: openbao-vso-auth
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: swh-objstorage-winery-certs-vss
+  namespace: swh-cassandra
+spec:
+  destination:
+    create: true
+    name: swh-objstorage-winery-certs
+    overwrite: true
+  mount: secrets-archive-production-rke2
+  path: swh-objstorage-winery-certs
+  refreshAfter: 10s
+  type: kv-v2
+  vaultAuthRef: openbao-vso-auth

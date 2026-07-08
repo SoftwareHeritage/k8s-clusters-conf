@@ -1,0 +1,16 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: rook-ceph-mon-vss
+  namespace: rook-ceph
+spec:
+  destination:
+    create: true
+    name: rook-ceph-mon
+    overwrite: true
+  mount: secrets-archive-production-rke2
+  path: rook-ceph-mon
+  refreshAfter: 10s
+  type: kv-v2
+  vaultAuthRef: openbao-vso-auth
