@@ -145,6 +145,7 @@ spec:
           from: gitlab+staging@swh.network
           reply-to: noreply@swh.network
         ingress:
+          enabled: true
           annotations:
             kubernetes.io/tls-acme: true
           configureCertmanager: true
