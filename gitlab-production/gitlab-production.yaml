@@ -28,10 +28,6 @@ spec:
         install: false
       postgresql:
         install: false
-      redis:
-        host: redis-gitlab.gitlab-redis.svc.cluster.local
-        auth:
-          enabled: false
       gitlab:
         webservice:
           deployments:
@@ -119,6 +115,10 @@ spec:
             secret: postgresql-app
             useSecret: true
           username: gitlab
+        redis:
+          host: redis-gitlab.gitlab-redis.svc.cluster.local
+          auth:
+            enabled: false
         hosts:
           domain: softwareheritage.org
           externalIP: 20.50.42.230
