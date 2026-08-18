@@ -14,7 +14,7 @@ spec:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
     name: postgresql
-    major: 16
+    major: 17
 
   nodeMaintenanceWindow:
     inProgress: false
