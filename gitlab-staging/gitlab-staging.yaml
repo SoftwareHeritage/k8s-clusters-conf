@@ -14,6 +14,7 @@ spec:
       certmanager-issuer:
         email: sysop@softwareheritage.org
       nginx-ingress:
+        enabled: true
         controller:
           config:
             allow-snippet-annotations: "true"
