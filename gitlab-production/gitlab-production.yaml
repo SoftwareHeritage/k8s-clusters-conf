@@ -26,8 +26,6 @@ spec:
               enabled: true
       prometheus:
         install: false
-      postgresql:
-        install: false
       gitlab:
         webservice:
           deployments:
@@ -165,8 +163,6 @@ spec:
           tls:
             enabled: true
         gatewayApi:
-          enabled: false
-        minio:
           enabled: false
         smtp:
           address: mail.gandi.net
