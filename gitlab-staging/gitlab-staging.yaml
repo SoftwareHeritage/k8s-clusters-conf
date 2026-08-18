@@ -149,6 +149,8 @@ spec:
           configureCertmanager: true
           tls:
             enabled: true
+        gatewayApi:
+          enabled: false
         smtp:
           address: mail.gandi.net
           authentication: plain
