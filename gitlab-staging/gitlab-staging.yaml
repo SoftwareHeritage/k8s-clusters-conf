@@ -105,6 +105,10 @@ spec:
             secret: postgresql-app
             useSecret: true
           username: gitlab
+        redis:
+          host: redis-gitlab.gitlab-redis.svc.cluster.local
+          auth:
+            enabled: false
         hosts:
           domain: swh.network
           externalIP: 20.103.140.206
