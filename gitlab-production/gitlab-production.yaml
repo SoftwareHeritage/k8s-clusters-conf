@@ -14,6 +14,7 @@ spec:
       certmanager-issuer:
         email: sysop@softwareheritage.org
       nginx-ingress:
+        enabled: true
         controller:
           config:
             allow-snippet-annotations: "true"
@@ -27,6 +28,10 @@ spec:
         install: false
       postgresql:
         install: false
+      redis:
+        host: redis-gitlab.gitlab-redis.svc.cluster.local
+        auth:
+          enabled: false
       gitlab:
         webservice:
           deployments:
@@ -153,6 +158,7 @@ spec:
           from: gitlab@softwareheritage.org
           reply-to: noreply@softwareheritage.org
         ingress:
+          enabled: true
           annotations:
             kubernetes.io/tls-acme: true
           configureCertmanager: true
