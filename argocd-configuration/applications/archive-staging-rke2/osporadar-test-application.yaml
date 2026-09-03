@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: osporadar-test-application
+  name: archive-staging-rke2-osporadar-test
   namespace: argocd
 spec:
   project: default
