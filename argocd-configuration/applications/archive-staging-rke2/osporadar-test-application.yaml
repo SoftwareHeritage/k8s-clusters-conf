@@ -1,0 +1,24 @@
+# Declare the application to deploy the swh services
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: osporadar-test-application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.softwareheritage.org/swh/devel/swh-osporadar-deployment.git'
+    path: ./swh-osporadar
+    targetRevision: mr/osporadar-test
+    helm:
+      valueFiles:
+        - values.yaml
+        - values/osporadar-test.yaml
+      releaseName: archive-staging-rke2-osporadar-test
+  destination:
+    server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
+    namespace: osporadar-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
