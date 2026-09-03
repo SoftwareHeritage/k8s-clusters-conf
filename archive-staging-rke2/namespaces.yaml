@@ -126,4 +126,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: osporadar
-
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: osporadar-test
