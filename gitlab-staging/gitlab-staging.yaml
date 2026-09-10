@@ -7,7 +7,7 @@ spec:
   chart:
     # obtain list of available chart versions from:
     #  https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/blob/\<Operator Version>/CHART_VERSIONS
-    version: 10.0.8
+    version: 10.1.7
     values:
       certmanager:
         install: false
