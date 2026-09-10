@@ -32,6 +32,10 @@ spec:
             default:
               ingress:
                 path: /
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 3Gi
             browse-endpoints:
               ingress:
                 # These four endpoints get aggressively scraped
@@ -46,6 +50,10 @@ spec:
                   # This scraper didn't go away even after a bunch of 403s
                   nginx.ingress.kubernetes.io/denylist-source-range: 47.79.0.0/16
                   nginx.ingress.kubernetes.io/use-regex: "true"
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 3Gi
               hpa:
                 # Only allocate a few replicas for these endpoints
                 minReplicas: 1
