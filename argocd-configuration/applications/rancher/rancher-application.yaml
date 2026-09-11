@@ -15,6 +15,12 @@ spec:
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
         replicas: 1
+        startupProbe:
+          failureThreshold: 24
+        readinessProbe:
+          failureThreshold: 15
+        livenessProbe:
+          failureThreshold: 10
         resources:
           requests:
             memory: 1.5Gi
