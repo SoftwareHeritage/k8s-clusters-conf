@@ -31,6 +31,9 @@ spec:
       kind: ValidatingWebhookConfiguration
       name: gitlab-validating-webhook-configuration
       jqPathExpressions:
-        - .webhooks[].namespaceSelector.matchExpressions[] | select(.key == "control-plane")
-        - .webhooks[].namespaceSelector.matchExpressions[] | select(.key == "kubernetes.azure.com/managedby")
-
+        - >-
+          .webhooks[].namespaceSelector.matchExpressions[] | select(
+            .key == "control-plane" or
+            .key == "kubernetes.azure.com/managedby" or
+            . == {"key": "kubernetes.io/metadata.name", "operator": "In", "values": ["gitlab-system"]}
+          )
