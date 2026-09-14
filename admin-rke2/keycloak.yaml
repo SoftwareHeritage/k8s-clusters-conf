@@ -1,0 +1,30 @@
+---
+apiVersion: k8s.keycloak.org/v2beta1
+kind: Keycloak
+metadata:
+  namespace: keycloak
+  name: keycloak
+spec:
+  instances: 2
+  update:
+    strategy: Auto
+  db:
+    vendor: postgres
+    host: db-keycloak-rw
+    usernameSecret:
+      name: swh-keycloak-postgres-secret
+      key: username
+    passwordSecret:
+      name: swh-keycloak-postgres-secret
+      key: password
+    database: keycloak
+  features:
+    enabled:
+      - client-admin-api:v2
+  hostname:
+    hostname: keycloak.internal.admin.swh.network
+  ingress:
+    enabled: true
+    className: nginx
+  proxy:
+    headers: xforwarded
