@@ -21,6 +21,8 @@ spec:
   features:
     enabled:
       - client-admin-api:v2
+  http:
+    httpEnabled: true
   hostname:
     hostname: keycloak.internal.admin.swh.network
   ingress:
