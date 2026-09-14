@@ -14,7 +14,7 @@ spec:
       recurse: true
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-682nvssh
-    namespace: minio
+    namespace: keycloak
   syncPolicy:
     automated:
       prune: true
