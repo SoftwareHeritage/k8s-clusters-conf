@@ -25,8 +25,48 @@ spec:
     httpEnabled: true
   hostname:
     hostname: keycloak.internal.admin.swh.network
+  # Ingress does not allow to declare multipe ingress hostname
+  # So our configuration with reverse-proxy won't be functional for now
+  # (for test purposes)
   ingress:
-    enabled: true
+    enabled: false
     className: nginx
   proxy:
     headers: xforwarded
+
+---
+# Source: cluster-config/templates/keycloak/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  namespace: keycloak
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - keycloak.internal.admin.swh.network
+        - auth.softwareheritage.org
+      secretName: "keycloak-swh-tls"
+
+  rules:
+    - host: "keycloak.internal.admin.swh.network"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak-service
+                port:
+                  number: 8080
+    - host: "auth.softwareheritage.org"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak-service
+                port:
+                  number: 8080
