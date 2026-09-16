@@ -5,7 +5,7 @@ metadata:
   namespace: keycloak
   name: keycloak
 spec:
-  instances: 2
+  instances: 1
   update:
     strategy: Auto
   db:
