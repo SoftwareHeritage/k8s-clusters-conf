@@ -24,7 +24,7 @@ spec:
   http:
     httpEnabled: true
   hostname:
-    hostname: keycloak.internal.admin.swh.network
+    hostname: auth.softwareheritage.org
   ingress:
     enabled: true
     className: nginx
