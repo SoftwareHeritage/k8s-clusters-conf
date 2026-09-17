@@ -14,9 +14,9 @@ spec:
       releaseName: rancher
       values: |
         hostname: rancher.euwest.azure.internal.softwareheritage.org
-        replicas: 1
         startupProbe:
           failureThreshold: 24
+          periodSeconds: 20
         readinessProbe:
           failureThreshold: 15
         livenessProbe:
