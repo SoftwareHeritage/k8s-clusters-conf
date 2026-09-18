@@ -36,6 +36,9 @@ spec:
             nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
           tls:
             source: secret
+        extraEnv:
+          - name: "CATTLE_PROMETHEUS_METRICS"
+            value: "true"
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/local
     namespace: cattle-system
