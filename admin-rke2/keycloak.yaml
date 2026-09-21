@@ -24,7 +24,7 @@ spec:
   http:
     httpEnabled: true
   hostname:
-    hostname: auth.softwareheritage.org
+    hostname: auth.staging.swh.network
   ingress:
     enabled: true
     className: nginx
