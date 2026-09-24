@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://gitlab.softwareheritage.org/swh/devel/swh-osporadar-deployment.git'
     path: ./swh-osporadar
-    targetRevision: mr/osporadar-test
+    targetRevision: main
     helm:
       valueFiles:
         - values.yaml
