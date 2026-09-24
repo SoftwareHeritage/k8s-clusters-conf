@@ -30,3 +30,13 @@ spec:
     className: nginx
   proxy:
     headers: xforwarded
+# Test additionalOption for debug
+  additionalOptions:
+    - name: metrics-enabled
+      value: "true"
+
+    - name: event-metrics-user-enabled
+      value: "true"
+    
+    - name: event-metrics-user-events
+      value: "true"
