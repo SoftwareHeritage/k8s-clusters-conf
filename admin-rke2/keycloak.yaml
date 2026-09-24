@@ -37,6 +37,3 @@ spec:
 
     - name: event-metrics-user-enabled
       value: "true"
-    
-    - name: event-metrics-user-events
-      value: "true"
