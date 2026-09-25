@@ -6,7 +6,6 @@ metadata:
   name: keycloak
 spec:
   instances: 1
-  image: container-registry.softwareheritage.org/olasd/swh-keycloak-theme/keycloak:26.7-mr-gitlab-ci
   update:
     strategy: Auto
   db:
