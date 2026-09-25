@@ -37,3 +37,15 @@ spec:
 
     - name: event-metrics-user-enabled
       value: "true"
+      
+    - name: log-level
+      value: "INFO,org.keycloak.authentication:DEBUG,org.keycloak.events:DEBUG"
+
+    - name: spi-events-listener--jboss-logging--success-level
+      value: info
+
+    - name: spi-events-listener--jboss-logging--error-level
+      value: warn
+
+    - name: http-access-log-enabled
+      value: "true"
