@@ -79,7 +79,7 @@ spec:
             valuesObject:
               operatorNamespace: rook-ceph
         - repoURL: https://gitlab.softwareheritage.org/swh/infra/ci-cd/k8s-clusters-conf.git
-          targetRevision: mr/rook-ceph-applicationset
+          targetRevision: master
           ref: values
   templatePatch: |
     spec:
