@@ -31,12 +31,16 @@ spec:
                   syncPolicy:
                     syncOptions:
                       - CreateNamespace=true
+                      - ApplyOutOfSyncOnly=true
+                      - ServerSideApply=true
                   ignoreDifferences: []
                 - chart: rook-ceph-cluster
                   syncPolicy:
                     syncOptions:
                       - RespectIgnoreDifferences=true
                       - CreateNamespace=true
+                      - ApplyOutOfSyncOnly=true
+                      - ServerSideApply=true
                   ignoreDifferences:
                     - group: "ceph.rook.io"
                       kind: "CephCluster"
