@@ -25,15 +25,6 @@ spec:
           - list:
               elements:
                 - chart: rook-ceph
-                  repoURL: https://charts.rook.io/release
-                  syncPolicy:
-                    syncOptions:
-                      - CreateNamespace=true
-                      - ApplyOutOfSyncOnly=true
-                      - ServerSideApply=true
-                  ignoreDifferences: []
-                - chart: ceph-csi-drivers
-                  repoURL: https://ceph.github.io/ceph-csi-operator
                   syncPolicy:
                     syncOptions:
                       - CreateNamespace=true
@@ -41,7 +32,6 @@ spec:
                       - ServerSideApply=true
                   ignoreDifferences: []
                 - chart: rook-ceph-cluster
-                  repoURL: https://charts.rook.io/release
                   syncPolicy:
                     syncOptions:
                       - RespectIgnoreDifferences=true
@@ -80,7 +70,8 @@ spec:
       project: default
       sources:
         - chart: "{{ .chart }}"
-          repoURL: "{{ .repoURL }}"
+          repoURL: https://charts.rook.io/release
+          # also update this version number in the ceph-csi-drivers ApplicationSet
           targetRevision: "v1.20.8"
           helm:
             valueFiles:
@@ -96,3 +87,45 @@ spec:
     spec:
       syncPolicy: {{ .syncPolicy | toJson }}
       ignoreDifferences: {{ .ignoreDifferences | toJson }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ceph-csi-drivers
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    # This is critical cluster infrastructure, don't let the Applications remove
+    # their owned resources when the ApplicationSet disappears
+    preserveResourcesOnDeletion: true
+    # Belt and suspenders: do not allow the ApplicationSet to delete
+    # Applications if they're not generated anymore either.
+    applicationsSync: create-update
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            softwareheritage.org/deploy-ceph: "true"
+  template:
+    metadata:
+      name: "{{ .name }}-ceph-csi-drivers"
+      namespace: argocd
+    spec:
+      destination:
+        namespace: rook-ceph
+        name: "{{ .name }}"
+      project: default
+      sources:
+        - chart: ceph-csi-drivers
+          repoURL: https://ceph.github.io/ceph-csi-operator
+          targetRevision: "1.1.0"
+          helm:
+            valueFiles:
+              # this version number must match Rook
+              - "https://raw.githubusercontent.com/rook/rook/v1.20.8/deploy/charts/ceph-csi-drivers/values.yaml"
+      syncPolicy:
+        syncOptions:
+          - ServerSideApply=true
+          - ApplyOutOfSyncOnly=true
