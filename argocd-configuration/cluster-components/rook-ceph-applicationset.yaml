@@ -25,6 +25,15 @@ spec:
           - list:
               elements:
                 - chart: rook-ceph
+                  repoURL: https://charts.rook.io/release
+                  syncPolicy:
+                    syncOptions:
+                      - CreateNamespace=true
+                      - ApplyOutOfSyncOnly=true
+                      - ServerSideApply=true
+                  ignoreDifferences: []
+                - chart: ceph-csi-drivers
+                  repoURL: https://ceph.github.io/ceph-csi-operator
                   syncPolicy:
                     syncOptions:
                       - CreateNamespace=true
@@ -70,8 +79,8 @@ spec:
       project: default
       sources:
         - chart: "{{ .chart }}"
-          repoURL: https://charts.rook.io/release
-          targetRevision: "v1.19.11"
+          repoURL: "{{ .repoURL }}"
+          targetRevision: "v1.20.8"
           helm:
             valueFiles:
               - "$values/argocd-configuration/cluster-components/values/{{ .chart }}/defaults.yaml"
