@@ -1,0 +1,38 @@
+---
+# +argocd:skip-file-rendering
+nameOverride: gitlab-runner-image-builder
+
+gitlabUrl: https://gitlab.softwareheritage.org
+
+image:
+  registry: registry.gitlab.com
+  image: gitlab-org/ci-cd/gitlab-runner-ubi-images/gitlab-runner-ocp
+  tag: v19.4.1
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+
+runners:
+  secret: gitlab-runner-image-builder
+  jobNamespace: gitlab-runner
+  config: |
+    [[runners]]
+      environment = ["HOME=/homedir"]
+      [runners.kubernetes]
+        privileged = true
+        helper_image = "registry.gitlab.com/gitlab-org/ci-cd/gitlab-runner-ubi-images/gitlab-runner-helper-ocp:v19.4.1"
+      [runners.kubernetes.pod_security_context]
+        run_as_non_root = true
+        run_as_user = 1000
+      [runners.kubernetes.build_container_security_context]
+        run_as_non_root = true
+        run_as_user = 1000
+      [[runners.kubernetes.volumes.empty_dir]]
+        name = "homedir"
+        mount_path = "/homedir"
+        medium = "Memory"
+rbac:
+  create: true
+serviceAccount:
+  create: true
