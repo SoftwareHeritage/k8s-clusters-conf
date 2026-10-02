@@ -41,6 +41,7 @@ spec:
                       - ServerSideApply=true
                   ignoreDifferences: []
                 - chart: rook-ceph-cluster
+                  repoURL: https://charts.rook.io/release
                   syncPolicy:
                     syncOptions:
                       - RespectIgnoreDifferences=true
