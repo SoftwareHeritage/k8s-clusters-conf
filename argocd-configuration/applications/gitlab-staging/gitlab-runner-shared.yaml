@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-staging-gitlab-runner-shared
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://192.168.200.13
+    namespace: gitlab-runner
+  sources:
+    - chart: gitlab-runner
+      repoURL: https://charts.gitlab.io
+      targetRevision: 0.93.0
+      helm:
+        releaseName: gitlab-runner-shared
+        valueFiles:
+          - $values/argocd-configuration/gitlab-staging/values/gitlab-runner-shared.yaml
+    - repoURL: https://gitlab.softwareheritage.org/swh/infra/ci-cd/k8s-clusters-conf.git
+      targetRevision: mr/gitlab-runner-staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true

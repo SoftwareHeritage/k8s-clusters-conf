@@ -1,0 +1,6 @@
+---
+# +argocd:skip-file-rendering
+rbac:
+  create: true
+
+gitlabUrl: https://gitlab-staging.swh.network
