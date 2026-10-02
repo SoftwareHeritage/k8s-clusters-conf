@@ -16,9 +16,10 @@ spec:
       helm:
         releaseName: gitlab-runner-shared
         valueFiles:
-          - $values/argocd-configuration/gitlab-staging/values/gitlab-runner-shared.yaml
+          - $values/argocd-configuration/applications/gitlab-staging/values/gitlab-runner-shared.yaml
     - repoURL: https://gitlab.softwareheritage.org/swh/infra/ci-cd/k8s-clusters-conf.git
       targetRevision: master
+      ref: values
   syncPolicy:
     automated:
       prune: true

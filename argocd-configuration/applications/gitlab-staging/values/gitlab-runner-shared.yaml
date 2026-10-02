@@ -1,6 +1,12 @@
 ---
 # +argocd:skip-file-rendering
+nameOverride: gitlab-runner-shared
+
 rbac:
   create: true
 
 gitlabUrl: https://gitlab-staging.swh.network
+
+runners:
+  secret: gitlab-runner-shared
+  jobNamespace: gitlab-runner
