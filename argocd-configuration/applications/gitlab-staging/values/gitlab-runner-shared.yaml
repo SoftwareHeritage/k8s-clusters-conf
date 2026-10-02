@@ -4,6 +4,8 @@ nameOverride: gitlab-runner-shared
 
 rbac:
   create: true
+serviceAccount:
+  create: true
 
 gitlabUrl: https://gitlab-staging.swh.network
 
