@@ -18,7 +18,7 @@ spec:
         valueFiles:
           - $values/argocd-configuration/gitlab-staging/values/gitlab-runner-shared.yaml
     - repoURL: https://gitlab.softwareheritage.org/swh/infra/ci-cd/k8s-clusters-conf.git
-      targetRevision: mr/gitlab-runner-staging
+      targetRevision: master
   syncPolicy:
     automated:
       prune: true
