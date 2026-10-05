@@ -21,4 +21,6 @@ spec:
       prune: false
       selfHeal: true
       allowEmpty: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
 
