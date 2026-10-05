@@ -27,7 +27,7 @@ spec:
   http:
     httpEnabled: true
   hostname:
-    hostname: auth.staging.swh.network/auth
+    hostname: http://auth.staging.swh.network/auth
   ingress:
     enabled: true
     className: nginx
