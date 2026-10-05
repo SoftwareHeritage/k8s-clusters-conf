@@ -47,3 +47,5 @@ spec:
       value: warn
     - name: http-access-log-enabled
       value: "true"
+    - name: http-relative-path
+      value: "/auth"
