@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - values.yaml
         - values/staging.yaml
-      releaseName: archive-staging-rke2-osporadar-test
+      releaseName: archive-staging-rke2-osporadar
   destination:
     server: https://rancher.euwest.azure.internal.softwareheritage.org/k8s/clusters/c-m-9n5h9nrf
     namespace: osporadar
