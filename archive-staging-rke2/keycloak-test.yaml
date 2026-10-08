@@ -1,0 +1,51 @@
+---
+apiVersion: k8s.keycloak.org/v2beta1
+kind: Keycloak
+metadata:
+  namespace: keycloak
+  name: keycloak
+spec:
+  instances: 1
+  image: container-registry.softwareheritage.org/swh/infra/websites/swh-keycloak-theme/keycloak:26.7.5-v0-4-2
+  # TODO: adjust configuration on the image to allow using startOptimized: true
+  startOptimized: false
+  update:
+    strategy: Auto
+  db:
+    vendor: postgres
+    host: db-keycloak-rw
+    usernameSecret:
+      name: swh-keycloak-postgres-secret
+      key: username
+    passwordSecret:
+      name: swh-keycloak-postgres-secret
+      key: password
+    database: keycloak
+  features:
+    enabled:
+      - client-admin-api:v2
+  http:
+    httpEnabled: true
+  hostname:
+    hostname: auth.staging.swh.network
+  ingress:
+    enabled: true
+    className: nginx
+  proxy:
+    headers: xforwarded
+# Test additionalOption for debug
+  additionalOptions:
+    - name: metrics-enabled
+      value: "true"
+    - name: event-metrics-user-enabled
+      value: "true"
+    - name: log-level
+      value: "INFO,org.keycloak.authentication:DEBUG,org.keycloak.events:DEBUG"
+    - name: spi-events-listener--jboss-logging--success-level
+      value: info
+    - name: spi-events-listener--jboss-logging--error-level
+      value: warn
+    - name: http-access-log-enabled
+      value: "true"
+    - name: http-relative-path
+      value: "/auth"
