@@ -5,7 +5,7 @@ metadata:
   namespace: keycloak
   name: keycloak
 spec:
-  instances: 1
+  instances: 2
   image: container-registry.softwareheritage.org/swh/infra/websites/swh-keycloak-theme/keycloak:26.7.5-v0-4-2
   # TODO: adjust configuration on the image to allow using startOptimized: true
   startOptimized: false
