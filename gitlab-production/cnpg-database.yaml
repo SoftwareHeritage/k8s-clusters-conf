@@ -7,9 +7,9 @@ metadata:
 spec:
   instances: 1
   storage:
-    size: 15Gi
+    size: 30Gi
   walStorage:
-    size: 3Gi
+    size: 6Gi
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
