@@ -135,6 +135,7 @@ spec:
           annotations:
             kubernetes.io/tls-acme: true
           configureCertmanager: true
+          useNewIngressForCerts: true
           tls:
             enabled: true
         gatewayApi:
