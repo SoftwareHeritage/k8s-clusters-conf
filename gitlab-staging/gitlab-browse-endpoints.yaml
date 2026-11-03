@@ -1,0 +1,43 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/issuer: gitlab-issuer
+    kubernetes.io/ingress.provider: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 512m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "15"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($http_cookie !~* "_gitlab_session") {
+        return 403;
+      }
+  name: gitlab-webservice-browse-endpoints
+  namespace: gitlab-system
+spec:
+  ingressClassName: gitlab-nginx
+  rules:
+  - host: gitlab-staging.swh.network
+    http:
+      paths:
+      - backend:
+          service:
+            name: gitlab-webservice-default
+            port:
+              number: 8181
+        path: /.*/-/(commit|commits|tags|tree|blob|raw|blame)(/.*)?
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: gitlab-webservice-default
+            port:
+              number: 8181
+        path: /.*/-/merge_requests/.*/diffs
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - gitlab-staging.swh.network
+    secretName: gitlab-gitlab-tls
